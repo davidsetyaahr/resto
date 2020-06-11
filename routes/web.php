@@ -19,3 +19,5 @@ Route::prefix('pages/')->group(function() {
     Route::get('list-data','Pages@list');
     Route::get('form','Pages@form');
 });
+
+Route::resource('kategori-barang', 'KategoriBarangController'); 
