@@ -24,7 +24,7 @@ Route::prefix('master-barang/')->group(function() {
     Route::resource('barang', '');
 });
 Route::prefix('pembelian-barang/')->group(function() {
-    Route::resource('supplier', '');
+    Route::resource('supplier', 'SupplierController');
     Route::resource('pembelian', '');
     Route::resource('laporan-pembelian', '');
 });
