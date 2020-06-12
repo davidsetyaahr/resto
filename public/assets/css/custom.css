@@ -22,3 +22,10 @@
 .breadcrumb li a i{
     line-height: 160%;
 }
+.sidenav .nav-item .nav-collapse{
+    padding-top : 15px;
+    padding-bottom : 15px;
+}
+.sidenav .nav-item .nav-collapse .nav-item .nav-link{
+    padding-left : 80px;
+}
