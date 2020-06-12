@@ -32,5 +32,9 @@ Route::prefix('pemakaian-barang/')->group(function() {
     Route::resource('pemakaian', '');
     Route::resource('laporan-pemakaian', '');
 });
+Route::prefix('master-menu/')->group(function(){
+    Route::resource('kategori-menu', 'KategoriMenuController');
+    Route::resource('menu', '');
+});
 
 
