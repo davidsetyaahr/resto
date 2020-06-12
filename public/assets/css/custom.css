@@ -22,10 +22,14 @@
 .breadcrumb li a i{
     line-height: 160%;
 }
+.sidenav .nav-item .nav-link{
+    color : rgba(24, 38, 77, 0.9)
+}
 .sidenav .nav-item .nav-collapse{
     padding-top : 15px;
     padding-bottom : 15px;
 }
 .sidenav .nav-item .nav-collapse .nav-item .nav-link{
     padding-left : 80px;
+    color : rgba(24, 38, 77, 0.6)
 }

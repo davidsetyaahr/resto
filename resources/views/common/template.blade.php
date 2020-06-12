@@ -65,49 +65,54 @@
               </a>
                 <ul class="navbar-nav nav-collapse collapse" id="master-barang">
                   <li class="nav-item">
-                    <a class="nav-link" href="">
+                    <a class="nav-link" href="{{url('master-barang/barang')}}">
                       <span class="nav-link-text">Barang</span>
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="">
+                    <a class="nav-link" href="{{url('master-barang/kategori-barang')}}">
                       <span class="nav-link-text">Kategori Barang</span>
                     </a>
                   </li>
                 </ul>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="" data-toggle="collapse" data-target="#master-barang">
-                <i class="ni ni-app text-info"></i>
+              <a class="nav-link" href="" data-toggle="collapse" data-target="#pembelian-barang">
+                <i class="ni ni-bag-17 text-yellow"></i>
                 <span class="nav-link-text">Pembelian Barang</span>
               </a>
-                <ul class="navbar-nav nav-collapse collapse" id="master-barang">
+                <ul class="navbar-nav nav-collapse collapse" id="pembelian-barang">
                   <li class="nav-item">
-                    <a class="nav-link" href="">
-                      <span class="nav-link-text">Barang</span>
+                    <a class="nav-link" href="{{url('pembelian-barang/supplier')}}">
+                      <span class="nav-link-text">Supplier</span>
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="">
-                      <span class="nav-link-text">Kategori Barang</span>
+                    <a class="nav-link" href="{{url('pembelian-barang/pembelian')}}">
+                      <span class="nav-link-text">Pembelian</span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{url('pembelian-barang/laporan-pembelian')}}">
+                      <span class="nav-link-text">Laporan Pembelian</span>
                     </a>
                   </li>
                 </ul>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="" data-toggle="collapse" data-target="#master-barang">
-                <i class="ni ni-app text-info"></i>
+              <a class="nav-link" href="" data-toggle="collapse" data-target="#pemakaian-barang">
+                <i class="ni ni-basket text-orange"></i>
                 <span class="nav-link-text">Pemakaian Barang</span>
               </a>
-                <ul class="navbar-nav nav-collapse collapse" id="master-barang">
+                <ul class="navbar-nav nav-collapse collapse" id="pemakaian-barang">
                   <li class="nav-item">
-                    <a class="nav-link" href="">
-                      <span class="nav-link-text">Barang</span>
+                    <a class="nav-link" href="{{url('pemakaian-barang/pemakaian')}}">
+                      <span class="nav-link-text">Pemakaian</span>
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="">
-                      <span class="nav-link-text">Kategori Barang</span>
+                    <a class="nav-link" href="{{url('pemakaian-barang/laporan-pemakaian')}}">
+                      <span class="nav-link-text">Laporan Pemakaian</span>
                     </a>
                   </li>
                 </ul>

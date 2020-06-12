@@ -19,5 +19,18 @@ Route::prefix('pages/')->group(function() {
     Route::get('list-data','Pages@list');
     Route::get('form','Pages@form');
 });
+Route::prefix('master-barang/')->group(function() {
+    Route::resource('kategori-barang', 'KategoriBarangController');
+    Route::resource('barang', '');
+});
+Route::prefix('pembelian-barang/')->group(function() {
+    Route::resource('supplier', '');
+    Route::resource('pembelian', '');
+    Route::resource('laporan-pembelian', '');
+});
+Route::prefix('pemakaian-barang/')->group(function() {
+    Route::resource('pemakaian', '');
+    Route::resource('laporan-pemakaian', '');
+});
 
-Route::resource('kategori-barang', 'KategoriBarangController'); 
+
