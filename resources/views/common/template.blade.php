@@ -59,6 +59,60 @@
               </a>
             </li>
             <li class="nav-item">
+              <a class="nav-link" href="" data-toggle="collapse" data-target="#master-barang">
+                <i class="ni ni-app text-info"></i>
+                <span class="nav-link-text">Master Barang</span>
+              </a>
+                <ul class="navbar-nav nav-collapse collapse" id="master-barang">
+                  <li class="nav-item">
+                    <a class="nav-link" href="">
+                      <span class="nav-link-text">Barang</span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="">
+                      <span class="nav-link-text">Kategori Barang</span>
+                    </a>
+                  </li>
+                </ul>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="" data-toggle="collapse" data-target="#master-barang">
+                <i class="ni ni-app text-info"></i>
+                <span class="nav-link-text">Pembelian Barang</span>
+              </a>
+                <ul class="navbar-nav nav-collapse collapse" id="master-barang">
+                  <li class="nav-item">
+                    <a class="nav-link" href="">
+                      <span class="nav-link-text">Barang</span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="">
+                      <span class="nav-link-text">Kategori Barang</span>
+                    </a>
+                  </li>
+                </ul>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="" data-toggle="collapse" data-target="#master-barang">
+                <i class="ni ni-app text-info"></i>
+                <span class="nav-link-text">Pemakaian Barang</span>
+              </a>
+                <ul class="navbar-nav nav-collapse collapse" id="master-barang">
+                  <li class="nav-item">
+                    <a class="nav-link" href="">
+                      <span class="nav-link-text">Barang</span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="">
+                      <span class="nav-link-text">Kategori Barang</span>
+                    </a>
+                  </li>
+                </ul>
+            </li>
+            <li class="nav-item">
               <a class="nav-link" href="{{url('pages/form')}}">
                 <i class="ni ni-planet text-orange"></i>
                 <span class="nav-link-text">Form</span>
