@@ -38,7 +38,7 @@
                         <select name="" class="form-control select2 @error('kode_supplier') is-invalid @enderror" id="">
                           <option value=''>---Select---</option>
                           @foreach($supplier as $value)
-                            <option value="{{$value->kode_supplier}}">{{$value->nama_supplier.' ~ '.$value->nama_supplier}}</option>
+                            <option value="{{$value->kode_supplier}}">{{$value->kode_supplier.' ~ '.$value->nama_supplier}}</option>
                           @endforeach
                         </select>
                         @error('kategori_barang')
@@ -50,40 +50,14 @@
                   </div>
                   <hr class="my-4">
                   <h6 class="heading-small text-muted mb-4">Detail Pembelian</h6>
-                  <div class="row pl-lg-4">
-                    <div class="col-md-4">
-                        <label for="" class="form-control-label">Barang</label>
-                        <select name="" class="form-control select2 @error('kode_barang') is-invalid @enderror" id="">
-                          <option value=''>---Select---</option>
-                        </select>
-                        @error('kode_barang')
-                          <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                          </span>
-                        @enderror
-                    </div>
-                    <div class="col-md-4">
-                        <label for="" class="form-control-label">Qty</label>
-                        <input type="number" name="qty" value="{{old('qty')}}" class="form-control @error('qty') is-invalid @enderror">
-                        @error('qty')
-                          <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                          </span>
-                        @enderror
-                    </div>
-                    <div class="col-md-4">
-                        <label for="" class="form-control-label">Harga (Satuan)</label>
-                        <input type="number" name="harga" value="{{old('harga')}}" class="form-control @error('harga') is-invalid @enderror">
-                        @error('harga')
-                          <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                          </span>
-                        @enderror
-                    </div>
+                  <div class="pl-lg-4" id='urlAddDetail' data-url="{{url('pembelian-barang/pembelian/addDetailPembelian')}}">
+                    @include('pembelian-barang.pembelian.tambah-detail-pembelian',['hapus' => false, 'no' => 1])
                   </div>
-                  <br>
+                  <h2 class='text-right mt-5 pr-5'>Total : <span id='total' class="text-orange">0</span></h2>
+                  <div class="mt-4">
                   <button type="submit" class="btn btn-primary"><span class="fa fa-save"></span> Simpan</button>
                   <button type="reset" class="btn btn-secondary"><span class="fa fa-times"></span> Reset</button>
+                  </div>
               </div>
             </form>
         </div>

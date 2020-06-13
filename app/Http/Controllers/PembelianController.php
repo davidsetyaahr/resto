@@ -31,6 +31,11 @@ class PembelianController extends Controller
     
         return view('pembelian-barang.pembelian.tambah-pembelian', $this->param);
     }
+    public function addDetailPembelian()
+    {   
+        $next = $_GET['biggestNo']+1;
+        return view('pembelian-barang.pembelian.tambah-detail-pembelian',['hapus' => true, 'no' => $next]);
+    }
     public function store(Request $request)
     {
         # code...
