@@ -106,7 +106,18 @@ class KategoriMenuController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $KategoriMenu = KategoriMenu::findOrFail($id);
+        $isUnique = $KategoriMenu->kategori_menu == $request->get('kategori_menu') ? "" : "|unique:kategori_menu";
+
+        $validatedData = $request->validate([
+            'kategori_menu' => 'required|max:15'.$isUnique,
+        ]);
+
+        $KategoriMenu->kategori_menu = $request->get('kategori_menu');
+
+        $KategoriMenu->save();
+
+        return redirect()->route('kategori-menu.index')->withStatus('Data berhasil diperbarui.');
     }
 
     /**

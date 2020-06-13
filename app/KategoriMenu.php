@@ -10,8 +10,8 @@ class KategoriMenu extends Model
 
     protected $primaryKey = 'id_kategori_menu';
 
-    /*public function menu()
+    public function menu()
     {
         return $this->hasMany('App\Menu');
-    }*/
+    }
 }
