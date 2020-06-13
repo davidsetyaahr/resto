@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use \App\Pemakaian;
+use \App\DetailPemakaian;
 use \App\Barang;
 
 class PemakaianController extends Controller
@@ -88,7 +89,52 @@ class PemakaianController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'tanggal' => 'required',
+            'kode_barang.*' => 'required',
+            'qty.*' => 'required|numeric',
+        ]);
+
+        $ttlQty = 0;
+        $totalSaldoPemakaian = 0;
+        foreach ($_POST['kode_barang'] as $key => $value) {
+            $barang = Barang::select('stock','saldo')->where('kode_barang',$value)->get()[0];
+            $hpp = $barang->saldo / $barang->stock;
+            $totalSaldoPemakaian += $hpp * $_POST['qty'][$key];
+            $ttlQty += $_POST['qty'][$key];
+        }
+
+        $newPemakaian = new Pemakaian;
+        $newPemakaian->kode_pemakaian = $request->get('kode_pemakaian');
+        $newPemakaian->tanggal = $request->get('tanggal');
+        $newPemakaian->jumlah_qty = $ttlQty;
+        $newPemakaian->total_saldo = $totalSaldoPemakaian;
+
+        $newPemakaian->save();
+
+        foreach ($_POST['kode_barang'] as $key => $value) {
+            $barang = Barang::select('stock','saldo')->where('kode_barang', $value)->get()[0];
+            $hpp = $barang->saldo / $barang->stock;
+            $subtotalSaldo = $hpp * $_POST['qty'][$key];
+
+            $newDetail = new DetailPemakaian;
+            $newDetail->kode_pemakaian = $request->get('kode_pemakaian');
+            $newDetail->kode_barang = $value;
+            $newDetail->qty = $_POST['qty'][$key];
+            $newDetail->subtotal_saldo = $subtotalSaldo;
+            $newDetail->keterangan = $_POST['keterangan'][$key];
+            $newDetail->save();
+
+            $barang = Barang::select('stock','saldo')->where('kode_barang',$value)->get()[0];
+
+            $updateBarang = Barang::findOrFail($value);
+            $updateBarang->stock = $barang->stock - $_POST['qty'][$key];
+            $updateBarang->saldo = $barang->saldo - $subtotalSaldo;
+
+            $updateBarang->save();
+        }
+
+        return redirect()->route('pemakaian.index')->withStatus('Data berhasil ditambahkan.');
     }
 
     /**

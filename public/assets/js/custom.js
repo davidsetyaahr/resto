@@ -47,6 +47,7 @@ $(document).ready(function() {
                     var delNo = $(this).data("no");
                     $(".row-detail[data-no='" + delNo + "']").remove();
                     getTotal();
+                    getTotalQty($(this));
                 });
                 $(".getSubtotal").keyup(function() {
                     getSubtotal($(this));
@@ -54,6 +55,10 @@ $(document).ready(function() {
 
                 $(".barang").change(function() {
                     barang($(this));
+                });
+                
+                $(".totalQty").keyup(function() {
+                    getTotalQty($(this));
                 });
             }
         });
@@ -116,5 +121,21 @@ $(document).ready(function() {
     }
     $(".barang").change(function() {
         barang($(this));
+    });
+
+    // var totalQty = 0;
+    function getTotalQty(thisParam) {
+        // var qty = parseInt(thisParam.val());
+        // totalQty += qty;
+        // $("#totalQty").html(formatRupiah(totalQty));
+        var total = 0;
+        $(".totalQty").each(function() {
+            var subtotalVal = parseInt($(this).val());
+            total = total + subtotalVal;
+        });
+        $("#totalQty").html(formatRupiah(total));
+    }
+    $(".totalQty").keyup(function() {
+        getTotalQty($(this));
     });
 });

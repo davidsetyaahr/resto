@@ -39,7 +39,7 @@
                   <div class="pl-lg-4" id='urlAddDetail' data-url="{{url('pemakaian-barang/pemakaian/addDetailPemakaian')}}">
                     @include('pemakaian-barang.pemakaian.tambah-detail-pemakaian',['hapus' => false, 'no' => 1])
                   </div>
-                  <h2 class='text-right mt-5 pr-5'>Total : <span id='total' class="text-orange">0</span></h2>
+                  <h2 class='text-right mt-5 pr-5'>Total Quantity : <span id='totalQty' class="text-orange">0</span></h2>
                   <div class="mt-4">
                   <button type="submit" class="btn btn-primary"><span class="fa fa-save"></span> Simpan</button>
                   <button type="reset" class="btn btn-secondary"><span class="fa fa-times"></span> Reset</button>
