@@ -46,6 +46,7 @@ $(document).ready(function() {
                     e.preventDefault()
                     var delNo = $(this).data('no')
                     $(".row-detail[data-no='"+delNo+"']").remove()
+                     getTotal()
                 })
                 $(".getSubtotal").keyup(function(){
                     getSubtotal($(this))
@@ -67,7 +68,9 @@ $(document).ready(function() {
        other = isNaN(other) ? 0 : other
        var subtotal = thisval * other
        $(parent+" "+".subtotal").val(subtotal)
-
+        getTotal()
+    }
+    function getTotal(){
         var total = 0
        $(".subtotal").each(function(){
            var subtotalVal = parseInt($(this).val())
