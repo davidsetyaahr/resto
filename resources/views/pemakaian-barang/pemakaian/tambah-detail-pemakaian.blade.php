@@ -1,7 +1,7 @@
 <div class="row row-detail mb-3" data-no='{{$no}}'>
     <div class="col-md-3">
         <label for="" class="form-control-label">Barang</label>
-        <select name="kode_barang[]" class="form-control select2" id="barang" required data-url="{{ route('pemakaian.get-detail-barang') }}">
+        <select name="kode_barang[]" class="form-control select2 barang">
             <option value=''>---Pilih Barang---</option>
             @foreach ($barang as $item)
                 <option value="{{$item->kode_barang}}">{{$item->kode_barang . ' - ' .$item->nama}}</option>
