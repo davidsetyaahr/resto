@@ -9,4 +9,6 @@ class Pembelian extends Model
     protected $table='pembelian';
 
     protected $primaryKey = 'kode_pembelian';
+    protected $keyType = 'string';
+
 }
