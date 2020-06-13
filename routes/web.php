@@ -21,7 +21,7 @@ Route::prefix('pages/')->group(function() {
 });
 Route::prefix('master-barang/')->group(function() {
     Route::resource('kategori-barang', 'KategoriBarangController');
-    Route::resource('barang', '');
+    Route::resource('barang', 'BarangController');
 });
 Route::prefix('pembelian-barang/')->group(function() {
     Route::resource('supplier', 'SupplierController');
@@ -31,6 +31,10 @@ Route::prefix('pembelian-barang/')->group(function() {
 Route::prefix('pemakaian-barang/')->group(function() {
     Route::resource('pemakaian', '');
     Route::resource('laporan-pemakaian', '');
+});
+Route::prefix('master-menu/')->group(function(){
+    Route::resource('kategori-menu', 'KategoriMenuController');
+    Route::resource('menu', '');
 });
 
 

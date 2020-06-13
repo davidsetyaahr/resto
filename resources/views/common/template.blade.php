@@ -60,7 +60,7 @@
             </li>
             <li class="nav-item">
               <a class="nav-link" href="" data-toggle="collapse" data-target="#master-barang">
-                <i class="ni ni-app text-info"></i>
+                <i class="ni ni-box-2 text-info"></i>
                 <span class="nav-link-text">Master Barang</span>
               </a>
                 <ul class="navbar-nav nav-collapse collapse" id="master-barang">

@@ -11,22 +11,28 @@ class KategoriBarangController extends Controller
     private $param;
     public function __construct()
     {
-        $this->param['icon'] = 'ni-tv-2 text-primary';
+        $this->param['icon'] = 'ni-tag text-primary';
     }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $kategori = KategoriBarang::paginate(10);
+        $keyword = $request->get('keyword');
+        if ($keyword) {
+            $kategori = KategoriBarang::where('kategori_barang', 'LIKE', "%$keyword%")->paginate(10);
+        }
+        else{
+            $kategori = KategoriBarang::paginate(10);
+        }
 
         $this->param['pageInfo'] = 'List Data';
         $this->param['btnRight']['text'] = 'Tambah Data';
         $this->param['btnRight']['link'] = route('kategori-barang.create');
 
-        return view('kategori-barang.index', ['kategori_barang' => $kategori],  $this->param);
+        return view('master-barang.kategori-barang.index', ['kategori_barang' => $kategori],  $this->param);
         
     }
 
@@ -41,7 +47,7 @@ class KategoriBarangController extends Controller
         $this->param['btnRight']['text'] = 'Lihat Data';
         $this->param['btnRight']['link'] = route('kategori-barang.index');
 
-        return view('kategori-barang.create', $this->param);
+        return view('master-barang.kategori-barang.create', $this->param);
     }
 
     /**
@@ -90,7 +96,7 @@ class KategoriBarangController extends Controller
 
         $kategoriBarang = KategoriBarang::findOrFail($id);
 
-        return view('kategori-barang.edit', ['kategori_barang' => $kategoriBarang], $this->param);
+        return view('master-barang.kategori-barang.edit', ['kategori_barang' => $kategoriBarang], $this->param);
     }
 
     /**
@@ -102,11 +108,13 @@ class KategoriBarangController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $kategoriBarang = KategoriBarang::findOrFail($id);
+        $isUnique = $kategoriBarang->kategori_barang == $request->get('kategori_barang') ? "" : "|unique:kategori_barang";
+
         $validatedData = $request->validate([
-            'kategori_barang' => 'required|max:15',
+            'kategori_barang' => 'required|max:15'.$isUnique,
         ]);
         
-        $kategoriBarang = KategoriBarang::findOrFail($id);
 
         $kategoriBarang->kategori_barang = $request->get('kategori_barang');
 
