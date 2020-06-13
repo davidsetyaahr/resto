@@ -1,8 +1,11 @@
 <div class="row row-detail mb-3" data-no='{{$no}}'>
     <div class="col-md-3">
         <label for="" class="form-control-label">Barang</label>
-        <select name="kode_barang[]" class="form-control select2" id="">
-            <option value=''>---Select---</option>
+        <select name="kode_barang[]" class="form-control select2" id="barang" required data-url="{{ route('pemakaian.get-detail-barang') }}">
+            <option value=''>---Pilih Barang---</option>
+            @foreach ($barang as $item)
+                <option value="{{$item->kode_barang}}">{{$item->kode_barang . ' - ' .$item->nama}}</option>
+            @endforeach
         </select>
     </div>
     <div class="col-md-2">
@@ -11,11 +14,11 @@
     </div>
     <div class="col-md-2">
         <label for="" class="form-control-label">Qty</label>
-        <input type="number" name="qty[]" value="" class="form-control getSubtotal" data-other='#harga' id='qty'>
+        <input type="number" name="qty[]" value="" class="form-control getSubtotal" id='qty' required>
     </div>
     <div class="col-md-2">
         <label for="" class="form-control-label">Satuan</label>
-        <input type="text" name="satuan[]" value="" class="form-control" id='satuan'>
+        <input type="text" name="satuan[]" value="" class="form-control" id='satuan' readonly>
     </div>
     <div class="col-md-2">
         <label for="" class="form-control-label">Keterangan</label>

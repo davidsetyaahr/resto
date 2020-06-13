@@ -12,7 +12,7 @@ class BarangController extends Controller
     private $param;
     public function __construct()
     {
-        $this->param['icon'] = 'ni-box-2 text-primary';
+        $this->param['icon'] = 'ni-box-2 text-info';
     }
     /**
      * Display a listing of the resource.
