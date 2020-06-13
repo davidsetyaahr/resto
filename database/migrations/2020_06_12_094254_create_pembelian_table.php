@@ -22,6 +22,7 @@ class CreatePembelianTable extends Migration
             $table->timestamps();
 
             $table->primary('kode_pembelian');
+
         });
     }
 

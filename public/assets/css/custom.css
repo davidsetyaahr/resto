@@ -11,13 +11,13 @@
     background-size: cover;
 }
 .bg-primary-opacity{
-   background: rgba(24, 38, 77, 0.8);
+   background: rgba(24, 38, 77, 0.5);
 }
 .form-control:focus{
     border-color: #7186A0;
 }
 .breadcrumb{
-    border : 4px solid rgba(24, 38, 77, 0.8);
+    border : 4px solid rgba(24, 38, 77, 0.5);
 }
 .breadcrumb li a i{
     line-height: 160%;
