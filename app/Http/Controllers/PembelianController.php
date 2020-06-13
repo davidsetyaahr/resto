@@ -76,18 +76,35 @@ class PembelianController extends Controller
             'qty.*' => 'required',
             'harga.*' => 'required',
         ]);
-
+        
+        $ttlQty = 0;
+        $total = 0;
+        foreach ($_POST['qty'] as $key => $value) {
+            $ttlQty = $ttlQty + $value;
+            $total = $total + $_POST['subtotal'][$key];
+        }
+        
         $newPembelian = new Pembelian;
         $newPembelian->kode_pembelian = $request->get('kode_pembelian');
         $newPembelian->tanggal = $request->get('tanggal');
-        $newPembelian->jumlah_item = 0;
-        $newPembelian->jumlah_qty = 0;
-        $newPembelian->total = 0;
+        $newPembelian->jumlah_item = count($_POST['kode_barang']);
+        $newPembelian->jumlah_qty = $ttlQty;
+        $newPembelian->total = $total;
         $newPembelian->kode_supplier = $request->get('kode_supplier');
 
         $newPembelian->save();
 
-//        return redirect()->route('supplier.index')->withStatus('Data berhasil ditambahkan.');
+        foreach ($_POST['kode_barang'] as $key => $value) {
+            $newDetail = new DetailPembelian;
+            $newDetail->kode_pembelian = $request->get('kode_pembelian');
+            $newDetail->kode_barang = $value;
+            $newDetail->qty = $_POST['qty'][$key];
+            $newDetail->subtotal = $_POST['subtotal'][$key];
+
+            $newDetail->save();
+        }
+
+        return redirect()->route('pembelian.index')->withStatus('Data berhasil ditambahkan.');
 
     }
 }
