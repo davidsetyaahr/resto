@@ -7,7 +7,6 @@ use App\Pembelian;
 use App\DetailPembelian;
 use App\Supplier;
 use App\Barang;
-use Illuminate\Support\Facades\DB;
 class PembelianController extends Controller
 {
     private $param;
@@ -30,8 +29,7 @@ class PembelianController extends Controller
         $tgl = explode('-',$_GET['tanggal']);
         $y = $tgl[0];
         $m = $tgl[1];
-        $lastKode = DB::table('pembelian')
-        ->select('kode_pembelian')
+        $lastKode = Pembelian::select('kode_pembelian')
         ->whereMonth('tanggal', $m)
         ->whereYear('tanggal', $y)
         ->orderBy('kode_pembelian','desc')
@@ -102,6 +100,14 @@ class PembelianController extends Controller
             $newDetail->subtotal = $_POST['subtotal'][$key];
 
             $newDetail->save();
+
+            $barang = Barang::select('stock','saldo')->where('kode_barang',$value)->get()[0];
+
+            $updateBarang = Barang::findOrFail($value);
+            $updateBarang->stock = $barang->stock + $_POST['qty'][$key];
+            $updateBarang->saldo = $barang->saldo + $_POST['subtotal'][$key];
+
+            $updateBarang->save();
         }
 
         return redirect()->route('pembelian.index')->withStatus('Data berhasil ditambahkan.');
