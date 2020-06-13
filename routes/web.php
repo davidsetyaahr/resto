@@ -30,7 +30,8 @@ Route::prefix('pembelian-barang/')->group(function() {
     Route::resource('laporan-pembelian', '');
 });
 Route::prefix('pemakaian-barang/')->group(function() {
-    Route::resource('pemakaian', '');
+    Route::get('pemakaian/addDetailPemakaian', 'PemakaianController@addDetailPemakaian');
+    Route::resource('pemakaian', 'PemakaianController');
     Route::resource('laporan-pemakaian', '');
 });
 Route::prefix('master-menu/')->group(function(){
