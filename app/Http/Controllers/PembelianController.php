@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Pembelian;
+use App\DetailPembelian;
 use App\Supplier;
 use App\Barang;
 use Illuminate\Support\Facades\DB;
@@ -68,6 +69,25 @@ class PembelianController extends Controller
     }
     public function store(Request $request)
     {
-        # code...
+        $validatedData = $request->validate([
+            'tanggal' => 'required',
+            'kode_supplier' => 'required',
+            'kode_barang.*' => 'required',
+            'qty.*' => 'required',
+            'harga.*' => 'required',
+        ]);
+
+        $newPembelian = new Pembelian;
+        $newPembelian->kode_pembelian = $request->get('kode_pembelian');
+        $newPembelian->tanggal = $request->get('tanggal');
+        $newPembelian->jumlah_item = 0;
+        $newPembelian->jumlah_qty = 0;
+        $newPembelian->total = 0;
+        $newPembelian->kode_supplier = $request->get('kode_supplier');
+
+        $newPembelian->save();
+
+//        return redirect()->route('supplier.index')->withStatus('Data berhasil ditambahkan.');
+
     }
 }

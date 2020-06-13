@@ -11,4 +11,9 @@ class Pembelian extends Model
     protected $primaryKey = 'kode_pembelian';
     protected $keyType = 'string';
 
+    public function detail_pembelian()
+    {
+        return $this->hasMany('App\DetailPembelian');
+    }
+
 }

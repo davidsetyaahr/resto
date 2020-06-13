@@ -3064,7 +3064,7 @@ textarea.form-control
 {
     font-size: 80%;
 
-    display: none;
+    display: inline-block;
 
     width: 100%;
     margin-top: .25rem;
@@ -28850,6 +28850,13 @@ html:not([dir='rtl']) .noUi-horizontal .noUi-handle
     width: 100% !important;
 }
 
+.is-invalid .select2-container .select2-selection--single,
+.is-invalid .select2-container--default.select2-container--focus .select2-selection--multiple,
+.is-invalid .select2-container--default .select2-selection--multiple,
+.is-invalid .select2-container--default .select2-search--dropdown .select2-search__field
+{
+    border-color : #fb6340;
+}
 .select2-container .select2-selection--single,
 .select2-container--default.select2-container--focus .select2-selection--multiple,
 .select2-container--default .select2-selection--multiple,
