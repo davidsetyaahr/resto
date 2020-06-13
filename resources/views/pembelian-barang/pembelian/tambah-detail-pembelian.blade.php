@@ -3,6 +3,9 @@
         <label for="" class="form-control-label">Barang</label>
         <select name="kode_barang[]" class="form-control select2" id="">
             <option value=''>---Select---</option>
+            @foreach($barang as $value)
+                <option value="{{$value->kode_barang}}">{{$value->kode_barang.' ~ '.$value->nama}}</option>
+            @endforeach
         </select>
     </div>
     <div class="col-md-2">
