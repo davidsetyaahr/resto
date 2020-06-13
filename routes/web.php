@@ -32,6 +32,8 @@ Route::prefix('pembelian-barang/')->group(function() {
 });
 Route::prefix('pemakaian-barang/')->group(function() {
     Route::get('pemakaian/addDetailPemakaian', 'PemakaianController@addDetailPemakaian');
+    Route::get('pemakaian/getKode', 'PemakaianController@getKode')->name('pemakaian.get-kode');
+    Route::get('pemakaian/get-detail-barang', 'PemakaianController@getDetailBarang')->name('pemakaian.get-detail-barang');
     Route::resource('pemakaian', 'PemakaianController');
     Route::resource('laporan-pemakaian', '');
 });

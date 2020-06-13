@@ -95,4 +95,19 @@ $(document).ready(function() {
             }
         })
     })
+
+    $("#barang").change(function(){
+        var kode = $(this).val()
+        var url = $(this).data('url')
+
+        $.ajax({
+            type : 'get',
+            url : url,
+            data : {kode : kode},
+            success : function(data){
+                $('#sisa_stock').val($.parseJSON(data)['stock']);
+                $('#satuan').val($.parseJSON(data)['satuan']);
+            }
+        })
+    })
 });

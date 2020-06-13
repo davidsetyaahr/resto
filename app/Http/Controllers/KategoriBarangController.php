@@ -11,13 +11,9 @@ class KategoriBarangController extends Controller
     private $param;
     public function __construct()
     {
-        $this->param['icon'] = 'ni-tag text-primary';
+        $this->param['icon'] = 'ni-box-2 text-info';
     }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    
     public function index(Request $request)
     {
         $keyword = $request->get('keyword');
