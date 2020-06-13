@@ -17,7 +17,7 @@
                   <div class="row pl-lg-4">
                     <div class="col-md-4">
                         <label for="" class="form-control-label">Kode Pembelian</label>
-                        <input type="text" class="form-control" name='kode_pembelian' value='' readonly>
+                        <input type="text" class="form-control" id="kode" name='kode_pembelian' value='' readonly>
                     </div>
                     <div class="col-md-4">
                         <label for="" class="form-control-label">Tanggal Pembelian</label>
@@ -25,7 +25,7 @@
                           <div class="input-group-prepend">
                               <span class="input-group-text"><span class="fa fa-calendar"></span></span>
                           </div>
-                        <input type="text" name="tanggal" value="{{old('tanggal')}}" class="form-control datepicker @error('tanggal') is-invalid @enderror">
+                        <input type="text" name="tanggal" value="{{old('tanggal')}}" class="form-control datepicker getKode @error('tanggal') is-invalid @enderror" data-url="{{url('pembelian-barang/pembelian/getKode')}}">
                         </div>
                         @error('tanggal')
                           <span class="invalid-feedback" role="alert">
@@ -51,7 +51,7 @@
                   <hr class="my-4">
                   <h6 class="heading-small text-muted mb-4">Detail Pembelian</h6>
                   <div class="pl-lg-4" id='urlAddDetail' data-url="{{url('pembelian-barang/pembelian/addDetailPembelian')}}">
-                    @include('pembelian-barang.pembelian.tambah-detail-pembelian',['hapus' => false, 'no' => 1])
+                    @include('pembelian-barang.pembelian.tambah-detail-pembelian',['hapus' => false, 'no' => 1, 'barang' => $barang])
                   </div>
                   <h2 class='text-right mt-5 pr-5'>Total : <span id='total' class="text-orange">0</span></h2>
                   <div class="mt-4">

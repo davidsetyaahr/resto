@@ -81,4 +81,18 @@ $(document).ready(function() {
     $(".getSubtotal").keyup(function(){
         getSubtotal($(this))
     })
+
+    $(".getKode").change(function(){
+        var tanggal = $(this).val()
+        var url = $(this).data('url')
+
+        $.ajax({
+            type : 'get',
+            url : url,
+            data : {tanggal : tanggal},
+            success : function(data){
+                $("#kode").val(data)
+            }
+        })
+    })
 });

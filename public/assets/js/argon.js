@@ -939,7 +939,7 @@ var SalesChart = (function() {
 
 })();
 
-//
+/* //
 // Bootstrap Datepicker
 //
 
@@ -973,7 +973,7 @@ var Datepicker = (function() {
 	}
 
 })();
-
+ */
 //
 // Form control
 //
