@@ -55,7 +55,7 @@
                     @php $no = 0 @endphp
                     @foreach(old('kode_barang') as $n => $value)
                       @php $no++ @endphp
-                      @include('pembelian-barang.pembelian.tambah-detail-pembelian',['hapus' => false, 'no' => $no, 'barang' => $barang, 'loopError' => $n])
+                      @include('pembelian-barang.pembelian.tambah-detail-pembelian',['hapus' => false, 'no' => $no, 'barang' => $barang])
                     @endforeach
                   @else
                     @include('pembelian-barang.pembelian.tambah-detail-pembelian',['hapus' => false, 'no' => 1, 'barang' => $barang])

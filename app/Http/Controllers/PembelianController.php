@@ -65,6 +65,18 @@ class PembelianController extends Controller
         $barang = Barang::select('kode_barang','nama')->get();
         return view('pembelian-barang.pembelian.tambah-detail-pembelian',['hapus' => true, 'no' => $next, 'barang' => $barang]);
     }
+    public function addEditDetailPembelian()
+    {   
+        $fields = array(
+            'kode_barang' => 'kode_barang',
+            'qty' => 'qty',
+            'harga' => 'harga',
+            'subtotal' => 'subtotal',
+        );
+        $next = $_GET['biggestNo']+1;
+        $barang = Barang::select('kode_barang','nama')->get();
+        return view('pembelian-barang.pembelian.edit-detail-pembelian',['hapus' => true, 'no' => $next, 'barang' => $barang, 'fields' => $fields]);
+    }
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -112,5 +124,56 @@ class PembelianController extends Controller
 
         return redirect()->route('pembelian.index')->withStatus('Data berhasil ditambahkan.');
 
+    }
+    public function edit($kode)
+    {
+        $this->param['pageInfo'] = 'Edit Pembelian';
+        $this->param['btnRight']['text'] = 'Lihat Pembelian';
+        $this->param['btnRight']['link'] = route('pembelian.index');
+        $this->param['pembelian'] = Pembelian::findOrFail($kode);
+        $this->param['detail'] = DetailPembelian::select('kode_barang','qty','subtotal')->where('kode_pembelian',$kode)->get();
+        $this->param['supplier'] = Supplier::select('kode_supplier','nama_supplier')->get();
+        $this->param['barang'] = Barang::select('kode_barang','nama')->get();
+
+        
+        return view('pembelian-barang.pembelian.edit-pembelian', $this->param);
+    }
+    public function update(Request $request)
+    {
+        $validatedData = $request->validate([
+            'tanggal' => 'required',
+            'kode_supplier' => 'required',
+            'kode_barang.*' => 'required',
+            'qty.*' => 'required',
+            'harga.*' => 'required',
+        ]);
+    }
+    public function laporan()
+    {
+        $this->param['pageInfo'] = 'Laporan Pembelian';
+        $this->param['btnRight']['text'] = 'Tambah Pembelian';
+        $this->param['btnRight']['link'] = route('pembelian.create');
+        $this->param['supplier'] = Supplier::select('kode_supplier','nama_supplier')->get();
+        if(isset($_GET['dari'])){
+            $pembelian = Pembelian::orderBy('tanggal','asc');
+            if($_GET['dari']!='' && $_GET['sampai']!='' && $_GET['kode_supplier']==''){
+                $pembelian->whereBetween('tanggal',[$_GET['dari'],$_GET['sampai']]);
+            }
+            else if($_GET['dari']=='' && $_GET['sampai']=='' && $_GET['kode_supplier']!=''){
+                $pembelian->where('kode_supplier', $_GET['kode_supplier']);
+            }
+            else{
+                $pembelian->whereBetween('tanggal',[$_GET['dari'],$_GET['sampai']]);
+                $pembelian->where('kode_supplier', $_GET['kode_supplier']);
+            }
+
+            $this->param['laporan'] = $pembelian->get();
+        }
+        if(isset($_GET['print'])){
+            return view('pembelian-barang.pembelian.print-laporan-pembelian', $this->param);
+        }
+        else{
+            return view('pembelian-barang.pembelian.laporan-pembelian', $this->param);
+        }
     }
 }
