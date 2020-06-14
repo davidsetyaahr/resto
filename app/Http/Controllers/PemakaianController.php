@@ -51,7 +51,7 @@ class PemakaianController extends Controller
         if(count($lastKode)==0){
             $dateCreate = date_create($_GET['tanggal']);
             $date = date_format($dateCreate, 'my');
-            $kode = "PB".$date."-0001";
+            $kode = "PK".$date."-0001";
         }
         else{
             $ex = explode('-', $lastKode[0]->kode_pemakaian);
@@ -177,8 +177,27 @@ class PemakaianController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($kode)
     {
-        //
+        $pemakaian = Pemakaian::findOrFail($kode);
+
+        $detail = DetailPemakaian::where('kode_pemakaian', $kode)->get();
+
+        foreach ($detail as $key => $value) {
+            $barang = Barang::findOrFail($value->kode_barang);
+            $qty = $value->qty;
+            $subtotal_saldo = $value->subtotal_saldo;
+            
+            $barang->stock = $barang->stock + $qty;
+            $barang->saldo = $barang->saldo + $subtotal_saldo;
+            
+            $barang->save();
+            $detailPemakaian = DetailPemakaian::findOrFail($value->id);
+            $detailPemakaian->delete();
+        }
+
+        $pemakaian->delete();
+
+        return redirect()->route('pemakaian.index')->withStatus('Data berhasil ditambahkan.');
     }
 }

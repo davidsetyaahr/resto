@@ -22,6 +22,7 @@ Route::prefix('pages/')->group(function() {
 Route::prefix('master-barang/')->group(function() {
     Route::resource('kategori-barang', 'KategoriBarangController');
     Route::resource('barang', 'BarangController');
+    Route::get('barang-minimum', 'BarangController@barangMinimum')->name('barang-minimum');
 });
 Route::prefix('pembelian-barang/')->group(function() {
     Route::resource('supplier', 'SupplierController');

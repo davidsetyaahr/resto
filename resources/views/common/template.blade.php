@@ -74,6 +74,11 @@
                       <span class="nav-link-text">Kategori Barang</span>
                     </a>
                   </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ route('barang-minimum') }}">
+                      <span class="nav-link-text">Barang Minimum</span>
+                    </a>
+                  </li>
                 </ul>
             </li>
             <li class="nav-item">

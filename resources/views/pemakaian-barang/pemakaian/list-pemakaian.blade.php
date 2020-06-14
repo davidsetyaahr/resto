@@ -35,7 +35,7 @@
               @endif
             </div>
             <div class="table-responsive">
-              <table class="table align-items-center table-flush">
+              <table class="table align-items-center table-hover table-flush">
                 <thead class="thead-light">
                   <tr>
                     <th>#</th>
@@ -48,9 +48,13 @@
                   </tr>
                 </thead>
                 <tbody class="list">
+                @php
+                    $page = Request::get('page');
+                    $no = !$page || $page == 1 ? 1 : $page * 10 - (10 - 1);
+                @endphp
                 @foreach ($pemakaian as $value)
                       <tr>
-                        <td>{{$loop->iteration}}</td>
+                        <td>{{$no}}</td>
                         <td>{{$value->kode_pemakaian}}</td>
                         <td>{{$value->tanggal}}</td>
                         <td>{{$value->jumlah_qty}}</td>
@@ -73,8 +77,18 @@
                           </div>
                         </td>
                       </tr>
+                      @php
+                          $no++
+                      @endphp
                   @endforeach
                 </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="10">
+                      {{$pemakaian->appends(Request::all())->links()}}
+                    </td>
+                  </tr>
+                </tfoot>
               </table>
             </div>
          </div>
