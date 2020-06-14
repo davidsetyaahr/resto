@@ -123,16 +123,27 @@
                 </ul>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{{url('pages/form')}}">
-                <i class="ni ni-planet text-orange"></i>
-                <span class="nav-link-text">Form</span>
+              <a class="nav-link" href="" data-toggle="collapse" data-target="#menu">
+                <i class="ni ni-bullet-list-67 text-dark"></i>
+                <span class="nav-link-text">Master Menu</span>
               </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{{url('pages/list-data')}}">
-                <i class="ni ni-bullet-list-67 text-default"></i>
-                <span class="nav-link-text">Table</span>
-              </a>
+                <ul class="navbar-nav nav-collapse collapse" id="menu">
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{url('master-menu/kategori-menu')}}">
+                      <span class="nav-link-text">Kategori Menu</span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{url('master-menu/menu')}}">
+                      <span class="nav-link-text">Menu</span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{url('master-menu/diskon')}}">
+                      <span class="nav-link-text">Diskon</span>
+                    </a>
+                  </li>
+                </ul>
             </li>
           </ul>
           <!-- Divider -->

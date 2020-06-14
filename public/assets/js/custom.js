@@ -56,7 +56,7 @@ $(document).ready(function() {
                 $(".barang").change(function() {
                     barang($(this));
                 });
-                
+
                 $(".totalQty").keyup(function() {
                     getTotalQty($(this));
                 });
@@ -83,6 +83,7 @@ $(document).ready(function() {
         var total = 0;
         $(".subtotal").each(function() {
             var subtotalVal = parseInt($(this).val());
+            subtotalVal = isNaN(subtotalVal) ? 0 : subtotalVal;
             total = total + subtotalVal;
         });
         $("#total").html(formatRupiah(total));
