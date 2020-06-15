@@ -60,6 +60,10 @@ $(document).ready(function() {
                 $(".totalQty").keyup(function() {
                     getTotalQty($(this));
                 });
+
+                $(".menu").change(function() {
+                    getDetailMenu($(this));
+                });
             }
         });
     }
@@ -122,6 +126,35 @@ $(document).ready(function() {
     }
     $(".barang").change(function() {
         barang($(this));
+    });
+
+    function getDetailMenu(thisParam) {
+        var kode = thisParam.val();
+        var no = thisParam.closest(".row-detail").data("no");
+        var parent = ".row-detail[data-no='" + no + "']";
+        var tipediskon = $('#jenis_diskon').val();
+        var diskon = parseInt($('#diskon').val());
+
+        $.ajax({
+            type: "get",
+            url: "get-detail-menu",
+            data: { kode: kode },
+            success: function(data) {
+                var nominaldiskon = 0;
+                var harga = parseInt($.parseJSON(data)["harga_jual"]);
+                $(parent + " #harga_jual").val($.parseJSON(data)["harga_jual"]);
+                if (tipediskon == 'Persen') {
+                    nominaldiskon = harga * diskon / 100;
+                    $(parent + " #harga_setelah_diskon").val($.parseJSON(data)["harga_jual"] - nominaldiskon);
+                }
+                else if(tipediskon == 'Rupiah'){
+                    $(parent + " #harga_setelah_diskon").val($.parseJSON(data)["harga_jual"] - diskon)
+                }
+            }
+        });
+    }
+    $(".menu").change(function() {
+        getDetailMenu($(this));
     });
 
     // var totalQty = 0;
