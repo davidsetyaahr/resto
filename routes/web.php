@@ -37,11 +37,16 @@ Route::prefix('pemakaian-barang/')->group(function() {
     Route::get('pemakaian/getKode', 'PemakaianController@getKode')->name('pemakaian.get-kode');
     Route::get('pemakaian/get-detail-barang', 'PemakaianController@getDetailBarang')->name('pemakaian.get-detail-barang');
     Route::resource('pemakaian', 'PemakaianController');
-    Route::resource('laporan-pemakaian', '');
+    Route::get('laporan-pemakaian', 'PemakaianController@laporan')->name('laporan-pemakaian');
 });
 Route::prefix('master-menu/')->group(function(){
     Route::resource('kategori-menu', 'KategoriMenuController');
     Route::resource('menu', 'MenuController');
 });
+
+// kas keluar
+Route::get('kas-keluar/laporan-kas-keluar', 'KasKeluarController@laporan')->name('kas-keluar.laporan');
+Route::get('kas-keluar/getKode', 'KasKeluarController@getKode')->name('kas-keluar.get-kode');
+Route::resource('kas-keluar', 'KasKeluarController');
 
 

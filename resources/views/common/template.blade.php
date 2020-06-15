@@ -145,6 +145,24 @@
                   </li>
                 </ul>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="" data-toggle="collapse" data-target="#kas-keluar">
+                <i class="ni ni-money-coins text-success"></i>
+                <span class="nav-link-text">Kas Keluar</span>
+              </a>
+                <ul class="navbar-nav nav-collapse collapse" id="kas-keluar">
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{url('kas-keluar/')}}">
+                      <span class="nav-link-text">Kas Keluar</span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{url('kas-keluar/laporan-kas-keluar')}}">
+                      <span class="nav-link-text">Laporan Kas Keluar</span>
+                    </a>
+                  </li>
+                </ul>
+            </li>
           </ul>
           <!-- Divider -->
           <ul class="navbar-nav lima-section">

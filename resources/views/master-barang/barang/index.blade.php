@@ -52,7 +52,8 @@
                 </thead>
                 <tbody class="list">
                   @php
-                      $no = 1;
+                    $page = Request::get('page');
+                    $no = !$page || $page == 1 ? 1 : ($page - 1) * 10 + 1;
                   @endphp
                   @foreach ($barangs as $value)
                       <tr>
@@ -62,7 +63,7 @@
                         <td>{{$value->kategori->kategori_barang}}</td>
                         <td>{{$value->stock}}</td>
                         <td>{{$value->satuan}}</td>
-                        <td>{{$value->saldo}}</td>
+                        <td>{{number_format($value->saldo,0,',','.')}}</td>
                         <td>{{$value->exp_date}}</td>
                         <td>{{$value->keterangan}}</td>
                         <td class="text-right">
@@ -90,6 +91,13 @@
                       @endphp
                   @endforeach
                 </tbody>
+                <tfoot>
+                  <tr>
+                    <td>
+                      {{$barangs->appends(Request::all())->links()}}
+                    </td>
+                  </tr>
+                </tfoot>
               </table>
             </div>
          </div>

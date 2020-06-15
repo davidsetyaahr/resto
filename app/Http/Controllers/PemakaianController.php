@@ -200,4 +200,28 @@ class PemakaianController extends Controller
 
         return redirect()->route('pemakaian.index')->withStatus('Data berhasil ditambahkan.');
     }
+
+    public function laporan(Request $request)
+    {
+        $this->param['pageInfo'] = 'Laporan Pemakaian';
+        $this->param['btnRight']['text'] = 'Tambah Pemakaian';
+        $this->param['btnRight']['link'] = route('pemakaian.create');
+
+        $dari = $request->get('dari');
+        $sampai = $request->get('sampai');
+        $laporan = '';
+        if($dari && $sampai){
+            $pemakaian = Pemakaian::orderBy('tanggal','asc');
+            $pemakaian->whereBetween('tanggal',[$dari, $sampai]);
+
+            $laporan = $pemakaian->get();
+        }
+
+        if($request->get('print')){
+            return view('pemakaian-barang.laporan-pemakaian.print-laporan-pemakaian', $this->param, ['laporan' => $laporan]);
+        }
+        else{
+            return view('pemakaian-barang.laporan-pemakaian.laporan-pemakaian', $this->param, ['laporan' => $laporan]);
+        }
+    }
 }

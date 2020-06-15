@@ -9,13 +9,13 @@
                   <h3 class="mb-0">{{$pageInfo}}</h3>
                 </div>
                 <div class="col-4 text-right">
-                    <form class="navbar-search navbar-search-light" id="navbar-search-main">
+                    <form action="{{ route('kas-keluar.index') }}" class="navbar-search navbar-search-light" id="navbar-search-main">
                         <div class="form-group mb-0">
                         <div class="input-group input-group-alternative input-group-merge">
                             <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fas fa-search"></i></span>
                             </div>
-                            <input class="form-control" placeholder="Search" type="text">
+                            <input name="keyword" class="form-control" placeholder="Search" type="text" value="{{Request::get('keyword')}}">
                         </div>
                         </div>
                         <button type="button" class="close" data-action="search-close" data-target="#navbar-search-main" aria-label="Close">
@@ -35,45 +35,46 @@
               @endif
             </div>
             <div class="table-responsive">
-              <table class="table align-items-center table-hover table-flush">
+              <table class="table align-items-center table-flush">
                 <thead class="thead-light">
                   <tr>
-                    <th>#</th>
-                    <th>Kode Pemakaian</th>
-                    <th>Tanggal Pemakaian</th>
-                    {{-- <th>Jumlah Item</th> --}}
-                    <th>Jumlah Qty</th>
-                    <th>Total Saldo Pemakaian</th>
-                    <th></th>
+                    <th scope="col" class="sort" data-sort="name">#</th>
+                    <th scope="col" class="sort" data-sort="name">Kode Kas</th>
+                    <th scope="col" class="sort" data-sort="name">Tanggal</th>
+                    <th scope="col" class="sort" data-sort="budget">Nominal</th>
+                    <th scope="col" class="sort" data-sort="name">Keterangan</th>
+                    <th scope="col" class="sort" data-sort="name">Penanggung Jawab</th>
+                    <th scope="col"></th>
                   </tr>
                 </thead>
                 <tbody class="list">
-                @php
-                  $page = Request::get('page');
-                  $no = !$page || $page == 1 ? 1 : ($page - 1) * 10 + 1;
-                @endphp
-                @foreach ($pemakaian as $value)
+                  @php
+                    $page = Request::get('page');
+                    $no = !$page || $page == 1 ? 1 : ($page - 1) * 10 + 1;
+                  @endphp
+                  @foreach ($kasKeluar as $value)
                       <tr>
                         <td>{{$no}}</td>
-                        <td>{{$value->kode_pemakaian}}</td>
+                        <td>{{$value->kode_kas}}</td>
                         <td>{{date('d-m-Y', strtotime($value->tanggal))}}</td>
-                        <td>{{$value->jumlah_qty}}</td>
-                        <td>{{number_format($value->total_saldo,0,',','.')}}</td>
+                        <td>{{number_format($value->nominal,0,',','.')}}</td>
+                        <td>{{$value->keterangan}}</td>
+                        <td>{{$value->penanggung_jawab}}</td>
                         <td class="text-right">
                           <div class="dropdown">
                             <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                               <i class="fas fa-ellipsis-v"></i>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                              <a class="dropdown-item" href="{{ route('pemakaian.edit', $value->kode_pemakaian) }}">Edit</a>
-                              <form action="{{ route('pemakaian.destroy', $value->kode_pemakaian) }}" method="post">
+                              <a class="dropdown-item" href="{{ route('kas-keluar.edit', $value->kode_kas) }}">Edit</a>
+                              {{-- fitur delete sementara nonaktif --}}
+                              <form action="{{ route('kas-keluar.destroy', $value->kode_kas) }}" method="post">
                                 @csrf
                                 @method('delete')
                                 <button type="button" class="mr-1 dropdown-item" onclick="confirm('{{ __("Apakah anda yakin ingin menghapus?") }}') ? this.parentElement.submit() : ''">
                                   Hapus
                                 </button>
                               </form>
-                              
                             </div>
                           </div>
                         </td>
@@ -86,7 +87,7 @@
                 <tfoot>
                   <tr>
                     <td>
-                      {{$pemakaian->appends(Request::all())->links()}}
+                      {{$kasKeluar->appends(Request::all())->links()}}
                     </td>
                   </tr>
                 </tfoot>
