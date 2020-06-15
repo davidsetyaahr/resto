@@ -36,8 +36,10 @@ Route::prefix('pemakaian-barang/')->group(function() {
     Route::get('pemakaian/addDetailPemakaian', 'PemakaianController@addDetailPemakaian');
     Route::get('pemakaian/getKode', 'PemakaianController@getKode')->name('pemakaian.get-kode');
     Route::get('pemakaian/get-detail-barang', 'PemakaianController@getDetailBarang')->name('pemakaian.get-detail-barang');
-    Route::resource('pemakaian', 'PemakaianController');
     Route::get('laporan-pemakaian', 'PemakaianController@laporan')->name('laporan-pemakaian');
+    Route::get('barang-sering-dipakai', 'PemakaianController@barangSeringTerpakai')->name('barang-sering-dipakai');
+    Route::get('barang-death-stock', 'PemakaianController@barangDeathStock')->name('barang-death-stock');
+    Route::resource('pemakaian', 'PemakaianController');
 });
 Route::prefix('master-menu/')->group(function(){
     Route::resource('kategori-menu', 'KategoriMenuController');

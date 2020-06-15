@@ -81,18 +81,13 @@ class PemakaianController extends Controller
         $barang = Barang::get();
         return view('pemakaian-barang.pemakaian.tambah-detail-pemakaian',['hapus' => true, 'no' => $next, 'barang' => $barang]);
     }
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    
     public function store(Request $request)
     {
         $validatedData = $request->validate([
             'tanggal' => 'required',
             'kode_barang.*' => 'required',
-            'qty.*' => 'required|numeric',
+            'qty.*' => 'required|numeric|lte:sisa_stock.*',
         ]);
 
         $ttlQty = 0;
@@ -135,6 +130,7 @@ class PemakaianController extends Controller
         }
 
         return redirect()->route('pemakaian.index')->withStatus('Data berhasil ditambahkan.');
+        
     }
 
     /**
@@ -223,5 +219,56 @@ class PemakaianController extends Controller
         else{
             return view('pemakaian-barang.laporan-pemakaian.laporan-pemakaian', $this->param, ['laporan' => $laporan]);
         }
+    }
+
+    public function barangSeringTerpakai(Request $request)
+    {
+        $this->param['pageInfo'] = 'Barang Sering Dipakai';
+        $this->param['btnRight']['text'] = 'Tambah Pemakaian';
+        $this->param['btnRight']['link'] = route('pemakaian.create');
+
+        $dari = $request->get('dari');
+        $sampai = $request->get('sampai');
+        $laporan = '';
+        if($dari && $sampai){
+            $laporan = \DB::table('pemakaian')
+                            ->whereBetween('tanggal', [$dari, $sampai])
+                            ->join('detail_pemakaian AS dt', \DB::raw('dt.kode_pemakaian'), '=', 'pemakaian.kode_pemakaian')
+                            ->join('barang AS b', \DB::raw('dt.kode_barang'), '=', \DB::raw('b.kode_barang'))
+                            ->select(\DB::raw('SUM(dt.qty) as jml'), 'dt.kode_barang', 'b.nama', 'b.satuan')
+                            ->groupBy(\DB::raw('dt.kode_barang'))
+                            ->orderBy(\DB::raw('jml'), 'DESC')
+                            ->get();
+        }
+
+        return view('pemakaian-barang.barang-sering-dipakai.barang-sering-dipakai', ['laporan' => $laporan], $this->param);
+    }
+    
+    public function barangDeathStock()
+    {
+        $this->param['pageInfo'] = 'Barang Death Stock';
+        $this->param['btnRight']['text'] = 'Tambah Pemakaian';
+        $this->param['btnRight']['link'] = route('pemakaian.create');
+
+        $bulanSekarang = date('m');
+        $bulanAwal = $bulanSekarang - 2;
+
+        $dari = date('Y').'-'.$bulanAwal.'-01';
+        $sampai = date('Y').'-'.$bulanSekarang.'-'.date('t');
+        
+        $laporan = \DB::table('detail_pemakaian as dt')
+                        ->whereBetween('p.tanggal', [$dari, $sampai])
+                        ->join('pemakaian AS p', \DB::raw('dt.kode_pemakaian'), '=', 'p.kode_pemakaian')
+                        ->select('dt.kode_barang')
+                        ->distinct()
+                        ->get();
+        $in = [];
+        foreach ($laporan as $key => $value) {
+            array_push($in, $value->kode_barang);
+        }
+        
+        $deathStock = Barang::whereNotIn('kode_barang', $in)->get();
+        
+        return view('pemakaian-barang.barang-death-stock.barang-death-stock', ['deathStock' => $deathStock], $this->param);
     }
 }

@@ -4,7 +4,7 @@
         <select name="kode_barang[]" class="form-control select2 barang">
             <option value=''>---Pilih Barang---</option>
             @foreach ($barang as $item)
-                <option value="{{$item->kode_barang}}" {{ isset($n)&&old('kode_barang.'.$n) == $value->kode_barang ? 'selected' : ''}}>{{$item->kode_barang . ' ~ ' .$item->nama}}</option>
+                <option value="{{$item->kode_barang}}" {{ isset($n)&&old('kode_barang.'.$n) == $item->kode_barang ? 'selected' : ''}}>{{$item->kode_barang . ' ~ ' .$item->nama}}</option>
             @endforeach
         </select>
         @if(isset($n)&&$errors->has('kode_barang.'.$n))
@@ -15,11 +15,11 @@
     </div>
     <div class="col-md-2">
         <label for="" class="form-control-label">Sisa Stock</label>
-        <input type="text" name="sisa_stock[]" value="" class="form-control" id='sisa_stock' readonly>
+        <input type="text" name="sisa_stock[]" value="{{isset($n) ? old('sisa_stock.'.$n) : ''}}" class="form-control" id='sisa_stock' readonly>
     </div>
     <div class="col-md-2">
         <label for="" class="form-control-label">Qty</label>
-        <input type="number" name="qty[]" value="{{isset($n) ? old('qty.'.$n) : ''}}" class="form-control totalQty {{ isset($n)&&$errors->has('qty.'.$n) ? ' is-invalid' : '' }}" id='qty' required>
+        <input type="number" name="qty[]" value="{{isset($n) ? old('qty.'.$n) : ''}}" class="form-control totalQty {{ isset($n)&&$errors->has('qty.'.$n) ? ' is-invalid' : '' }}" id='qty'>
         @if(isset($n)&&$errors->has('qty.'.$n))
         <span class="invalid-feedback" role="alert">
             <strong>{{ $errors->first('qty.'.$n) }}</strong>
@@ -28,7 +28,7 @@
     </div>
     <div class="col-md-2">
         <label for="" class="form-control-label">Satuan</label>
-        <input type="text" name="satuan[]" value="" class="form-control" id='satuan' readonly>
+        <input type="text" name="satuan[]" value="{{isset($n) ? old('satuan.'.$n) : ''}}" class="form-control" id='satuan' readonly>
     </div>
     <div class="col-md-2">
         <label for="" class="form-control-label">Keterangan</label>
