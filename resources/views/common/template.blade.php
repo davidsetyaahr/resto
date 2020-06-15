@@ -120,6 +120,16 @@
                       <span class="nav-link-text">Laporan Pemakaian</span>
                     </a>
                   </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ route('barang-sering-dipakai') }}">
+                      <span class="nav-link-text">Barang Sering Dipakai</span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ route('barang-death-stock') }}">
+                      <span class="nav-link-text">Barang Death Stock</span>
+                    </a>
+                  </li>
                 </ul>
             </li>
             <li class="nav-item">
