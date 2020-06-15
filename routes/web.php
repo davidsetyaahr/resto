@@ -42,6 +42,8 @@ Route::prefix('pemakaian-barang/')->group(function() {
 Route::prefix('master-menu/')->group(function(){
     Route::resource('kategori-menu', 'KategoriMenuController');
     Route::resource('menu', 'MenuController');
+    Route::resource('diskon', 'DiskonController');
+    Route::get('diskon/addDetailDiskon', 'DiskonController@addDetailDiskon');
 });
 
 // kas keluar
