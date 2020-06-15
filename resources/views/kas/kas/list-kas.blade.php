@@ -9,7 +9,7 @@
                   <h3 class="mb-0">{{$pageInfo}}</h3>
                 </div>
                 <div class="col-4 text-right">
-                    <form action="{{ route('kas-keluar.index') }}" class="navbar-search navbar-search-light" id="navbar-search-main">
+                    <form action="{{ route('kas.index') }}" class="navbar-search navbar-search-light" id="navbar-search-main">
                         <div class="form-group mb-0">
                         <div class="input-group input-group-alternative input-group-merge">
                             <div class="input-group-prepend">
@@ -41,7 +41,8 @@
                     <th scope="col" class="sort" data-sort="name">#</th>
                     <th scope="col" class="sort" data-sort="name">Kode Kas</th>
                     <th scope="col" class="sort" data-sort="name">Tanggal</th>
-                    <th scope="col" class="sort" data-sort="budget">Nominal</th>
+                    <th scope="col" class="sort" data-sort="budget">Nominal Masuk</th>
+                    <th scope="col" class="sort" data-sort="budget">Nominal Keluar</th>
                     <th scope="col" class="sort" data-sort="name">Keterangan</th>
                     <th scope="col" class="sort" data-sort="name">Penanggung Jawab</th>
                     <th scope="col"></th>
@@ -52,12 +53,18 @@
                     $page = Request::get('page');
                     $no = !$page || $page == 1 ? 1 : ($page - 1) * 10 + 1;
                   @endphp
-                  @foreach ($kasKeluar as $value)
+                  @foreach ($kas as $value)
                       <tr>
                         <td>{{$no}}</td>
                         <td>{{$value->kode_kas}}</td>
                         <td>{{date('d-m-Y', strtotime($value->tanggal))}}</td>
-                        <td>{{number_format($value->nominal,0,',','.')}}</td>
+                        @if ($value->tipe == 'Masuk')
+                          <td>{{number_format($value->nominal,0,',','.')}}</td>
+                          <td>-</td>
+                        @else
+                          <td>-</td>
+                          <td>{{number_format($value->nominal,0,',','.')}}</td>
+                        @endif
                         <td>{{$value->keterangan}}</td>
                         <td>{{$value->penanggung_jawab}}</td>
                         <td class="text-right">
@@ -66,9 +73,9 @@
                               <i class="fas fa-ellipsis-v"></i>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                              <a class="dropdown-item" href="{{ route('kas-keluar.edit', $value->kode_kas) }}">Edit</a>
+                              <a class="dropdown-item" href="{{ route('kas.edit', $value->kode_kas) }}">Edit</a>
                               {{-- fitur delete sementara nonaktif --}}
-                              <form action="{{ route('kas-keluar.destroy', $value->kode_kas) }}" method="post">
+                              <form action="{{ route('kas.destroy', $value->kode_kas) }}" method="post">
                                 @csrf
                                 @method('delete')
                                 <button type="button" class="mr-1 dropdown-item" onclick="confirm('{{ __("Apakah anda yakin ingin menghapus?") }}') ? this.parentElement.submit() : ''">
@@ -87,7 +94,7 @@
                 <tfoot>
                   <tr>
                     <td>
-                      {{$kasKeluar->appends(Request::all())->links()}}
+                      {{$kas->appends(Request::all())->links()}}
                     </td>
                   </tr>
                 </tfoot>

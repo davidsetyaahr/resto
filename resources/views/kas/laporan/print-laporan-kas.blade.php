@@ -7,22 +7,35 @@
       <th>#</th>
       <th>Kode Kas Keluar</th>
       <th>Tanggal</th>
-      <th>Nominal</th>
+      <th>Nominal Masuk</th>
+      <th>Nominal Keluar</th>
       <th>Keterangan</th>
       <th>Penanggung Jawab</th>
     </tr>
 </thead>
 <tbody class="list">
-  @php $total = 0; @endphp
+  @php $totalMasuk = $totalKeluar = 0; @endphp
   @foreach ($laporan as $value)
-  @php 
-      $total += $value->nominal; 
-  @endphp
+  @if ($value->tipe == 'Masuk')
+    @php 
+        $totalMasuk += $value->nominal;
+    @endphp
+  @else
+    @php 
+        $totalKeluar += $value->nominal;
+    @endphp
+  @endif
     <tr>
       <td>{{$loop->iteration}}</td>
       <td>{{$value->kode_kas}}</td>
       <td>{{date('d-m-Y', strtotime($value->tanggal))}}</td>
+      @if ($value->tipe == 'Masuk')
       <td>{{number_format($value->nominal,0,',','.')}}</td>
+      <td>-</td>
+      @else
+      <td>-</td>
+      <td>{{number_format($value->nominal,0,',','.')}}</td>
+      @endif
       <td>{{$value->keterangan}}</td>
       <td>{{$value->penanggung_jawab}}</td>
     </tr>
@@ -31,7 +44,8 @@
 <tfoot class="bg-dark text-white">
     <tr>
       <td colspan='3' class='text-center'><b>TOTAL</b></td>
-      <td>{{number_format($total,0,',','.')}}</td>
+      <td>{{number_format($totalMasuk,0,',','.')}}</td>
+      <td>{{number_format($totalKeluar,0,',','.')}}</td>
       <td colspan='2'></td>
     </tr>
 </tfoot>

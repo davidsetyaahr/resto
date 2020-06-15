@@ -47,8 +47,8 @@ Route::prefix('master-menu/')->group(function(){
 });
 
 // kas keluar
-Route::get('kas-keluar/laporan-kas-keluar', 'KasKeluarController@laporan')->name('kas-keluar.laporan');
-Route::get('kas-keluar/getKode', 'KasKeluarController@getKode')->name('kas-keluar.get-kode');
-Route::resource('kas-keluar', 'KasKeluarController');
+Route::get('kas/laporan-kas', 'KasController@laporan')->name('kas.laporan');
+Route::get('kas/getKode', 'KasController@getKode')->name('kas.get-kode');
+Route::resource('kas', 'KasController');
 
 

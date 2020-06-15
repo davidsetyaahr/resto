@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use \App\KasKeluar;
+use \App\Kas;
 
-class KasKeluarController extends Controller
+class KasController extends Controller
 {
     private $param;
     public function __construct()
@@ -18,18 +18,18 @@ class KasKeluarController extends Controller
     {
         $this->param['pageInfo'] = 'List Data';
         $this->param['btnRight']['text'] = 'Tambah Data';
-        $this->param['btnRight']['link'] = route('kas-keluar.create');
+        $this->param['btnRight']['link'] = route('kas.create');
 
         $keyword = $request->get('keyword');
         
         if ($keyword) {
-            $kasKeluar = KasKeluar::where('kode_kas', 'LIKE', "%$keyword%")->paginate(10);
+            $kas = Kas::where('kode_kas', 'LIKE', "%$keyword%")->paginate(10);
         }
         else{
-            $kasKeluar = KasKeluar::paginate(10);
+            $kas = Kas::paginate(10);
         }
 
-        return \view('kas-keluar.kas-keluar.list-kas-keluar', ['kasKeluar' => $kasKeluar], $this->param);
+        return \view('kas.kas.list-kas', ['kas' => $kas], $this->param);
     }
 
     public function getKode()
@@ -37,17 +37,24 @@ class KasKeluarController extends Controller
         $tgl = explode('-',$_GET['tanggal']);
         $y = $tgl[0];
         $m = $tgl[1];
-        $lastKode = \DB::table('kas_keluar')
+        $tipe = $_GET['tipe'];
+        $lastKode = \DB::table('kas')
         ->select('kode_kas')
         ->whereMonth('tanggal', $m)
         ->whereYear('tanggal', $y)
+        ->where('tipe', $tipe)
         ->orderBy('kode_kas','desc')
         ->skip(0)->take(1)
         ->get();
-        if(count($lastKode)==0){
+        if(count($lastKode)==0 && $tipe == 'Masuk'){
             $dateCreate = date_create($_GET['tanggal']);
             $date = date_format($dateCreate, 'my');
-            $kode = "BBK".$date."-0001";
+            $kode = "BBM-".$date."-0001";
+        }
+        elseif(count($lastKode)==0 && $tipe == 'Keluar'){
+            $dateCreate = date_create($_GET['tanggal']);
+            $date = date_format($dateCreate, 'my');
+            $kode = "BBK-".$date."-0001";
         }
         else{
             $ex = explode('-', $lastKode[0]->kode_kas);
@@ -63,23 +70,25 @@ class KasKeluarController extends Controller
     {
         $this->param['pageInfo'] = 'Tambah Data';
         $this->param['btnRight']['text'] = 'List Data';
-        $this->param['btnRight']['link'] = route('kas-keluar.index');
+        $this->param['btnRight']['link'] = route('kas.index');
 
-        return \view('kas-keluar.kas-keluar.tambah-kas-keluar', $this->param);
+        return \view('kas.kas.tambah-kas', $this->param);
     }
 
     public function store(Request $request)
     {
         $validatedData = $request->validate([
             'kode_kas' => 'required',
+            'tipe' => 'required',
             'nominal' => 'required|numeric',
             'tanggal' => 'required|date',
             'penanggung_jawab' => 'required',
         ]);
 
-        $newKas = new KasKeluar;
+        $newKas = new Kas;
 
         $newKas->kode_kas = $request->get('kode_kas');
+        $newKas->tipe = $request->get('tipe');
         $newKas->tanggal = $request->get('tanggal');
         $newKas->nominal = $request->get('nominal');
         $newKas->keterangan = $request->get('keterangan');
@@ -87,7 +96,7 @@ class KasKeluarController extends Controller
 
         $newKas->save();
 
-        return redirect()->route('kas-keluar.index')->withStatus('Data berhasil ditambahkan.');
+        return redirect()->route('kas.index')->withStatus('Data berhasil ditambahkan.');
     }
 
     public function show($id)
@@ -99,11 +108,11 @@ class KasKeluarController extends Controller
     {
         $this->param['pageInfo'] = 'Edit Data';
         $this->param['btnRight']['text'] = 'List Data';
-        $this->param['btnRight']['link'] = route('kas-keluar.index');
+        $this->param['btnRight']['link'] = route('kas.index');
 
-        $kas = KasKeluar::findOrFail($kode);
+        $kas = Kas::findOrFail($kode);
 
-        return \view('kas-keluar.kas-keluar.edit-kas-keluar', $this->param, ['kas' => $kas]);
+        return \view('kas.kas.edit-kas', $this->param, ['kas' => $kas]);
     }
 
     /**
@@ -117,21 +126,23 @@ class KasKeluarController extends Controller
     {
         $validatedData = $request->validate([
             'kode_kas' => 'required',
+            'tipe' => 'required',
             'nominal' => 'required|numeric',
             'tanggal' => 'required|date',
             'penanggung_jawab' => 'required',
         ]);
 
-        $kas = KasKeluar::findOrFail($kode);
+        $kas = Kas::findOrFail($kode);
 
         $kas->tanggal = $request->get('tanggal');
         $kas->nominal = $request->get('nominal');
         $kas->keterangan = $request->get('keterangan');
         $kas->penanggung_jawab = $request->get('penanggung_jawab');
+        $kas->tipe = $request->get('tipe');
 
         $kas->save();
 
-        return redirect()->route('kas-keluar.index')->withStatus('Data berhasil diperbarui.');
+        return redirect()->route('kas.index')->withStatus('Data berhasil diperbarui.');
     }
 
     /**
@@ -142,33 +153,33 @@ class KasKeluarController extends Controller
      */
     public function destroy($kode)
     {
-        $kas = KasKeluar::findOrFail($kode);
+        $kas = Kas::findOrFail($kode);
         $kas->delete();
 
-        return redirect()->route('kas-keluar.index')->withStatus('Data berhasil dihapus.');
+        return redirect()->route('kas.index')->withStatus('Data berhasil dihapus.');
     }
 
     public function laporan(Request $request)
     {
-        $this->param['pageInfo'] = 'Laporan Kas Keluar';
-        $this->param['btnRight']['text'] = 'Tambah Kas Keluar';
-        $this->param['btnRight']['link'] = route('kas-keluar.create');
+        $this->param['pageInfo'] = 'Laporan Kas ';
+        $this->param['btnRight']['text'] = 'Tambah Kas ';
+        $this->param['btnRight']['link'] = route('kas.create');
 
         $dari = $request->get('dari');
         $sampai = $request->get('sampai');
         $laporan = '';
         if($dari && $sampai){
-            $kas = KasKeluar::orderBy('tanggal','asc');
+            $kas = Kas::orderBy('tanggal','asc');
             $kas->whereBetween('tanggal',[$dari, $sampai]);
 
             $laporan = $kas->get();
         }
 
         if($request->get('print')){
-            return view('kas-keluar.laporan.print-laporan-kas-keluar', $this->param, ['laporan' => $laporan]);
+            return view('kas.laporan.print-laporan-kas', $this->param, ['laporan' => $laporan]);
         }
         else{
-            return view('kas-keluar.laporan.laporan-kas-keluar', $this->param, ['laporan' => $laporan]);
+            return view('kas.laporan.laporan-kas', $this->param, ['laporan' => $laporan]);
         }
     }
 }

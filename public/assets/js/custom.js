@@ -105,6 +105,22 @@ $(document).ready(function() {
             }
         });
     });
+    
+    $(".getKodeKas").change(function() {
+        var tanggal = $('#tanggal').val();
+        var tipe = $('#tipe').val();
+        var url = $(this).data("url");
+
+        $.ajax({
+            type: "get",
+            url: url,
+            data: { tanggal: tanggal, tipe : tipe },
+            success: function(data) {
+                $("#kode").val(data);
+            }
+        });
+    });
+    
     function barang(thisParam) {
         var kode = thisParam.val();
         var no = thisParam.closest(".row-detail").data("no");

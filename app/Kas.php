@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class KasKeluar extends Model
+class Kas extends Model
 {
-    protected $table = 'kas_keluar';
+    protected $table = 'kas';
     protected $primaryKey = 'kode_kas';
 
     public $incrementing = false;
