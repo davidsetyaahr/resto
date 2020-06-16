@@ -17,7 +17,7 @@
                   <div class="row pl-lg-4">
                     <div class="col-md-4">
                         <label for="" class="form-control-label">Kode Pemakaian</label>
-                        <input type="text" class="form-control" name='kode_pemakaian' id="kode" value='' readonly>
+                        <input type="text" class="form-control" name='kode_pemakaian' id="kode" value="{{old('kode_pemakaian')}}" readonly>
                     </div>
                     <div class="col-md-4">
                         <label for="" class="form-control-label">Tanggal Pemakaian</label>
@@ -37,7 +37,16 @@
                   <hr class="my-4">
                   <h6 class="heading-small text-muted mb-4">Detail Pemakaian</h6>
                   <div class="pl-lg-4" id='urlAddDetail' data-url="{{url('pemakaian-barang/pemakaian/addDetailPemakaian')}}">
-                    @include('pemakaian-barang.pemakaian.tambah-detail-pemakaian',['hapus' => false, 'no' => 1])
+                    {{-- @include('pemakaian-barang.pemakaian.tambah-detail-pemakaian',['hapus' => false, 'no' => 1]) --}}
+                    @if(!is_null(old('kode_barang')))
+                      @php $no = 0 @endphp
+                      @foreach(old('kode_barang') as $n => $value)
+                        @php $no++ @endphp
+                        @include('pemakaian-barang.pemakaian.tambah-detail-pemakaian',['hapus' => false, 'no' => $no, 'barang' => $barang])
+                      @endforeach
+                    @else
+                      @include('pemakaian-barang.pemakaian.tambah-detail-pemakaian',['hapus' => false, 'no' => 1, 'barang' => $barang])
+                    @endif
                   </div>
                   <h2 class='text-right mt-5 pr-5'>Total Quantity : <span id='totalQty' class="text-orange">0</span></h2>
                   <div class="mt-4">

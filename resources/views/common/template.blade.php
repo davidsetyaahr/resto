@@ -80,6 +80,11 @@
                       <span class="nav-link-text">Kategori Barang</span>
                     </a>
                   </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ route('barang-minimum') }}">
+                      <span class="nav-link-text">Barang Minimum</span>
+                    </a>
+                  </li>
                 </ul>
             </li>
             <li class="nav-item">
@@ -121,6 +126,16 @@
                       <span class="nav-link-text">Laporan Pemakaian</span>
                     </a>
                   </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ route('barang-sering-dipakai') }}">
+                      <span class="nav-link-text">Barang Sering Dipakai</span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ route('barang-death-stock') }}">
+                      <span class="nav-link-text">Barang Death Stock</span>
+                    </a>
+                  </li>
                 </ul>
             </li>
             <li class="nav-item">
@@ -142,6 +157,24 @@
                   <li class="nav-item">
                     <a class="nav-link" href="{{url('master-menu/diskon')}}">
                       <span class="nav-link-text">Diskon</span>
+                    </a>
+                  </li>
+                </ul>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="" data-toggle="collapse" data-target="#kas-keluar">
+                <i class="ni ni-money-coins text-success"></i>
+                <span class="nav-link-text">Kas</span>
+              </a>
+                <ul class="navbar-nav nav-collapse collapse" id="kas-keluar">
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{url('kas/')}}">
+                      <span class="nav-link-text">Kas</span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{url('kas/laporan-kas')}}">
+                      <span class="nav-link-text">Laporan Kas</span>
                     </a>
                   </li>
                 </ul>

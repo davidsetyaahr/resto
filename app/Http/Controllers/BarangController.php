@@ -168,4 +168,14 @@ class BarangController extends Controller
 
         return redirect()->route('barang.index')->withStatus('Data berhasil dihapus.');
     }
+
+    public function barangMinimum()
+    {
+        $this->param['pageInfo'] = 'Barang Minimum';
+        $this->param['btnRight']['text'] = '';
+        $this->param['btnRight']['link'] = '';
+
+        $barangMinimum = Barang::whereRaw('stock <= minimum_stock')->get();
+        return view('master-barang.barang-minimum.barang-minimum', ['barangMinimum' => $barangMinimum],$this->param);
+    }
 }

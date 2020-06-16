@@ -51,7 +51,7 @@ class PemakaianController extends Controller
         if(count($lastKode)==0){
             $dateCreate = date_create($_GET['tanggal']);
             $date = date_format($dateCreate, 'my');
-            $kode = "PB".$date."-0001";
+            $kode = "PK".$date."-0001";
         }
         else{
             $ex = explode('-', $lastKode[0]->kode_pemakaian);
@@ -81,18 +81,13 @@ class PemakaianController extends Controller
         $barang = Barang::get();
         return view('pemakaian-barang.pemakaian.tambah-detail-pemakaian',['hapus' => true, 'no' => $next, 'barang' => $barang]);
     }
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    
     public function store(Request $request)
     {
         $validatedData = $request->validate([
             'tanggal' => 'required',
             'kode_barang.*' => 'required',
-            'qty.*' => 'required|numeric',
+            'qty.*' => 'required|numeric|lte:sisa_stock.*',
         ]);
 
         $ttlQty = 0;
@@ -135,6 +130,7 @@ class PemakaianController extends Controller
         }
 
         return redirect()->route('pemakaian.index')->withStatus('Data berhasil ditambahkan.');
+        
     }
 
     /**
@@ -177,8 +173,102 @@ class PemakaianController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($kode)
     {
-        //
+        $pemakaian = Pemakaian::findOrFail($kode);
+
+        $detail = DetailPemakaian::where('kode_pemakaian', $kode)->get();
+
+        foreach ($detail as $key => $value) {
+            $barang = Barang::findOrFail($value->kode_barang);
+            $qty = $value->qty;
+            $subtotal_saldo = $value->subtotal_saldo;
+            
+            $barang->stock = $barang->stock + $qty;
+            $barang->saldo = $barang->saldo + $subtotal_saldo;
+            
+            $barang->save();
+            $detailPemakaian = DetailPemakaian::findOrFail($value->id);
+            $detailPemakaian->delete();
+        }
+
+        $pemakaian->delete();
+
+        return redirect()->route('pemakaian.index')->withStatus('Data berhasil ditambahkan.');
+    }
+
+    public function laporan(Request $request)
+    {
+        $this->param['pageInfo'] = 'Laporan Pemakaian';
+        $this->param['btnRight']['text'] = 'Tambah Pemakaian';
+        $this->param['btnRight']['link'] = route('pemakaian.create');
+
+        $dari = $request->get('dari');
+        $sampai = $request->get('sampai');
+        $laporan = '';
+        if($dari && $sampai){
+            $pemakaian = Pemakaian::orderBy('tanggal','asc');
+            $pemakaian->whereBetween('tanggal',[$dari, $sampai]);
+
+            $laporan = $pemakaian->get();
+        }
+
+        if($request->get('print')){
+            return view('pemakaian-barang.laporan-pemakaian.print-laporan-pemakaian', $this->param, ['laporan' => $laporan]);
+        }
+        else{
+            return view('pemakaian-barang.laporan-pemakaian.laporan-pemakaian', $this->param, ['laporan' => $laporan]);
+        }
+    }
+
+    public function barangSeringTerpakai(Request $request)
+    {
+        $this->param['pageInfo'] = 'Barang Sering Dipakai';
+        $this->param['btnRight']['text'] = 'Tambah Pemakaian';
+        $this->param['btnRight']['link'] = route('pemakaian.create');
+
+        $dari = $request->get('dari');
+        $sampai = $request->get('sampai');
+        $laporan = '';
+        if($dari && $sampai){
+            $laporan = \DB::table('pemakaian')
+                            ->whereBetween('tanggal', [$dari, $sampai])
+                            ->join('detail_pemakaian AS dt', \DB::raw('dt.kode_pemakaian'), '=', 'pemakaian.kode_pemakaian')
+                            ->join('barang AS b', \DB::raw('dt.kode_barang'), '=', \DB::raw('b.kode_barang'))
+                            ->select(\DB::raw('SUM(dt.qty) as jml'), 'dt.kode_barang', 'b.nama', 'b.satuan')
+                            ->groupBy(\DB::raw('dt.kode_barang'))
+                            ->orderBy(\DB::raw('jml'), 'DESC')
+                            ->get();
+        }
+
+        return view('pemakaian-barang.barang-sering-dipakai.barang-sering-dipakai', ['laporan' => $laporan], $this->param);
+    }
+    
+    public function barangDeathStock()
+    {
+        $this->param['pageInfo'] = 'Barang Death Stock';
+        $this->param['btnRight']['text'] = 'Tambah Pemakaian';
+        $this->param['btnRight']['link'] = route('pemakaian.create');
+
+        $bulanSekarang = date('m');
+        $bulanAwal = $bulanSekarang - 2;
+
+        $dari = date('Y').'-'.$bulanAwal.'-01';
+        $sampai = date('Y').'-'.$bulanSekarang.'-'.date('t');
+        
+        $laporan = \DB::table('detail_pemakaian as dt')
+                        ->whereBetween('p.tanggal', [$dari, $sampai])
+                        ->join('pemakaian AS p', \DB::raw('dt.kode_pemakaian'), '=', 'p.kode_pemakaian')
+                        ->select('dt.kode_barang')
+                        ->distinct()
+                        ->get();
+        $in = [];
+        foreach ($laporan as $key => $value) {
+            array_push($in, $value->kode_barang);
+        }
+        
+        $deathStock = Barang::whereNotIn('kode_barang', $in)->get();
+        
+        return view('pemakaian-barang.barang-death-stock.barang-death-stock', ['deathStock' => $deathStock], $this->param);
     }
 }
