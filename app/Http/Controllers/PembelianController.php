@@ -75,7 +75,7 @@ class PembelianController extends Controller
         );
         $next = $_GET['biggestNo']+1;
         $barang = Barang::select('kode_barang','nama')->get();
-        return view('pembelian-barang.pembelian.edit-detail-pembelian',['hapus' => true, 'no' => $next, 'barang' => $barang, 'fields' => $fields]);
+        return view('pembelian-barang.pembelian.edit-detail-pembelian',['hapus' => true, 'no' => $next, 'barang' => $barang, 'fields' => $fields,'idDetail' => '0']);
     }
     public function store(Request $request)
     {
@@ -83,8 +83,8 @@ class PembelianController extends Controller
             'tanggal' => 'required',
             'kode_supplier' => 'required',
             'kode_barang.*' => 'required',
-            'qty.*' => 'required',
-            'harga.*' => 'required',
+            'qty.*' => 'required|integer|min:1',
+            'harga.*' => 'required|integer|min:1',
         ]);
         
         $ttlQty = 0;
@@ -131,7 +131,7 @@ class PembelianController extends Controller
         $this->param['btnRight']['text'] = 'Lihat Pembelian';
         $this->param['btnRight']['link'] = route('pembelian.index');
         $this->param['pembelian'] = Pembelian::findOrFail($kode);
-        $this->param['detail'] = DetailPembelian::select('kode_barang','qty','subtotal')->where('kode_pembelian',$kode)->get();
+        $this->param['detail'] = DetailPembelian::select('id','kode_barang','qty','subtotal')->where('kode_pembelian',$kode)->get();
         $this->param['supplier'] = Supplier::select('kode_supplier','nama_supplier')->get();
         $this->param['barang'] = Barang::select('kode_barang','nama')->get();
 
@@ -144,18 +144,100 @@ class PembelianController extends Controller
             'tanggal' => 'required',
             'kode_supplier' => 'required',
             'kode_barang.*' => 'required',
-            'qty.*' => 'required',
-            'harga.*' => 'required',
+            'qty.*' => 'required|integer|min:1',
+            'harga.*' => 'required|integer|min:1',
         ]);
-    }
-    public function laporan()
-    {
-        $this->param['pageInfo'] = 'Laporan Pembelian';
-        $this->param['btnRight']['text'] = 'Tambah Pembelian';
-        $this->param['btnRight']['link'] = route('pembelian.create');
-        $this->param['supplier'] = Supplier::select('kode_supplier','nama_supplier')->get();
-        if(isset($_GET['dari'])){
-            $pembelian = Pembelian::orderBy('tanggal','asc');
+        $newQty = 0;
+        $newTotal = 0;
+        foreach ($_POST['kode_barang'] as $key => $value) {
+            if($_POST['id_detail'][$key]!=0){
+                $getDetail = DetailPembelian::select('kode_barang','qty','subtotal')->where('id',$_POST['id_detail'][$key])->get()[0];
+
+                if($_POST['kode_barang'][$key]!=$getDetail['kode_barang'] || $_POST['qty'][$key]!=$getDetail['qty'] || $_POST['subtotal'][$key]!=$getDetail['subtotal']){
+
+                    //kembalikan stock & saldo barang
+                    Barang::where('kode_barang',$_POST['kode_barang'][$key])
+                    ->update([
+                        'stock' => \DB::raw('stock-'.$getDetail->qty),
+                        'saldo' => \DB::raw('saldo-'.$getDetail->subtotal),
+                        ]);
+                        
+                        //perbarui stock
+                        Barang::where('kode_barang',$_POST['kode_barang'][$key])
+                        ->update([
+                            'stock' => \DB::raw('stock+'.$_POST['qty'][$key]),
+                            'saldo' => \DB::raw('saldo+'.$_POST['subtotal'][$key]),
+                            ]);
+                            
+                            //update detail
+                            DetailPembelian::where('id',$_POST['id_detail'][$key])
+                            ->update([
+                                'qty' => $_POST['qty'][$key],
+                                'subtotal' => $_POST['subtotal'][$key],
+                    ]);
+                    
+                }
+            }
+            else{
+                
+                //update barang
+                Barang::where('kode_barang',$_POST['kode_barang'][$key])
+                ->update([
+                    'stock' => \DB::raw('stock+'.$_POST['qty'][$key]),
+                    'saldo' => \DB::raw('saldo+'.$_POST['subtotal'][$key]),
+                    ]);
+                    
+                    //insert to detail
+                    DetailPembelian::where('kode_pembelian',$_POST['kode_pembelian'])
+                    ->insert([
+                        'kode_pembelian' => $_POST['kode_pembelian'],
+                        'kode_barang' => $_POST['kode_barang'][$key],
+                        'qty' => $_POST['qty'][$key],
+                        'subtotal' => $_POST['subtotal'][$key],
+                        ]);
+                        
+                    }
+                    $newQty = $newQty + $_POST['qty'][$key];
+                    $newTotal = $newTotal + $_POST['subtotal'][$key];
+                    
+                }
+                
+                if(isset($_POST['id_delete'])){
+                    foreach ($_POST['id_delete'] as $key => $value) {
+                        $getDetail = DetailPembelian::select('kode_barang','qty','subtotal')->where('id',$value)->get()[0];
+                        
+                        //update barang
+                        Barang::where('kode_barang',$getDetail->kode_barang)
+                        ->update([
+                            'stock' => \DB::raw('stock-'.$getDetail->qty),
+                            'saldo' => \DB::raw('saldo-'.$getDetail->subtotal),
+                            ]);
+                            
+                            //delete detail
+                            DetailPembelian::where('id',$value)->delete();
+                        }
+                    }
+        
+        //update pembelian
+        Pembelian::where('kode_pembelian',$_POST['kode_pembelian'])
+        ->update([
+            'tanggal' => $_POST['tanggal'],
+            'jumlah_item' => count($_POST['kode_barang']),
+            'jumlah_qty' => $newQty,
+            'total' => $newTotal,
+            'kode_supplier' => $_POST['kode_supplier'],
+            ]);
+
+            return redirect()->route('pembelian.index')->withStatus('Data berhasil diperbarui.');
+        }
+        public function laporan()
+        {
+            $this->param['pageInfo'] = 'Laporan Pembelian';
+            $this->param['btnRight']['text'] = 'Tambah Pembelian';
+            $this->param['btnRight']['link'] = route('pembelian.create');
+            $this->param['supplier'] = Supplier::select('kode_supplier','nama_supplier')->get();
+            if(isset($_GET['dari'])){
+                $pembelian = Pembelian::orderBy('tanggal','asc');
             if($_GET['dari']!='' && $_GET['sampai']!='' && $_GET['kode_supplier']==''){
                 $pembelian->whereBetween('tanggal',[$_GET['dari'],$_GET['sampai']]);
             }

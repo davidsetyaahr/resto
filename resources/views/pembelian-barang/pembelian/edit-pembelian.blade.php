@@ -15,6 +15,8 @@
               @method('put')
               <div class="card-body">
               <h6 class="heading-small text-muted mb-4">Informasi Umum</h6>
+                <div class="idDelete">
+                </div>
                   <div class="row pl-lg-4">
                     <div class="col-md-4">
                         <label for="" class="form-control-label">Kode Pembelian</label>
@@ -54,12 +56,17 @@
                   <div class="pl-lg-4" id='urlAddDetail' data-url="{{url('pembelian-barang/pembelian/addEditDetailPembelian')}}">
                   @if(!is_null(old('kode_barang')))
                     @php
-                        $error = true;
-                        $loop = old('kode_barang');
+                      $loop = array();
+                      foreach(old('kode_barang') as $i => $val){
+                        $loop[] = array(
+                          'kode_barang' => old('kode_barang.'.$i),
+                          'qty' => (int)old('qty.'.$i),
+                          'subtotal' => (int)old('subtotal.'.$i),
+                        );
+                      }
                     @endphp
                   @else
                     @php
-                        $error = false;
                         $loop = $detail;
                     @endphp
                   @endif
@@ -68,29 +75,25 @@
                     @foreach($loop as $n => $edit)
                       @php 
                         $no++;
-                        $linkHapus = $n==1 ? false : true; 
+                        $linkHapus = $no==1 ? false : true; 
                         $harga = 0;
+                        $fields = array(
+                            'kode_barang' => 'kode_barang.'.$n,
+                            'qty' => 'qty.'.$n,
+                            'harga' => 'harga.'.$n,
+                            'subtotal' => 'subtotal.'.$n,
+                        );
                         if(!is_null(old('kode_barang'))){
-                            $fields = array(
-                                'kode_barang' => 'kode_barang.'.$n,
-                                'qty' => 'qty.'.$n,
-                                'harga' => 'harga.'.$n,
-                                'subtotal' => 'subtotal.'.$n,
-                            );
-                            $total = $total + (int)old('subtotal');
+                            $total = $total + $edit['subtotal'];
+                            $idDetail = old('id_detail.'.$n);
                         }
                         else{
-                            $fields = array(
-                                'kode_barang' => 'kode_barang',
-                                'qty' => 'qty',
-                                'harga' => 'harga',
-                                'subtotal' => 'subtotal',
-                            );
-                            $total = $total + $edit->subtotal;
-                            $harga = $edit->subtotal/$edit->qty;
+                            $total = $total + $edit['subtotal'];
+                            $harga = $edit['subtotal']/$edit['qty'];
+                            $idDetail = $edit['id'];
                         }
                       @endphp
-                      @include('pembelian-barang.pembelian.edit-detail-pembelian',['hapus' => $linkHapus, 'no' => $no, 'barang' => $barang])
+                        @include('pembelian-barang.pembelian.edit-detail-pembelian',['hapus' => $linkHapus, 'no' => $no, 'barang' => $barang])
                     @endforeach
                   </div>
                   <h2 class='text-right mt-5 pr-5'>Total : <span id='total' class="text-orange">{{number_format($total,0,',','.')}}</span></h2>

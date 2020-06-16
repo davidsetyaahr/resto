@@ -3,7 +3,9 @@ $(document).ready(function() {
         format: "yyyy-mm-dd"
     });
     $(".select2").select2();
-
+    $("form").submit(function() {
+        $(".loading").addClass("show");
+    });
     function formatRupiah(angka) {
         var number_string = angka.toString(),
             sisa = number_string.length % 3,
@@ -33,7 +35,11 @@ $(document).ready(function() {
             type: "get",
             url: url,
             data: { biggestNo: biggestNo },
+            beforeSend: function() {
+                $(".loading").addClass("show");
+            },
             success: function(response) {
+                $(".loading").removeClass("show");
                 $(".row-detail[data-no='" + thisNo + "']").after(response);
                 $(".select2").select2();
 
@@ -44,10 +50,7 @@ $(document).ready(function() {
 
                 $(".deleteDetail").click(function(e) {
                     e.preventDefault();
-                    var delNo = $(this).data("no");
-                    $(".row-detail[data-no='" + delNo + "']").remove();
-                    getTotal();
-                    getTotalQty($(this));
+                    deleteDetail($(this));
                 });
                 $(".getSubtotal").keyup(function() {
                     getSubtotal($(this));
@@ -66,6 +69,25 @@ $(document).ready(function() {
     $(".addDetail").click(function(e) {
         e.preventDefault();
         addDetail($(this));
+    });
+    function deleteDetail(thisParam) {
+        var delNo = thisParam.data("no");
+        var parent = ".row-detail[data-no='" + delNo + "']";
+        var idDetail = $(parent + " .idDetail").val();
+        if (thisParam.hasClass("addDeleteId") && idDetail != 0) {
+            $(".idDelete").append(
+                "<input type='hidden' name='id_delete[]' value='" +
+                    idDetail +
+                    "'>"
+            );
+        }
+        $(parent).remove();
+        getTotal();
+        getTotalQty(thisParam);
+    }
+    $(".deleteDetail").click(function(e) {
+        e.preventDefault();
+        deleteDetail($(this));
     });
 
     function getSubtotal(thisParam) {

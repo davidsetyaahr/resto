@@ -33,3 +33,26 @@
     padding-left : 80px;
     color : rgba(24, 38, 77, 0.6)
 }
+.loading{
+    background: rgba(255, 255, 255, 0.95);
+    position: fixed;
+    top : 0;
+    left : 0;
+    width: 100%;
+    height: 100%;
+    z-index: 5000;
+    display: none;
+}
+.loading.show{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.loading .info p{
+    text-align: center;
+    font-weight: bold !important;
+}
+.loading img{
+    width: 100px;
+    border-radius: 100%;
+}

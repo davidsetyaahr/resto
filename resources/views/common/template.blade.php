@@ -38,6 +38,12 @@
 </head>
 
 <body>
+<div class="loading">
+  <div class="info">
+    <img src="{{asset('assets/img/loading.gif')}}" alt="">
+    <p>Loading...</p>
+  </div>
+</div>
   <!-- Sidenav -->
   <nav class="sidenav navbar navbar-vertical  fixed-left  navbar-expand-xs navbar-light bg-white" id="sidenav-main">
     <div class="scrollbar-inner">
