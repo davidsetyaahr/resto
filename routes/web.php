@@ -41,6 +41,18 @@ Route::prefix('pemakaian-barang/')->group(function() {
     Route::get('barang-death-stock', 'PemakaianController@barangDeathStock')->name('barang-death-stock');
     Route::resource('pemakaian', 'PemakaianController');
 });
+Route::prefix('penjualan/')->group(function() {
+    Route::get('penjualan/addDetailPenjualan', 'PenjualanController@addDetailPenjualan');
+    Route::get('penjualan/getKode', 'PenjualanController@getKode')->name('penjualan.get-kode');
+    Route::get('penjualan/get-detail-menu', 'PenjualanController@getDetailMenu')->name('get-detail-menu');
+    Route::get('penjualan/get-diskon', 'PenjualanController@getDiskon')->name('get-diskon');
+    Route::get('laporan-penjualan', 'PenjualanController@laporan')->name('laporan-penjualan');
+    Route::get('menu-terlaris', 'PenjualanController@menuTerlaris')->name('menu-terlaris');
+    Route::get('pembayaran', 'PenjualanController@listPembayaran')->name('pembayaran');
+    Route::get('pembayaran/bayar/{kode}', 'PenjualanController@pembayaran')->name('penjualan.bayar');
+    Route::put('pembayaran/save/{kode}', 'PenjualanController@savePembayaran')->name('pembayaran.save');
+    Route::resource('penjualan', 'PenjualanController');
+});
 Route::prefix('master-menu/')->group(function(){
     Route::get('diskon/addEditDetailDiskon', 'DiskonController@addEditDetailDiskon');
     Route::get('diskon/get-detail-menu', 'DiskonController@getDetailMenu');

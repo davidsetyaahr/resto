@@ -67,6 +67,15 @@ $(document).ready(function() {
                 $(".menu").change(function() {
                     getDetailMenu($(this));
                 });
+
+                $(".menu2").change(function() {
+                    pjGetDetailMenu($(this));
+                    pjGetDiskon($(this));
+                });
+
+                $(".qtyPj").change(function() {
+                    getSubtotalPj($(this));
+                });
             }
         });
     }
@@ -164,6 +173,96 @@ $(document).ready(function() {
     }
     $(".barang").change(function() {
         barang($(this));
+    });
+
+    $("#debit_only").hide();
+    $("#jenis_bayar").change(function() {
+        var thisVal = $(this).val();
+        if (thisVal == "Debit") {
+            $("#debit_only").show();
+            $('#no_kartu').attr('required', true);
+        } else {
+            $("#debit_only").hide();
+        }
+    });
+
+    $('#diskon_tambahan').keyup(function () { 
+        var diskon_tambahan = parseInt($(this).val());
+        var total = parseInt($('#total').val());
+        var grand_total = total - diskon_tambahan;
+        $('#grand_total').val(grand_total);
+    });
+    
+    $('#bayar').keyup(function () { 
+        var terbayar = parseInt($(this).val());
+        var grand_total = parseInt($('#grand_total').val());
+        var kembalian = terbayar - grand_total;
+        $('#kembalian').val(kembalian);
+    });
+
+    function pjGetDetailMenu(thisParam) {
+        var kode = thisParam.val();
+        var no = thisParam.closest(".row-detail").data("no");
+        var parent = ".row-detail[data-no='" + no + "']";
+
+        $.ajax({
+            type: "get",
+            url: "get-detail-menu",
+            data: { kode: kode },
+            success: function(data) {
+                $(parent + " #harga").val($.parseJSON(data)["harga_jual"]);
+            }
+        });
+    }
+    function pjGetDiskon(thisParam) {
+        var kode = thisParam.val();
+        var no = thisParam.closest(".row-detail").data("no");
+        var parent = ".row-detail[data-no='" + no + "']";
+
+        $.ajax({
+            type: "get",
+            url: "get-diskon",
+            data: { kode: kode },
+            success: function(data) {
+                $(parent + " #diskon").val(data);
+                $(parent + " #diskon_satuan").val(data);
+            }
+        });
+    }
+    $(".menu2").change(function() {
+        pjGetDetailMenu($(this));
+        pjGetDiskon($(this));
+    });
+
+    function getSubtotalPj(thisParam) {
+        var qty = parseInt(thisParam.val());
+        var no = thisParam.closest(".row-detail").data("no");
+        var parent = ".row-detail[data-no='" + no + "']";
+        var harga = parseInt($(parent + " #harga").val()) * qty;
+        var diskon = parseInt($(parent + " #diskon_satuan").val()) * qty;
+
+        // $(parent + " #harga").val(harga);
+        $(parent + " #diskon").val(diskon);
+        $(parent + " #subtotal").val(harga - diskon);
+        getTotalPj();
+    }
+
+    function getTotalPj() {
+        var total = 0;
+        var totalPpn = 0;
+        $(".getTotalPj").each(function() {
+            var subtotalVal = parseInt($(this).val());
+            subtotalVal = isNaN(subtotalVal) ? 0 : subtotalVal;
+            total = total + subtotalVal;
+        });
+        totalPpn = total * 10 / 100;
+        $("#total_harga").html(formatRupiah(total));
+        $("#total_ppn").html(formatRupiah(totalPpn));
+        $("#grand_total").html(formatRupiah(total + totalPpn));
+    }
+
+    $(".qtyPj").change(function() {
+        getSubtotalPj($(this));
     });
 
     function getDetailMenu(thisParam) {

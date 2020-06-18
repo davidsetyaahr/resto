@@ -179,6 +179,29 @@
                   </li>
                 </ul>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="" data-toggle="collapse" data-target="#penjualan">
+                <i class="ni ni-cart text-blue"></i>
+                <span class="nav-link-text">Penjualan</span>
+              </a>
+                <ul class="navbar-nav nav-collapse collapse" id="penjualan">
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ route('penjualan.index') }}">
+                      <span class="nav-link-text">Penjualan</span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ route('pembayaran') }}">
+                      <span class="nav-link-text">Pembayaran</span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{url('kas/laporan-kas')}}">
+                      <span class="nav-link-text">Laporan Kas</span>
+                    </a>
+                  </li>
+                </ul>
+            </li>
           </ul>
           <!-- Divider -->
           <ul class="navbar-nav lima-section">
