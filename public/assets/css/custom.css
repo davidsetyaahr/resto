@@ -56,3 +56,17 @@
     width: 100px;
     border-radius: 100%;
 }
+.nav-tabs li.active{
+    border : 1px solid #ddd;
+    border-bottom: none;
+    border-radius: 7px 7px 0px 0px;
+}
+.nav-tabs li.active a{
+    color : #f1404c;
+}
+.nav-tabs li{
+    padding : 10px 15px;
+}
+.nav-tabs li a{
+    color : #939da8;
+}

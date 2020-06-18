@@ -242,4 +242,25 @@ class PenjualanController extends Controller
 
         return redirect()->route('pembayaran')->withStatus('Pembayaran berhasil.');    
     }
+
+    public function laporanPenjualan()
+    {
+        $this->param['pageInfo'] = 'Laporan Pembayaran';
+        $this->param['btnRight']['text'] = 'Tambah Penjualan';
+        $this->param['btnRight']['link'] = route('penjualan.create');
+        if(isset($_GET['dari']) && isset($_GET['sampai'])){
+            if($_GET['tipe']=='general'){
+                $this->param['penjualan'] = Penjualan::where('status_bayar','Sudah Bayar')->whereBetween('waktu',[$_GET['dari'],$_GET['sampai']])->orderBy('waktu','asc')->get();
+            }
+            else if($_GET['tipe']=='menu-favorit'){
+                $this->param['menu'] = \DB::table('menu as m')->select(\DB::raw('m.kode_menu,m.nama, SUM(dp.qty) as qty, sum(sub_total) as total'))->leftJoin('detail_penjualan as dp','m.kode_menu','dp.kode_menu')->join('penjualan as p', 'dp.kode_penjualan','p.kode_penjualan')->where('p.status_bayar','Sudah Bayar')->whereBetween('p.waktu',[$_GET['dari'],$_GET['sampai']])->groupBy('m.kode_menu')->orderBy('qty','desc')->orderBy('total','desc')->get();
+            }
+            else if($_GET['tipe']=='tidak-terjual'){
+                $this->param['menu'] = \DB::table('menu as m')->select('m.kode_menu','m.nama','m.hpp','m.harga_jual','m.status')->whereNotIn('m.kode_menu', function($query){
+                    $query->select('dp.kode_menu')->from('detail_penjualan as dp')->join('penjualan as p','dp.kode_penjualan','p.kode_penjualan')->where('p.status_bayar','Sudah Bayar')->whereBetween('p.waktu',[$_GET['dari'],$_GET['sampai']]);
+                })->orderBy('m.kode_menu','asc')->get();
+            }
+        }
+        return view('penjualan.laporan.laporan-penjualan', $this->param);
+    }
 }

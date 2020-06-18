@@ -6,6 +6,22 @@ $(document).ready(function() {
     $("form").submit(function() {
         $(".loading").addClass("show");
     });
+    $(".nav-link[data-toggle='collapse']").click(function(){
+        if($(this).hasClass('collapsed')){
+            $(".nav-link[data-toggle='collapse']").addClass('collapsed')
+            $(".nav-link[data-toggle='collapse']").attr('aria-expanded',false)
+
+            $(this).removeClass('collapsed')
+            $(this).attr('aria-expanded',true)
+        
+            var target = $(this).data('target')
+            $('.nav-collapse.collapse').removeClass('show')
+            $('.nav-collapse.collapse'+target).addClass('collapsing')
+        }
+/*         $(".nav-collapse").removeClass('show')
+        var target = $(this).data('target')
+        $(".nav-collapse"+target).toggleClass('show')
+ */    })
     function formatRupiah(angka) {
         var number_string = angka.toString(),
             sisa = number_string.length % 3,

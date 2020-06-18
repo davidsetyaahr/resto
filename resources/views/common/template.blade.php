@@ -65,7 +65,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="" data-toggle="collapse" data-target="#master-barang">
+              <a class="nav-link collapsed" href="" data-toggle="collapse" data-target="#master-barang" aria-expanded='false'>
                 <i class="ni ni-box-2 text-info"></i>
                 <span class="nav-link-text">Master Barang</span>
               </a>
@@ -88,7 +88,7 @@
                 </ul>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="" data-toggle="collapse" data-target="#pembelian-barang">
+              <a class="nav-link collapsed" href="" data-toggle="collapse" data-target="#pembelian-barang" aria-expanded='false'>
                 <i class="ni ni-bag-17 text-yellow"></i>
                 <span class="nav-link-text">Pembelian Barang</span>
               </a>
@@ -111,7 +111,7 @@
                 </ul>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="" data-toggle="collapse" data-target="#pemakaian-barang">
+              <a class="nav-link collapsed" href="" data-toggle="collapse" data-target="#pemakaian-barang" aria-expanded='false'>
                 <i class="ni ni-basket text-orange"></i>
                 <span class="nav-link-text">Pemakaian Barang</span>
               </a>
@@ -139,7 +139,7 @@
                 </ul>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="" data-toggle="collapse" data-target="#menu">
+              <a class="nav-link collapsed" href="" data-toggle="collapse" data-target="#menu" aria-expanded='false'>
                 <i class="ni ni-bullet-list-67 text-dark"></i>
                 <span class="nav-link-text">Master Menu</span>
               </a>
@@ -162,7 +162,7 @@
                 </ul>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="" data-toggle="collapse" data-target="#kas-keluar">
+              <a class="nav-link collapsed" href="" data-toggle="collapse" data-target="#kas-keluar" aria-expanded='false'>
                 <i class="ni ni-money-coins text-success"></i>
                 <span class="nav-link-text">Kas</span>
               </a>
@@ -180,7 +180,7 @@
                 </ul>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="" data-toggle="collapse" data-target="#penjualan">
+              <a class="nav-link collapsed" href="" data-toggle="collapse" data-target="#penjualan" aria-expanded='false'>
                 <i class="ni ni-cart text-blue"></i>
                 <span class="nav-link-text">Penjualan</span>
               </a>
@@ -196,8 +196,8 @@
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="{{url('kas/laporan-kas')}}">
-                      <span class="nav-link-text">Laporan Kas</span>
+                    <a class="nav-link" href="{{route('laporan-penjualan')}}?tipe=general">
+                      <span class="nav-link-text">Laporan Penjualan</span>
                     </a>
                   </li>
                 </ul>
