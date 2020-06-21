@@ -97,6 +97,15 @@
                   @enderror
                   <br>
                   
+                  <label for="" class="form-control-label">Lokasi Penyimpanan</label>
+                  <input type="text" name="tempat_penyimpanan" value="{{old('tempat_penyimpanan', $barang->tempat_penyimpanan)}}" class="form-control @error('tempat_penyimpanan') is-invalid @enderror" placeholder="ex : Rak A">
+                  @error('tempat_penyimpanan')
+                    <span class="invalid-feedback" role="alert">
+                      <strong>{{ $message }}</strong>
+                    </span>
+                  @enderror
+                  <br>
+
                   <label for="" class="form-control-label ">Keterangan</label>
                   <textarea name="keterangan" class="form-control @error('keterangan') is-invalid @enderror">{{old('keterangan', $barang->keterangan)}}</textarea>
                   @error('keterangan')

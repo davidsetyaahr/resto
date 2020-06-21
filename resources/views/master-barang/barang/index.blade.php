@@ -47,6 +47,7 @@
                     <th scope="col" class="sort" data-sort="name">Saldo</th>
                     <th scope="col" class="sort" data-sort="name">Exp Date</th>
                     <th scope="col" class="sort" data-sort="name">Keterangan</th>
+                    <th scope="col" class="sort" data-sort="name">Lokasi</th>
                     <th scope="col"></th>
                   </tr>
                 </thead>
@@ -66,6 +67,7 @@
                         <td>{{number_format($value->saldo,0,',','.')}}</td>
                         <td>{{$value->exp_date}}</td>
                         <td>{{$value->keterangan}}</td>
+                        <td>{{$value->tempat_penyimpanan}}</td>
                         <td class="text-right">
                           <div class="dropdown">
                             <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

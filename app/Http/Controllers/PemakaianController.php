@@ -144,35 +144,126 @@ class PemakaianController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+    public function addEditDetailPemakaian()
+    {   
+        $fields = array(
+            'kode_barang' => 'kode_barang',
+            'sisa_stock' => 'sisa_stock',
+            'qty' => 'qty',
+            'satuan' => 'satuan',
+            'keterangan' => 'keterangan',
+        );
+        $next = $_GET['biggestNo']+1;
+        $barang = Barang::select('kode_barang','nama')->get();
+        return view('pemakaian-barang.pemakaian.edit-detail-pemakaian',['hapus' => true, 'no' => $next, 'barang' => $barang, 'fields' => $fields,'idDetail' => '0']);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    public function edit($kode)
+    {
+        $this->param['pageInfo'] = 'Edit Pemakaian';
+        $this->param['btnRight']['text'] = 'Lihat Pemakaian';
+        $this->param['btnRight']['link'] = route('pemakaian.index');
+        $this->param['pemakaian'] = Pemakaian::findOrFail($kode);
+        // $this->param['detail'] = DetailPemakaian::select('id','kode_barang','qty','subtotal_saldo', 'keterangan')->where('kode_pemakaian',$kode)->get();
+        $this->param['detail'] = \DB::table('detail_pemakaian AS dt')
+                                        ->select('dt.id','dt.kode_barang', 'dt.qty', 'dt.subtotal_saldo', 'dt.keterangan', 'b.satuan', 'b.stock as sisa_stock')
+                                        ->join('barang AS b', 'b.kode_barang', '=', 'dt.kode_barang')
+                                        ->where('kode_pemakaian', $kode)
+                                        ->get();
+        $this->param['barang'] = Barang::select('kode_barang','nama')->get();
+
+        
+        return view('pemakaian-barang.pemakaian.edit-pemakaian', $this->param);
+    }
+
     public function update(Request $request, $id)
     {
-        //
+        $validatedData = $request->validate([
+            'tanggal' => 'required',
+            'kode_barang.*' => 'required',
+            'qty.*' => 'required|numeric|lte:sisa_stock.*',
+        ]);
+
+        $newQty = 0;
+        $newTotal =0;
+        foreach ($_POST['kode_barang'] as $key => $value) {
+            $getHppBarang = Barang::select('stock', 'saldo')->where('kode_barang', $_POST['kode_barang'][$key])->get()[0];
+            $hpp = $getHppBarang->saldo / $getHppBarang->stock;
+            //update barang
+            $subtotal = $hpp * $_POST['qty'][$key];
+            if($_POST['id_detail'][$key]!=0){
+                $getDetail = DetailPemakaian::select('kode_barang','qty','subtotal_saldo')->where('id',$_POST['id_detail'][$key])->get()[0];
+
+                if($_POST['kode_barang'][$key]!=$getDetail['kode_barang'] || $_POST['qty'][$key]!=$getDetail['qty']){
+
+                    //kembalikan stock & saldo barang
+                    Barang::where('kode_barang',$_POST['kode_barang'][$key])
+                    ->update([
+                        'stock' => \DB::raw('stock+'.$getDetail->qty),
+                        'saldo' => \DB::raw('saldo+'.$getDetail->subtotal_saldo),
+                        ]);
+                        
+                        //perbarui stock
+                        Barang::where('kode_barang',$_POST['kode_barang'][$key])
+                        ->update([
+                            'stock' => \DB::raw('stock-'.$_POST['qty'][$key]),
+                            'saldo' => \DB::raw('saldo-'.$subtotal),
+                            ]);
+                            
+                            //update detail
+                            DetailPemakaian::where('id',$_POST['id_detail'][$key])
+                            ->update([
+                                'qty' => $_POST['qty'][$key],
+                                'subtotal_saldo' => $subtotal,
+                    ]);
+                    
+                }
+            }
+            else{
+                Barang::where('kode_barang',$_POST['kode_barang'][$key])
+                ->update([
+                    'stock' => \DB::raw('stock-'.$_POST['qty'][$key]),
+                    'saldo' => \DB::raw('saldo-'.$subtotal),
+                    ]);
+                    
+                    //insert to detail
+                    DetailPemakaian::where('kode_pemakaian',$_POST['kode_pemakaian'])
+                    ->insert([
+                        'kode_pemakaian' => $_POST['kode_pemakaian'],
+                        'kode_barang' => $_POST['kode_barang'][$key],
+                        'qty' => $_POST['qty'][$key],
+                        'subtotal_saldo' => $subtotal,
+                        'keterangan' => $_POST['keterangan'][$key],
+                        ]);
+            }
+            $newQty = $newQty + $_POST['qty'][$key];
+            $newTotal = $newTotal + $subtotal;
+        }
+        if(isset($_POST['id_delete'])){
+            foreach ($_POST['id_delete'] as $key => $value) {
+                $getDetail = DetailPemakaian::select('kode_barang','qty','subtotal_saldo')->where('id',$value)->get()[0];
+                //update barang
+                Barang::where('kode_barang',$getDetail->kode_barang)
+                ->update([
+                    'stock' => \DB::raw('stock+'.$getDetail->qty),
+                    'saldo' => \DB::raw('saldo+'.$getDetail->subtotal_saldo),
+                    ]);
+                    //delete detail
+                    DetailPemakaian::where('id',$value)->delete();
+                }
+        }
+        
+        //update pemakaian
+        Pemakaian::where('kode_pemakaian',$_POST['kode_pemakaian'])
+        ->update([
+            'tanggal' => $_POST['tanggal'],
+            'jumlah_qty' => $newQty,
+            'total_saldo' => $newTotal,
+            ]);
+
+            return redirect()->route('pemakaian.index')->withStatus('Data berhasil diperbarui.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($kode)
     {
         $pemakaian = Pemakaian::findOrFail($kode);

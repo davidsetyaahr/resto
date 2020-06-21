@@ -80,9 +80,12 @@ class BarangController extends Controller
         $newBarang->satuan = $request->get('satuan');
         $newBarang->stock = $request->get('stock');
         $newBarang->saldo = $request->get('saldo');
+        $newBarang->stock_awal = $request->get('stock_awal');
+        $newBarang->saldo_awal = $request->get('saldo_awal');
         $newBarang->minimum_stock = $request->get('minimum_stock');
         $newBarang->exp_date = $request->get('exp_date');
         $newBarang->keterangan = $request->get('keterangan');
+        $newBarang->tempat_penyimpanan = $request->get('tempat_penyimpanan');
 
         $newBarang->save();
 
@@ -146,9 +149,12 @@ class BarangController extends Controller
         $barang->satuan = $request->get('satuan');
         $barang->stock = $request->get('stock');
         $barang->saldo = $request->get('saldo');
+        $barang->stock_awal = $request->get('stock_awal');
+        $barang->saldo_awal = $request->get('saldo_awal');
         $barang->minimum_stock = $request->get('minimum_stock');
         $barang->exp_date = $request->get('exp_date');
         $barang->keterangan = $request->get('keterangan');
+        $barang->tempat_penyimpanan = $request->get('tempat_penyimpanan');
 
         $barang->save();
 
@@ -177,5 +183,27 @@ class BarangController extends Controller
 
         $barangMinimum = Barang::whereRaw('stock <= minimum_stock')->get();
         return view('master-barang.barang-minimum.barang-minimum', ['barangMinimum' => $barangMinimum],$this->param);
+    }
+
+    public function posisiStock(Request $request)
+    {
+        $this->param['pageInfo'] = 'Posisi Stock';
+        $this->param['btnRight']['text'] = '';
+        $this->param['btnRight']['link'] = '';
+
+        $dari = $request->get('dari');
+        $sampai = $request->get('sampai');
+        $kode = $request->get('kode_barang');
+        $allBarang = Barang::select('kode_barang', 'nama')->get();
+        $barang = '';
+
+        if ($dari && $sampai && !$kode) {
+            $barang = Barang::where('stock', '>', 0)->get();
+        }
+        elseif ($kode && $dari && $sampai) {
+            $barang = Barang::where('kode_barang', $kode)->get();
+        }
+
+        return view('master-barang.posisi-stock.posisi-stock', $this->param, ['barang' => $barang, 'allBarang' => $allBarang]);
     }
 }
