@@ -48,6 +48,7 @@ Route::prefix('penjualan/')->group(function() {
     Route::get('penjualan/getKode', 'PenjualanController@getKode')->name('penjualan.get-kode');
     Route::get('penjualan/get-detail-menu', 'PenjualanController@getDetailMenu')->name('get-detail-menu');
     Route::get('penjualan/get-diskon', 'PenjualanController@getDiskon')->name('get-diskon');
+    Route::get('penjualan/filter', 'PenjualanController@filter');
     Route::get('laporan-penjualan', 'PenjualanController@laporanPenjualan')->name('laporan-penjualan');
     Route::get('menu-terlaris', 'PenjualanController@menuTerlaris')->name('menu-terlaris');
     Route::get('pembayaran', 'PenjualanController@listPembayaran')->name('pembayaran');
