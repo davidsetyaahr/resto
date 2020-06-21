@@ -43,8 +43,6 @@
                     <th>Waktu</th>
                     <th>Customer</th>
                     <th>Jenis Order</th>
-                    <th>Jumlah Item</th>
-                    <th>Jumlah Qty</th>
                     <th>Total Harga</th>
                     <th>Diskon</th>
                     <th>Status</th>
@@ -64,8 +62,6 @@
                         <td>{{date('d-m-Y H:i:s', strtotime($value->waktu))}}</td>
                         <td>{{$value->nama_customer}}</td>
                         <td>{{$value->jenis_order}}</td>
-                        <td>{{$value->jumlah_item}}</td>
-                        <td>{{$value->jumlah_qty}}</td>
                         <td>{{number_format($value->total_harga,0,',','.')}}</td>
                         <td>{{number_format($value->total_diskon + $value->total_diskon_tambahan,0,',','.')}}</td>
                         <td>

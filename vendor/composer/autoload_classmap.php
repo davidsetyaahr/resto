@@ -25,6 +25,7 @@ return array(
     'App\\Http\\Controllers\\PemakaianController' => $baseDir . '/app/Http/Controllers/PemakaianController.php',
     'App\\Http\\Controllers\\PembelianController' => $baseDir . '/app/Http/Controllers/PembelianController.php',
     'App\\Http\\Controllers\\PenjualanController' => $baseDir . '/app/Http/Controllers/PenjualanController.php',
+    'App\\Http\\Controllers\\PosisiStockController' => $baseDir . '/app/Http/Controllers/PosisiStockController.php',
     'App\\Http\\Controllers\\SupplierController' => $baseDir . '/app/Http/Controllers/SupplierController.php',
     'App\\Http\\Kernel' => $baseDir . '/app/Http/Kernel.php',
     'App\\Http\\Middleware\\Authenticate' => $baseDir . '/app/Http/Middleware/Authenticate.php',

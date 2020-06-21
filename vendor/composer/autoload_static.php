@@ -525,6 +525,7 @@ class ComposerStaticInitbe04c6a6788aba38fcaf024ba860fb9e
         'App\\Http\\Controllers\\PemakaianController' => __DIR__ . '/../..' . '/app/Http/Controllers/PemakaianController.php',
         'App\\Http\\Controllers\\PembelianController' => __DIR__ . '/../..' . '/app/Http/Controllers/PembelianController.php',
         'App\\Http\\Controllers\\PenjualanController' => __DIR__ . '/../..' . '/app/Http/Controllers/PenjualanController.php',
+        'App\\Http\\Controllers\\PosisiStockController' => __DIR__ . '/../..' . '/app/Http/Controllers/PosisiStockController.php',
         'App\\Http\\Controllers\\SupplierController' => __DIR__ . '/../..' . '/app/Http/Controllers/SupplierController.php',
         'App\\Http\\Kernel' => __DIR__ . '/../..' . '/app/Http/Kernel.php',
         'App\\Http\\Middleware\\Authenticate' => __DIR__ . '/../..' . '/app/Http/Middleware/Authenticate.php',

@@ -119,7 +119,6 @@ class PenjualanController extends Controller
         $validatedData = $request->validate([
             'kode_penjualan' => 'required',
             'nama_customer' => 'required',
-            'no_hp' => 'numeric',
             'no_meja' => 'required|numeric',
             'jenis_order' => 'required',
             'kode_menu.*' => 'required',

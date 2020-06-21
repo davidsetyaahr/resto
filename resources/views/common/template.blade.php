@@ -85,6 +85,11 @@
                       <span class="nav-link-text">Barang Minimum</span>
                     </a>
                   </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ route('posisi-stock') }}">
+                      <span class="nav-link-text">Posisi Stock</span>
+                    </a>
+                  </li>
                 </ul>
             </li>
             <li class="nav-item">
