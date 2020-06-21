@@ -23,6 +23,7 @@ Route::prefix('master-barang/')->group(function() {
     Route::resource('kategori-barang', 'KategoriBarangController');
     Route::resource('barang', 'BarangController');
     Route::get('barang-minimum', 'BarangController@barangMinimum')->name('barang-minimum');
+    Route::get('posisi-stock', 'BarangController@posisiStock')->name('posisi-stock');
 });
 Route::prefix('pembelian-barang/')->group(function() {
     Route::resource('supplier', 'SupplierController');
@@ -34,6 +35,7 @@ Route::prefix('pembelian-barang/')->group(function() {
 });
 Route::prefix('pemakaian-barang/')->group(function() {
     Route::get('pemakaian/addDetailPemakaian', 'PemakaianController@addDetailPemakaian');
+    Route::get('pemakaian/addEditDetailPemakaian', 'PemakaianController@addEditDetailPemakaian');
     Route::get('pemakaian/getKode', 'PemakaianController@getKode')->name('pemakaian.get-kode');
     Route::get('pemakaian/get-detail-barang', 'PemakaianController@getDetailBarang')->name('pemakaian.get-detail-barang');
     Route::get('laporan-pemakaian', 'PemakaianController@laporan')->name('laporan-pemakaian');
@@ -67,5 +69,3 @@ Route::prefix('master-menu/')->group(function(){
 Route::get('kas/laporan-kas', 'KasController@laporan')->name('kas.laporan');
 Route::get('kas/getKode', 'KasController@getKode')->name('kas.get-kode');
 Route::resource('kas', 'KasController');
-
-

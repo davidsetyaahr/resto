@@ -176,10 +176,10 @@ $(document).ready(function() {
         var kode = thisParam.val();
         var no = thisParam.closest(".row-detail").data("no");
         var parent = ".row-detail[data-no='" + no + "']";
-
+        var url = thisParam.data("url");
         $.ajax({
             type: "get",
-            url: "get-detail-barang",
+            url: url,
             data: { kode: kode },
             success: function(data) {
                 $(parent + " #sisa_stock").val($.parseJSON(data)["stock"]);
