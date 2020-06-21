@@ -3,6 +3,11 @@ $(document).ready(function() {
         format: "yyyy-mm-dd"
     });
     $(".select2").select2();
+    $(".fullpage-version").click(function(e){
+        e.preventDefault()
+        $("body").toggleClass('fullpage')
+        $(".fullpage-version span").toggleClass("fa-chevron-right")
+    })
     $("form").submit(function() {
         $(".loading").addClass("show");
     });
@@ -325,4 +330,176 @@ $(document).ready(function() {
     $(".totalQty").keyup(function() {
         getTotalQty($(this));
     });
+    $("#formFilterMenu").submit(function(e){
+        e.preventDefault()
+        var idKategori = $("#idKategori").val()
+        var key = $("#key").val()
+
+        $.ajax({
+            type : 'get',
+            data : {idKategori : idKategori, key : key},
+            url : 'filter',
+            beforeSend: function() {
+                $(".loading").addClass("show");
+            },
+            success : function(data){
+                $(".loading").removeClass("show");
+                $(".row-menu .col-md-3").remove()
+                $(".row-menu").append(data)
+                $(".keranjang .tbodyLoop .tr").each(function(){
+                    var no = $(this).attr('data-tr')
+                    var kodeMenu = $(".keranjang .tbodyLoop .tr[data-tr='"+no+"'] .inputKodeMenu").val()
+                    $(".menu[data-menu='"+kodeMenu+"']").attr('data-pick','true')
+                })
+                $(".menu").click(function(){
+                    pickMenu($(this))
+                })
+            }
+        })
+    })
+    function pickMenu(thisParam){
+        var kode = thisParam.data('menu')
+        var picked = thisParam.attr('data-pick')
+        if(picked=='false'){
+            $.ajax({
+                type: "get",
+                url: "get-diskon",
+                data: { kode: kode },
+                beforeSend: function() {
+                    $(".loading").addClass("show");
+                },
+                success : function(data){
+                    $(".loading").removeClass("show");
+                    var selector = ".menu[data-menu='"+kode+"']";
+                    $(selector).attr('data-pick','true')
+                    var namaMenu = $(selector+" .info h4").html()
+                    var hargaIDR = $(selector+" .info h5").data('harga')
+                    var diskon = formatRupiah(data);
+                    var subtotal = parseInt(hargaIDR) - parseInt(data)
+                    var no = $(".keranjang .tbodyLoop").attr('data-no')
+                    var newNo = parseInt(no)+1
+                    $(".keranjang .tbodyLoop").attr('data-no',newNo)
+                    $(".keranjang .tbodyLoop").append(`
+                    <tr data-tr='${newNo}' class='tr'>
+                        <td colspan='6' class='p-0'>
+                            <table width='100%'>
+                                <tr>
+                                    <td width='10%' class='no'>${newNo}</td>
+                                    <td width='25%'>
+                                    <input type='hidden' name='kode_menu[]' class='inputKodeMenu' value='${kode}'> 
+                                    <input type='hidden' name='nama_menu[]' class='inputNamaMenu' value='${namaMenu}'> 
+                                    ${namaMenu}</td>
+                                    <td width='25%'>
+                                        <input type="hidden" name="harga[]" value="${hargaIDR}" class="inputHarga">
+                                        <div class="change-qty">
+                                            <button class='btnqty' data-tipe='min'>-</button>
+                                            <input type='text' name='qty[]' value='1' class='form-control text-center inputQty' readonly>
+                                            <button class='btnqty' data-tipe='plus'>+</button>
+                                        </div>
+                                    </td>
+                                    <td width='15%' class='tdDiskon'><input type='hidden' class='inputDiskon' name='diskon[]' value='${data}'> ${diskon}</td>
+                                    <td width='15%' class='tdSubtotal'><input type='hidden' name='subtotal[]' value='${subtotal}' class='inputSubtotal'> <span> ${formatRupiah(subtotal)}</span></td>
+                                    <td width='10%'><a href='' title="Hapus" class='deleteCart'><span class='fa fa-trash fa-lg'></span></a></td>
+                                </tr>
+                                <tr>
+                                    <td colspan='6' class='p-0'>
+                                        <input type='text' class='form-control form-line' name='keterangan[]' placeholder="Keterangan">
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    `)
+                    getTfoot();
+                    $(".keranjang .tbodyLoop .tr[data-tr='"+newNo+"'] .deleteCart").click(function(e){
+                        e.preventDefault()
+                        deleteCart($(this))
+                    })
+                    $(".keranjang .tbodyLoop .tr[data-tr='"+newNo+"'] .change-qty .btnqty").click(function(e){
+                        e.preventDefault()
+                        changeQty($(this))
+                    })
+                }
+            })
+        }
+    }
+    $(".keranjang .tbodyLoop .tr .change-qty .btnqty").click(function(e){
+        e.preventDefault()
+        changeQty($(this))
+    })
+
+    function changeQty(thisParam){
+        var no = thisParam.closest(".tr").attr("data-tr");
+        var tipe = thisParam.data('tipe')
+        var input = ".keranjang .tbodyLoop .tr[data-tr='"+no+"'] .inputQty"
+        var qty = parseInt($(input).val())
+        var harga = parseInt($(".keranjang .tbodyLoop .tr[data-tr='"+no+"'] .inputHarga").val())
+        var update = true
+        if(tipe=='min'){
+            if(qty>1){
+                newQty = qty-1
+                $(input).val(newQty)
+            }
+            else{
+                update = false
+            }
+        }
+        else{
+            newQty = qty+1
+            $(input).val(newQty)
+        }
+        if(update){
+            var subtotal = harga * newQty
+            $(".keranjang .tbodyLoop .tr[data-tr='"+no+"'] .tdSubtotal .inputSubtotal").val(subtotal)
+            $(".keranjang .tbodyLoop .tr[data-tr='"+no+"'] .tdSubtotal span").html(formatRupiah(subtotal))
+            getTfoot();
+        }
+
+    }
+    $(".keranjang .tbodyLoop .tr .deleteCart").click(function(e){
+        e.preventDefault()
+        deleteCart($(this))
+    })
+    function deleteCart(thisParam){
+        if(confirm('Apakah anda yakin?')){
+            var no = thisParam.closest(".tr").attr("data-tr");
+            var selector = ".keranjang .tbodyLoop .tr[data-tr='"+no+"']"
+
+            var kodeMenu = $(selector+" .inputKodeMenu").val()
+            $(".menu[data-menu='"+kodeMenu+"']").attr('data-pick','false')
+            
+            $(selector).remove()
+            var numbOfNo = parseInt($(".keranjang .tbodyLoop").attr('data-no'))
+            var newNumbOfNo = numbOfNo - 1
+            $(".keranjang .tbodyLoop").attr('data-no',newNumbOfNo)
+            var updateNo = 0
+            $(".keranjang .tbodyLoop .tr").each(function(key,val){
+                updateNo++
+                $(this).attr('data-tr',updateNo)
+                $(".keranjang .tbodyLoop tr[data-tr='"+updateNo+"'] .no").html(updateNo)
+            })
+            getTfoot()
+        }
+    }
+    $(".menu").click(function(){
+        pickMenu($(this))
+    })
+    function getTfoot(){
+        var no = parseInt($(".keranjang .tbodyLoop").attr('data-no'))
+        var qty = 0;
+        var diskon = 0;
+        var subtotal = 0;
+        var selector = ".keranjang .tbodyLoop"
+        for (let i = 1; i <= no; i++) {
+            qty = qty + parseInt($(selector+"  .tr[data-tr='"+i+"'] .inputQty").val())
+            diskon = diskon + parseInt($(selector+"  .tr[data-tr='"+i+"'] .tdDiskon .inputDiskon").val())
+            subtotal = subtotal + parseInt($(selector+"  .tr[data-tr='"+i+"'] .tdSubtotal .inputSubtotal").val())
+        }
+        var total = subtotal - diskon;
+
+        $("#tfootQty").html(qty)
+        $("#tfootDiskon").html(formatRupiah(diskon))
+        $("#tfootSubtotal").html(formatRupiah(subtotal))
+        $("#total").html(formatRupiah(total))
+    }
 });

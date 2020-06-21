@@ -1,72 +1,253 @@
-.lima-section, .lima-section li a{
+.lima-section,
+.lima-section li a {
     position: absolute !important;
     bottom: 0 !important;
 }
-.sidenav{
+.sidenav {
     padding-bottom: 0px;
 }
-.bg-top{
-    background-image: url('../img/bg-resto.png');
+.bg-top {
+    background-image: url("../img/bg-resto.png");
     background-position: bottom;
     background-size: cover;
 }
-.bg-primary-opacity{
-   background: rgba(24, 38, 77, 0.5);
+.bg-primary-opacity {
+    background: rgba(24, 38, 77, 0.5);
 }
-.form-control:focus{
-    border-color: #7186A0;
+.form-control:focus {
+    border-color: #7186a0;
 }
-.breadcrumb{
-    border : 4px solid rgba(24, 38, 77, 0.5);
+.breadcrumb {
+    border: 4px solid rgba(24, 38, 77, 0.5);
 }
-.breadcrumb li a i{
+.breadcrumb li a i {
     line-height: 160%;
 }
-.sidenav .nav-item .nav-link{
-    color : rgba(24, 38, 77, 0.9)
+.sidenav .nav-item .nav-link {
+    color: rgba(24, 38, 77, 0.9);
 }
-.sidenav .nav-item .nav-collapse{
-    padding-top : 15px;
-    padding-bottom : 15px;
+.sidenav .nav-item .nav-collapse {
+    padding-top: 15px;
+    padding-bottom: 15px;
 }
-.sidenav .nav-item .nav-collapse .nav-item .nav-link{
-    padding-left : 80px;
-    color : rgba(24, 38, 77, 0.6)
+.sidenav .nav-item .nav-collapse .nav-item .nav-link {
+    padding-left: 80px;
+    color: rgba(24, 38, 77, 0.6);
 }
-.loading{
+.loading {
     background: rgba(255, 255, 255, 0.95);
     position: fixed;
-    top : 0;
-    left : 0;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     z-index: 5000;
     display: none;
 }
-.loading.show{
+.loading.show {
     display: flex;
     justify-content: center;
     align-items: center;
 }
-.loading .info p{
+.loading .info p {
     text-align: center;
     font-weight: bold !important;
 }
-.loading img{
+.loading img {
     width: 100px;
     border-radius: 100%;
 }
-.nav-tabs li.active{
-    border : 1px solid #ddd;
+.nav-tabs li.active {
+    border: 1px solid #ddd;
     border-bottom: none;
     border-radius: 7px 7px 0px 0px;
 }
-.nav-tabs li.active a{
-    color : #f1404c;
+.nav-tabs li.active a {
+    color: #f1404c;
 }
-.nav-tabs li{
-    padding : 10px 15px;
+.nav-tabs li {
+    padding: 10px 15px;
 }
-.nav-tabs li a{
-    color : #939da8;
+.nav-tabs li a {
+    color: #939da8;
+}
+.box-menu {
+    height: 500px;
+    width: 100%;
+    border: 2px solid #f0f3f8;
+    position: relative;
+    overflow: auto;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.box-menu .col-md-4 {
+    padding-left: 5px;
+    padding-right: 5px;
+    margin-bottom: 10px;
+}
+.box-menu .img {
+    height: 120px;
+}
+.box-menu .img img {
+    width: 100%;
+    height: 100%;
+}
+.sidenav.fixed-left + .main-content {
+    transition: all 0.5s ease;
+}
+.fullpage-version {
+    background: rgba(255, 255, 255, 0.5);
+    padding: 10px 16px;
+    border-radius: 100%;
+    color: #fff;
+}
+.fullpage .navbar-vertical.navbar-expand-xs {
+    transform: translateX(-100%);
+}
+@media (min-width: 1200px) {
+    .fullpage .g-sidenav-pinned .sidenav.fixed-left + .main-content {
+        margin-left: 0px;
+    }
+}
+.fullpage .navbar-vertical.navbar-expand-xs.fixed-left + .main-content,
+.fullpage .sidenav.fixed-left + .main-content {
+    margin-left: 0px;
+}
+.penjualan .main-content .bg-top,
+.penjualan .main-content .container-content {
+    width: 60%;
+}
+.penjualan .main-content .container-content {
+    margin-left: inherit;
+}
+.box-penjualan {
+    width: 40%;
+    height: 100%;
+    position: fixed;
+    background: #fff;
+    right: 0;
+    top: 0;
+    box-shadow: 0 0 2rem 0 rgba(136, 152, 170, 0.15);
+}
+.box-penjualan .relative {
+    position: relative;
+    height: 100%;
+    width: 100%;
+}
+.form-line {
+    border: none;
+    border-bottom: 1px solid #dee2e6;
+    border-radius: 0px;
+}
+.row-menu .col-md-3 {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.row-menu .menu {
+    width: 100%;
+    min-height: 200px;
+    position: relative;
+    border-radius: 7px;
+    border: 1px solid #f0f3f8;
+    cursor: pointer;
+}
+.row-menu .menu .img div {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+    left: 50%;
+    width: 100%;
+    font-size: 14px;
+    color: white;
+    text-align: center;
+}
+.row-menu .menu .img div span.info {
+    background: rgba(255, 255, 255, 0.3);
+}
+.row-menu .menu .img div span.picked {
+    background: rgba(241, 64, 76, 0.3);
+    border: 3px solid rgba(255, 255, 255, 0.3);
+}
+.row-menu .menu .img div span {
+    border-radius: 50px;
+    padding: 5px 8px;
+    transition: all.3s ease;
+    display: none;
+}
+.row-menu .menu[data-pick="false"]:hover .img div span.info,
+.row-menu .menu[data-pick="true"] .img div span.picked {
+    display: inline-block;
+}
+.row-menu .menu .img::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(24, 38, 77, 0.3);
+    border-radius: 7px;
+}
+.row-menu .menu .img {
+    position: relative;
+    width: 100%;
+    height: 138px;
+}
+.row-menu .menu .img img {
+    border-radius: 7px;
+    width: 100%;
+    height: 100%;
+}
+.row-menu .menu .info {
+    padding: 10px;
+}
+.input-group-prepend .select2-selection.select2-selection--single {
+    padding: 0.625rem 2.3rem;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.box-penjualan .sticky-bottom {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    right: 0;
+    background: white;
+    box-shadow: 0 0 2rem 0 rgba(136, 152, 170, 0.15);
+}
+.box-penjualan .sticky-bottom .btn {
+    border-top-left-radius: 30px;
+}
+.box-penjualan form {
+    max-height: 680px;
+    overflow: auto;
+}
+.change-qty{
+    position: relative;
+}
+.change-qty button:first-child {
+    left: 0;
+    border-top-left-radius: .25rem;
+    border-bottom-left-radius: .25rem;
+}
+.change-qty button:last-child {
+    border-top-right-radius: .25rem;
+    border-bottom-right-radius: .25rem;
+    right: 0;
+}
+.change-qty button {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    border : none;
+    background: #ffc107;
+    color : #fff;
+    font-size: 20px;
+    font-weight: bold;
+    padding : 0px 10px;
+}
+.keranjang td, .keranjang th{
+    white-space: normal;
 }

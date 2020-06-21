@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Penjualan;
 use App\DetailPenjualan;
+use App\KategoriMenu;
 use \App\Menu;
 use \App\DetailDiskon;
 
@@ -103,11 +104,12 @@ class PenjualanController extends Controller
 
     public function create()
     {
-        $this->param['pageInfo'] = 'Tambah Penjualan';
+        $this->param['pageInfo'] = 'Daftar Menu';
         $this->param['btnRight']['text'] = 'Lihat Penjualan';
         $this->param['btnRight']['link'] = route('penjualan.index');
         $this->param['kode_penjualan'] = $this->getKode();
-        $this->param['menu'] = Menu::where('status', '=', 'Ready')->select('kode_menu','nama')->get();
+        $this->param['kategori'] = KategoriMenu::select('id_kategori_menu','kategori_menu')->get();
+        $this->param['menu'] = Menu::where('status', '=', 'Ready')->select('kode_menu','nama','foto','harga_jual')->get();
         
         return view('penjualan.penjualan.tambah-penjualan', $this->param);
     }
@@ -241,6 +243,23 @@ class PenjualanController extends Controller
         $penjualan->save();
 
         return redirect()->route('pembayaran')->withStatus('Pembayaran berhasil.');    
+    }
+    public function filter()
+    {
+        $menu = Menu::where('status', '=', 'Ready');
+        if($_GET['idKategori']!='' || $_GET['key']!=""){
+            if($_GET['key']!='' && $_GET['idKategori']==''){
+                $menu->where('nama','like','%'.$_GET['key'].'%');
+            }
+            else{
+                $menu->where('nama','like','%'.$_GET['key'].'%')
+                ->where('id_kategori_menu', $_GET['idKategori']);
+            }
+        }
+        $menu->select('kode_menu','nama','foto','harga_jual');
+        $filter = $menu->get();
+
+        return view('penjualan.penjualan.loop-menu', ['menu' => $filter]);
     }
 
     public function laporanPenjualan()

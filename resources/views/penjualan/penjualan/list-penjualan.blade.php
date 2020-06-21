@@ -57,6 +57,7 @@
                   $no = !$page || $page == 1 ? 1 : ($page - 1) * 10 + 1;
                 @endphp
                 @foreach ($penjualan as $value)
+                @php $no++ @endphp
                       <tr>
                         <td>{{$no}}</td>
                         <td>{{$value->kode_penjualan}}</td>

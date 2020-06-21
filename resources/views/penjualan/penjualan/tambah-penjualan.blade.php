@@ -4,96 +4,185 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
-            <div class="row align-items-center">
+              <div class="row align-items-center">
                 <div class="col-8">
                   <h3 class="mb-0">{{$pageInfo}}</h3>
                 </div>
               </div>
             </div>
-            <form action="{{ route('penjualan.store') }}" method="post">
-              @csrf
-              <div class="card-body">
-              <h6 class="heading-small text-muted mb-4">Informasi Umum</h6>
-                  <div class="row pl-lg-4">
-                    <div class="col-md-4 mb-2">
-                        <label for="" class="form-control-label">Kode Penjualan</label>
-                        <input type="text" class="form-control" id="kode" name='kode_penjualan' value="{{$kode_penjualan}}" readonly>
-                    </div>
-                    <div class="col-md-4 mb-2">
-                        <label for="" class="form-control-label">Nama Customer</label>
-                        <input type="text" class="form-control @error('nama_customer') is-invalid @enderror" name='nama_customer' value="{{old('nama_customer')}}">
-                        @error('nama_customer')
-                          <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                          </span>
-                        @enderror
-                    </div>
-
-                    <div class="col-md-4 mb-2">
-                        <label for="" class="form-control-label">No Handphone</label>
-                        <input type="number" class="form-control @error('no_hp') is-invalid @enderror" name='no_hp' value="{{old('no_hp')}}">
-                        @error('no_hp')
-                          <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                          </span>
-                        @enderror
-                    </div>
-                    
-                    <div class="col-md-4 mb-2">
-                        <label for="" class="form-control-label">No Meja</label>
-                        <input type="number" class="form-control @error('no_meja') is-invalid @enderror" name='no_meja' value="{{old('no_meja')}}">
-                        @error('no_meja')
-                          <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                          </span>
-                        @enderror
-                    </div>
-                    
-                    <div class="col-md-4 mb-2">
-                        <label for="" class="form-control-label">Jenis Order</label>
-                        <select name="jenis_order" class="form-control select2 @error('jenis_order') is-invalid @enderror ">
-                          <option value="">--Pilih Jenis Order--</option>
-                          <option value="Dine In" {{old('jenis_order') == 'Dine In' ? 'selected' : ''}} >Dine In</option>
-                          <option value="Take Away" {{old('jenis_order') == 'Take Away' ? 'selected' : ''}} >Take Away</option>
+            <div class="card-body">
+              <form action="" method="" id="formFilterMenu">
+              <div class="row mb-4">
+                  <div class="col-md-12">
+                    <div class="input-group mb-2">
+                      <div class="input-group-prepend mr-0">
+                        <select name="" id="idKategori" class='form-control px-4 select2'>
+                          <option value="">Semua Kategori</option>
+                          @foreach($kategori as $data)
+                            <option value="{{$data->id_kategori_menu}}">{{$data->kategori_menu}}</option>
+                          @endforeach
                         </select>
-                        @error('jenis_order')
-                          <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                          </span>
-                        @enderror
-                    </div>
-                  </div>
-                  <hr class="my-4">
-                  <h6 class="heading-small text-muted mb-4">Detail Penjualan</h6>
-                  <div class="pl-lg-4" id='urlAddDetail' data-url="{{url('penjualan/penjualan/addDetailPenjualan')}}">
-                  @if(!is_null(old('kode_menu')))
-                    @php $no = 0 @endphp
-                    @foreach(old('kode_menu') as $n => $value)
-                      @php $no++ @endphp
-                      @include('penjualan.penjualan.tambah-detail-penjualan',['hapus' => false, 'no' => $no, 'menu' => $menu])
-                    @endforeach
-                  @else
-                    @include('penjualan.penjualan.tambah-detail-penjualan',['hapus' => false, 'no' => 1, 'menu' => $menu])
-                  @endif
-                  </div>
-                  <div class="row">
-                    <div class="col-3">
-                      <h2 class='pl-4 mt-3'>Total : <span id='total_harga' class="text-orange">0</span></h2>
-                    </div>
-                    <div class="col-3">
-                      <h2 class='pl-4 mt-3'>PPN : <span id='total_ppn' class="text-orange">0</span></h2>
-                    </div>
-                    <div class="col-3">
-                      <h2 class='pl-4 mt-3'>Grand Total : <span id='grand_total' class="text-orange">0</span></h2>
-                    </div>
-                  </div>
-                  <div class="mt-4">
-                  <button type="submit" class="btn btn-primary"><span class="fa fa-save"></span> Simpan</button>
-                  <button type="reset" class="btn btn-secondary"><span class="fa fa-times"></span> Reset</button>
-                  </div>
+                      </div>
+                      <input type="text" class="form-control" id="key" placeholder="Cari Menu Disini..">
+                        <div class="input-group-append">
+                          <button class="btn btn-primary">Filter</button>
+                        </div>
+                    </div>                    
+                  </div>                
+                </div>
+              </form>
+              <div class="row row-menu">
+                @include('penjualan.penjualan.loop-menu')
               </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
+<div class="box-penjualan">
+  <div class="relative">
+
+  <form action="{{ route('penjualan.store') }}" method="post">
+    @csrf
+    <div class="container py-4">
+      <div class="col-md-12">
+        <input type="hidden" name="kode_penjualan" id='kode' value='{{$kode_penjualan}}'>
+        <h2>{{$kode_penjualan}}</h2>
+        <hr class="mt-1">
+        <div class="row">
+          <div class="col-md-6">
+            <input type="number" class="form-control form-line @error('no_meja') is-invalid @enderror" name='no_meja' value="{{old('no_meja')}}" placeholder='Nomor  Meja' autocomplete='off'>
+            @error('no_meja')
+            <span class="invalid-feedback" role="alert">
+              <strong>{{ $message }}</strong>
+            </span>
+            @enderror
+          </div>
+          <div class="col-md-6">
+            <input type="text" class="form-control form-line @error('nama_customer') is-invalid @enderror" name='nama_customer' value="{{old('nama_customer')}}" placeholder='Nama Customer' autocomplete='off'>
+            @error('nama_customer')
+            <span class="invalid-feedback" role="alert">
+              <strong>{{ $message }}</strong>
+            </span>
+            @enderror
+          </div>
+          <div class="col-md-6 mt-3">
+            <input type="number" class="form-control form-line @error('no_hp') is-invalid @enderror" name='no_hp' value="{{old('no_hp')}}" placeholder='Nomor Hp' autocomplete='off'>
+              @error('no_hp')
+              <span class="invalid-feedback" role="alert">
+                <strong>{{ $message }}</strong>
+              </span>
+              @enderror
+            </div>
+            <div class="col-md-6 mt-3">
+              <select name="jenis_order" class="form-control form-line @error('jenis_order') is-invalid @enderror ">
+              <option value="">Jenis Order</option>
+              <option value="Dine In" {{old('jenis_order') == 'Dine In' ? 'selected' : ''}} >Dine In</option>
+              <option value="Take Away" {{old('jenis_order') == 'Take Away' ? 'selected' : ''}} >Take Away</option>
+            </select>
+            @error('jenis_order')
+            <span class="invalid-feedback" role="alert">
+              <strong>{{ $message }}</strong>
+              </span>
+            @enderror
+          </div>
+        </div>
+        <h2 class='mt-4'>Keranjang Menu</h2>
+        <div class="table-responsive">
+        <table class="table align-items-center table-flush keranjang table-striped table-hover">
+          <thead class="thead-light">
+            <tr>
+              <th width='10%'>#</th>
+              <th width='25%' class='text-center'>Menu</th>
+              <th width='25%' class='text-center'>Qty</th>
+              <th width='15%' class='text-center'>Diskon</th>
+              <th width='15%' class='text-center'>Subtotal</th>
+              <th width='10%'></th>
+            </tr>
+          </thead>
+          <?php 
+            $qty = 0;
+            $diskon = 0;
+            $subtotal = 0;
+            $total = 0;
+            if(!is_null(old('kode_menu'))){
+                $no = 0;
+          ?>
+            <tbody class='tbodyLoop' data-no="{{count(old('kode_menu'))}}">
+              @foreach(old('kode_menu') as $i => $value)
+              @php 
+                $no++; 
+                $qty = $qty + old('qty.'.$i);
+                $diskon = $diskon + old('diskon.'.$i);
+                $subtotal = $subtotal + old('subtotal.'.$i);
+              @endphp
+                <tr data-tr='{{$no}}' class='tr'>
+                    <td colspan='6' class='p-0'>
+                      <table width='100%'>
+                        <tr>
+                          <td width='10%' class='no'>{{$no}}</td>
+                          <td width='25%'>
+                          <input type='hidden' name='kode_menu[]' class='inputKodeMenu' value="{{old('kode_menu.'.$i)}}"> 
+                          <input type='hidden' name='nama_menu[]' class='inputNamaMenu' value="{{old('nama_menu.'.$i)}}">
+                          {{old('nama_menu.'.$i)}}</td>
+                          <td width='25%'>
+                              <div class="change-qty">
+                                  <input type="hidden" name="harga[]" value="{{old('harga.'.$i)}}" class="inputHarga">
+                                  <button class='btnqty' data-tipe='min'>-</button>
+                                  <input type='text' name='qty[]' value="{{old('qty.'.$i)}}" class='form-control text-center inputQty' readonly>
+                                  <button class='btnqty' data-tipe='plus'>+</button>
+                              </div>
+                          </td>
+                          <td width='15%' class='tdDiskon'><input type='hidden' class='inputDiskon' name='diskon[]' value="{{old('diskon.'.$i)}}"> {{number_format(old('diskon.'.$i),0,',','.')}}</td>
+                          <td width='15%' class='tdSubtotal'><input type='hidden' name='subtotal[]' value="{{old('subtotal.'.$i)}}" class='inputSubtotal'> <span> {{number_format(old('subtotal.'.$i),0,',','.')}}</span></td>
+                          <td width='10%'><a href='' title="Hapus" class='deleteCart'><span class='fa fa-trash fa-lg'></span></a></td>
+                        </tr>
+                        <tr>
+                            <td colspan='6' class='p-0'>
+                                <input type="text" class="form-control form-line" name="keterangan[]" value="{{old('keterangan.'.$i)}}" placeholder="Keterangan">
+                            </td>
+                        </tr>
+                      </table>
+                    </td>
+                </tr>
+              @endforeach
+            </tbody>
+          <?php
+            $total = $subtotal - $diskon;
+            }
+            else{
+          ?>
+            <tbody class='tbodyLoop' data-no='0'>
+            </tbody>
+          <?php } ?>
+          <tfoot class='bg-dark text-white'>
+            <td colspan='2' class='text-center'></td>
+            <td id='tfootQty' class='text-center'>{{$qty}}</td>
+            <td id='tfootDiskon'>{{number_format($diskon,0,',','.')}}</td>
+            <td colspan='2' id='tfootSubtotal'>{{number_format($subtotal,0,',','.')}}</td>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="sticky-bottom">
+    <div class="row">
+      <div class="col-md-6 pl-5">
+        <h2 class='mt-2'>Total : <span id='total' class="text-primary"> {{number_format($total,0,',','.')}}</span></h2>
+      </div>
+      <div class="col-md-6 pr-0">
+        <button class='btn py-3 btn-primary btn-block'>CHECKOUT</button>
+      </div>
+    </div>
+  </div>
+</form>
+</div>
+</div>
+
+<script>
+    var body = document.querySelector('body')
+    body.classList.add('fullpage')
+    body.classList.add('penjualan')
+    var span = document.querySelector('.fullpage-version span')
+    span.classList.add('fa-chevron-right')
+</script>
 @endsection

@@ -222,6 +222,9 @@
     <nav class="navbar navbar-top navbar-expand navbar-dark bg-primary-opacity border-bottom">
       <div class="container-fluid">
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="mr-sm-3">
+          <a href="" class="fullpage-version"><span class="fa fa-chevron-left"></span></a>
+        </div>
           <!-- Navbar links -->
           <ul class="navbar-nav align-items-center  ml-md-auto ">
             <li class="nav-item d-xl-none">
@@ -437,7 +440,7 @@
     </div>
     </div>
     <!-- Page content -->
-    <div class="container-fluid mt--6">
+    <div class="container-fluid mt--6 container-content">
     @yield('content')
       <!-- Footer -->
       <footer class="footer pt-0">
