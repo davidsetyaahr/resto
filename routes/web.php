@@ -44,6 +44,7 @@ Route::prefix('pemakaian-barang/')->group(function() {
     Route::resource('pemakaian', 'PemakaianController');
 });
 Route::prefix('penjualan/')->group(function() {
+    Route::get('{kode}/edit', 'PenjualanController@edit')->name('edit-penjualan');
     Route::get('penjualan/addDetailPenjualan', 'PenjualanController@addDetailPenjualan');
     Route::get('penjualan/getKode', 'PenjualanController@getKode')->name('penjualan.get-kode');
     Route::get('penjualan/get-detail-menu', 'PenjualanController@getDetailMenu')->name('get-detail-menu');
@@ -52,7 +53,7 @@ Route::prefix('penjualan/')->group(function() {
     Route::get('laporan-penjualan', 'PenjualanController@laporanPenjualan')->name('laporan-penjualan');
     Route::get('menu-terlaris', 'PenjualanController@menuTerlaris')->name('menu-terlaris');
     Route::get('pembayaran', 'PenjualanController@listPembayaran')->name('pembayaran');
-    Route::get('pembayaran/bayar/{kode}', 'PenjualanController@pembayaran')->name('penjualan.bayar');
+    Route::get('pembayaran/{kode}', 'PenjualanController@pembayaran')->name('penjualan.bayar');
     Route::put('pembayaran/save/{kode}', 'PenjualanController@savePembayaran')->name('pembayaran.save');
     Route::resource('penjualan', 'PenjualanController');
 });

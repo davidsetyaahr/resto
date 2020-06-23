@@ -55,7 +55,6 @@
                   $no = !$page || $page == 1 ? 1 : ($page - 1) * 10 + 1;
                 @endphp
                 @foreach ($penjualan as $value)
-                @php $no++ @endphp
                       <tr>
                         <td>{{$no}}</td>
                         <td>{{$value->kode_penjualan}}</td>
@@ -77,18 +76,21 @@
                               <i class="fas fa-ellipsis-v"></i>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                              <a class="dropdown-item" href="{{ route('penjualan.edit', $value->kode_penjualan) }}">Edit</a>
-                              {{-- <form action="{{ route('penjualan.destroy', $value->kode_penjualan) }}" method="post">
+                            <a class="dropdown-item" href="{{ route('penjualan.bayar', $value->kode_penjualan) }}">Pembayaran</a>
+                              <a class="dropdown-item" href="{{ url('penjualan/'.$value->kode_penjualan.'/edit') }}">Edit</a>
+                              <form action="{{ route('penjualan.destroy', $value->kode_penjualan) }}" method="post">
                                 @csrf
                                 @method('delete')
                                 <button type="button" class="mr-1 dropdown-item" onclick="confirm('{{ __("Apakah anda yakin ingin menghapus?") }}') ? this.parentElement.submit() : ''">
                                   Hapus
                                 </button>
-                              </form>                           --}}
+                              </form>                          
                             </div>
                           </div>
                         </td>
                       </tr>
+                      @php $no++ @endphp
+
                   @endforeach
                 </tbody>
                 <tfoot>

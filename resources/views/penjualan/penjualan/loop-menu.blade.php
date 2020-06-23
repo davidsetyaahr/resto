@@ -1,8 +1,8 @@
 @foreach($menu as $data)
 <?php
     $pick = 'false';
-    if(!is_null(old('kode_menu'))){
-        if(in_array($data->kode_menu, old('kode_menu'))){
+    if(!is_null(old('kode_menu')) || isset($penjualan)){
+        if((!is_null(old('kode_menu')) && in_array($data->kode_menu, old('kode_menu'))) || (isset($penjualan) && in_array($data->kode_menu, $menuOnDetail))){
             $pick = 'true';
         }
     }

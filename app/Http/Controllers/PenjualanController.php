@@ -23,7 +23,7 @@ class PenjualanController extends Controller
         $this->param['pageInfo'] = 'Daftar Penjualan';
         $this->param['btnRight']['text'] = 'Tambah Penjualan';
         $this->param['btnRight']['link'] = route('penjualan.create');
-        $this->param['penjualan'] = Penjualan::paginate(10);
+        $this->param['penjualan'] = Penjualan::where('status_bayar','Belum Bayar')->paginate(10);
         
         return view('penjualan.penjualan.list-penjualan', $this->param);
     }
@@ -149,6 +149,7 @@ class PenjualanController extends Controller
         $newPenjualan->total_ppn = $totalPpn;
         $newPenjualan->waktu = date('Y-m-d H:i:s');
         $newPenjualan->jumlah_qty = $ttlQty;
+        $newPenjualan->jenis_bayar = '';
         $newPenjualan->total_diskon = $totalDiskon;
 
         $newPenjualan->save();
@@ -165,7 +166,7 @@ class PenjualanController extends Controller
 
             $newDetail->save();
         }
-        return redirect()->route('penjualan.index')->withStatus('Data berhasil ditambahkan.');
+        return redirect()->route('penjualan.create')->withStatus('Data berhasil ditambahkan.');
     }
 
     public function show($id)
@@ -173,9 +174,22 @@ class PenjualanController extends Controller
         //
     }
 
-    public function edit($id)
+    public function edit($kodePenjualan)
     {
-        //
+        $this->param['pageInfo'] = 'Daftar Menu';
+        $this->param['btnRight']['text'] = 'Lihat Penjualan';
+        $this->param['btnRight']['link'] = route('penjualan.index');
+        $this->param['kategori'] = KategoriMenu::select('id_kategori_menu','kategori_menu')->get();
+        $this->param['menu'] = Menu::where('status', '=', 'Ready')->select('kode_menu','nama','foto','harga_jual')->get();
+        $this->param['penjualan'] = Penjualan::findOrFail($kodePenjualan);
+        $this->param['detail'] = \DB::table('detail_penjualan as dp')->select('dp.*','dp.sub_total as subtotal','m.harga_jual as harga','m.nama as nama_menu')->join('menu as m','dp.kode_menu','m.kode_menu')->where('kode_penjualan',$kodePenjualan)->get()->toArray();
+        $getKodeMenu = DetailPenjualan::select('kode_menu')->where('kode_penjualan',$kodePenjualan)->get()->toArray();
+        $arrKode = [];
+        foreach ($getKodeMenu as $key => $value) {
+            array_push($arrKode, $value['kode_menu']);
+        }
+        $this->param['menuOnDetail'] = $arrKode;
+        return view('penjualan.penjualan.edit-penjualan', $this->param);
     }
 
     /**
@@ -185,9 +199,80 @@ class PenjualanController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $kodePenjualan)
     {
-        //
+        $validatedData = $request->validate([
+            'kode_penjualan' => 'required',
+            'nama_customer' => 'required',
+            'no_meja' => 'required|numeric',
+            'jenis_order' => 'required',
+            'kode_menu.*' => 'required',
+            'qty.*' => 'required|integer|min:1',
+        ]);
+        
+        $totalHarga = 0;
+        $totalDiskon = 0;
+        $totalQty = 0;
+        foreach ($_POST['kode_menu'] as $key => $value) {
+
+            $totalHarga += $_POST['qty'][$key] * $_POST['harga'][$key];
+            $totalDiskon += $_POST['diskon'][$key];
+            $totalQty += $_POST['qty'][$key];
+
+            if(empty($_POST['id_detail'][$key])){
+                //insert new
+                $newDetail = new DetailPenjualan;
+                $newDetail->kode_penjualan = $request->get('kode_penjualan');
+                $newDetail->kode_menu = $_POST['kode_menu'][$key];
+                $newDetail->sub_total = $_POST['subtotal'][$key];
+                $newDetail->sub_total_ppn = $_POST['subtotal'][$key] * 10 / 100;
+                $newDetail->keterangan = $_POST['keterangan'][$key];
+                $newDetail->qty = $_POST['qty'][$key];
+                $newDetail->diskon = $_POST['diskon'][$key];
+    
+                $newDetail->save();
+            }
+            else{
+                $getDetail = DetailPenjualan::select('qty','keterangan')->where('id_detail_penjualan',$_POST['id_detail'][$key])->get()[0];
+                if($getDetail->qty!=$_POST['qty'][$key] || $getDetail->keterangan!=$_POST['keterangan'][$key]){
+                    //update   
+                    DetailPenjualan::where('id_detail_penjualan', $_POST['id_detail'][$key])
+                    ->update([
+                        'sub_total' => $_POST['subtotal'][$key],
+                        'sub_total_ppn' => $_POST['subtotal'][$key] * 10 / 100,
+                        'keterangan' => $_POST['keterangan'][$key],
+                        'qty' => $_POST['qty'][$key], 
+                        'diskon' => $_POST['diskon'][$key],
+                    ]);
+                }
+            }
+        }
+
+        if(isset($_POST['id_delete'])){
+            foreach ($_POST['id_delete'] as $key => $value) {
+                //delete
+                DetailPenjualan::where('id_detail_penjualan', $value)->delete();
+            }
+        }
+
+        $total = $totalHarga - $totalDiskon;
+        $totalPpn = $total * 10 / 100;
+
+        Penjualan::where('kode_penjualan',$kodePenjualan)
+        ->update([
+            'nama_customer' => $_POST['nama_customer'],
+            'no_hp' => $_POST['no_hp'],
+            'no_meja' => $_POST['no_meja'],
+            'jenis_order' => $_POST['jenis_order'],
+            'jumlah_item' => count($_POST['kode_menu']),
+            'total_harga' => $totalHarga,
+            'total_ppn' => $totalPpn,
+            'waktu' => date('Y-m-d H:i:s'),
+            'jumlah_qty' => $totalQty,
+            'total_diskon' => $totalDiskon,
+        ]);
+        
+        return redirect()->route('edit-penjualan',['kode' => $kodePenjualan])->withStatus('Data berhasil diperbarui.');
     }
 
     /**
@@ -196,9 +281,14 @@ class PenjualanController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($kode)
     {
-        //
+        DetailPenjualan::where('kode_penjualan',$kode)->delete();
+        Penjualan::where('kode_penjualan',$kode)->delete();
+
+        return redirect()->route('penjualan.index')->withStatus('Data berhasil dihapus.');
+
+
     }
 
     public function listPembayaran()

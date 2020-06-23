@@ -196,11 +196,11 @@ class PembelianController extends Controller
                         'subtotal' => $_POST['subtotal'][$key],
                         ]);
                         
-                    }
+            }
                     $newQty = $newQty + $_POST['qty'][$key];
                     $newTotal = $newTotal + $_POST['subtotal'][$key];
                     
-                }
+        }
                 
                 if(isset($_POST['id_delete'])){
                     foreach ($_POST['id_delete'] as $key => $value) {

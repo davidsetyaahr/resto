@@ -3,30 +3,31 @@ $(document).ready(function() {
         format: "yyyy-mm-dd"
     });
     $(".select2").select2();
-    $(".fullpage-version").click(function(e){
-        e.preventDefault()
-        $("body").toggleClass('fullpage')
-        $(".fullpage-version span").toggleClass("fa-chevron-right")
-    })
+    $(".fullpage-version").click(function(e) {
+        e.preventDefault();
+        $("body").toggleClass("fullpage");
+        $(".fullpage-version span").toggleClass("fa-chevron-right");
+    });
     $("form").submit(function() {
         $(".loading").addClass("show");
     });
-    $(".nav-link[data-toggle='collapse']").click(function(){
-        if($(this).hasClass('collapsed')){
-            $(".nav-link[data-toggle='collapse']").addClass('collapsed')
-            $(".nav-link[data-toggle='collapse']").attr('aria-expanded',false)
+    $(".nav-link[data-toggle='collapse']").click(function() {
+        if ($(this).hasClass("collapsed")) {
+            $(".nav-link[data-toggle='collapse']").addClass("collapsed");
+            $(".nav-link[data-toggle='collapse']").attr("aria-expanded", false);
 
-            $(this).removeClass('collapsed')
-            $(this).attr('aria-expanded',true)
-        
-            var target = $(this).data('target')
-            $('.nav-collapse.collapse').removeClass('show')
-            $('.nav-collapse.collapse'+target).addClass('collapsing')
+            $(this).removeClass("collapsed");
+            $(this).attr("aria-expanded", true);
+
+            var target = $(this).data("target");
+            $(".nav-collapse.collapse").removeClass("show");
+            $(".nav-collapse.collapse" + target).addClass("collapsing");
         }
-/*         $(".nav-collapse").removeClass('show')
+        /*         $(".nav-collapse").removeClass('show')
         var target = $(this).data('target')
         $(".nav-collapse"+target).toggleClass('show')
- */    })
+ */
+    });
     function formatRupiah(angka) {
         var number_string = angka.toString(),
             sisa = number_string.length % 3,
@@ -161,22 +162,22 @@ $(document).ready(function() {
             }
         });
     });
-    
+
     $(".getKodeKas").change(function() {
-        var tanggal = $('#tanggal').val();
-        var tipe = $('#tipe').val();
+        var tanggal = $("#tanggal").val();
+        var tipe = $("#tipe").val();
         var url = $(this).data("url");
 
         $.ajax({
             type: "get",
             url: url,
-            data: { tanggal: tanggal, tipe : tipe },
+            data: { tanggal: tanggal, tipe: tipe },
             success: function(data) {
                 $("#kode").val(data);
             }
         });
     });
-    
+
     function barang(thisParam) {
         var kode = thisParam.val();
         var no = thisParam.closest(".row-detail").data("no");
@@ -201,24 +202,24 @@ $(document).ready(function() {
         var thisVal = $(this).val();
         if (thisVal == "Debit") {
             $("#debit_only").show();
-            $('#no_kartu').attr('required', true);
+            $("#no_kartu").attr("required", true);
         } else {
             $("#debit_only").hide();
         }
     });
 
-    $('#diskon_tambahan').keyup(function () { 
+    $("#diskon_tambahan").keyup(function() {
         var diskon_tambahan = parseInt($(this).val());
-        var total = parseInt($('#total').val());
+        var total = parseInt($("#total").val());
         var grand_total = total - diskon_tambahan;
-        $('#grand_total').val(grand_total);
+        $("#grand_total").val(grand_total);
     });
-    
-    $('#bayar').keyup(function () { 
+
+    $("#bayar").keyup(function() {
         var terbayar = parseInt($(this).val());
-        var grand_total = parseInt($('#grand_total').val());
+        var grand_total = parseInt($("#grand_total").val());
         var kembalian = terbayar - grand_total;
-        $('#kembalian').val(kembalian);
+        $("#kembalian").val(kembalian);
     });
 
     function pjGetDetailMenu(thisParam) {
@@ -276,7 +277,7 @@ $(document).ready(function() {
             subtotalVal = isNaN(subtotalVal) ? 0 : subtotalVal;
             total = total + subtotalVal;
         });
-        totalPpn = total * 10 / 100;
+        totalPpn = (total * 10) / 100;
         $("#total_harga").html(formatRupiah(total));
         $("#total_ppn").html(formatRupiah(totalPpn));
         $("#grand_total").html(formatRupiah(total + totalPpn));
@@ -290,8 +291,8 @@ $(document).ready(function() {
         var kode = thisParam.val();
         var no = thisParam.closest(".row-detail").data("no");
         var parent = ".row-detail[data-no='" + no + "']";
-        var tipediskon = $('#jenis_diskon').val();
-        var diskon = parseInt($('#diskon').val());
+        var tipediskon = $("#jenis_diskon").val();
+        var diskon = parseInt($("#diskon").val());
 
         $.ajax({
             type: "get",
@@ -301,12 +302,15 @@ $(document).ready(function() {
                 var nominaldiskon = 0;
                 var harga = parseInt($.parseJSON(data)["harga_jual"]);
                 $(parent + " #harga_jual").val($.parseJSON(data)["harga_jual"]);
-                if (tipediskon == 'Persen') {
-                    nominaldiskon = harga * diskon / 100;
-                    $(parent + " #harga_setelah_diskon").val($.parseJSON(data)["harga_jual"] - nominaldiskon);
-                }
-                else if(tipediskon == 'Rupiah'){
-                    $(parent + " #harga_setelah_diskon").val($.parseJSON(data)["harga_jual"] - diskon)
+                if (tipediskon == "Persen") {
+                    nominaldiskon = (harga * diskon) / 100;
+                    $(parent + " #harga_setelah_diskon").val(
+                        $.parseJSON(data)["harga_jual"] - nominaldiskon
+                    );
+                } else if (tipediskon == "Rupiah") {
+                    $(parent + " #harga_setelah_diskon").val(
+                        $.parseJSON(data)["harga_jual"] - diskon
+                    );
                 }
             }
         });
@@ -330,55 +334,63 @@ $(document).ready(function() {
     $(".totalQty").keyup(function() {
         getTotalQty($(this));
     });
-    $("#formFilterMenu").submit(function(e){
-        e.preventDefault()
-        var idKategori = $("#idKategori").val()
-        var key = $("#key").val()
+    $("#formFilterMenu").submit(function(e) {
+        e.preventDefault();
+        var idKategori = $("#idKategori").val();
+        var key = $("#key").val();
 
         $.ajax({
-            type : 'get',
-            data : {idKategori : idKategori, key : key},
-            url : 'filter',
+            type: "get",
+            data: { idKategori: idKategori, key: key },
+            url: "filter",
             beforeSend: function() {
                 $(".loading").addClass("show");
             },
-            success : function(data){
+            success: function(data) {
                 $(".loading").removeClass("show");
-                $(".row-menu .col-md-3").remove()
-                $(".row-menu").append(data)
-                $(".keranjang .tbodyLoop .tr").each(function(){
-                    var no = $(this).attr('data-tr')
-                    var kodeMenu = $(".keranjang .tbodyLoop .tr[data-tr='"+no+"'] .inputKodeMenu").val()
-                    $(".menu[data-menu='"+kodeMenu+"']").attr('data-pick','true')
-                })
-                $(".menu").click(function(){
-                    pickMenu($(this))
-                })
+                $(".row-menu .col-md-3").remove();
+                $(".row-menu").append(data);
+                $(".keranjang .tbodyLoop .tr").each(function() {
+                    var no = $(this).attr("data-tr");
+                    var kodeMenu = $(
+                        ".keranjang .tbodyLoop .tr[data-tr='" +
+                            no +
+                            "'] .inputKodeMenu"
+                    ).val();
+                    $(".menu[data-menu='" + kodeMenu + "']").attr(
+                        "data-pick",
+                        "true"
+                    );
+                });
+                $(".menu").click(function() {
+                    pickMenu($(this));
+                });
             }
-        })
-    })
-    function pickMenu(thisParam){
-        var kode = thisParam.data('menu')
-        var picked = thisParam.attr('data-pick')
-        if(picked=='false'){
+        });
+    });
+    function pickMenu(thisParam) {
+        var kode = thisParam.data("menu");
+        var picked = thisParam.attr("data-pick");
+        var url = $(".row-menu").attr("data-urlDiskon");
+        if (picked == "false") {
             $.ajax({
                 type: "get",
-                url: "get-diskon",
+                url: url,
                 data: { kode: kode },
                 beforeSend: function() {
                     $(".loading").addClass("show");
                 },
-                success : function(data){
+                success: function(data) {
                     $(".loading").removeClass("show");
-                    var selector = ".menu[data-menu='"+kode+"']";
-                    $(selector).attr('data-pick','true')
-                    var namaMenu = $(selector+" .info h4").html()
-                    var hargaIDR = $(selector+" .info h5").data('harga')
+                    var selector = ".menu[data-menu='" + kode + "']";
+                    $(selector).attr("data-pick", "true");
+                    var namaMenu = $(selector + " .info h4").html();
+                    var hargaIDR = $(selector + " .info h5").data("harga");
                     var diskon = formatRupiah(data);
-                    var subtotal = parseInt(hargaIDR) - parseInt(data)
-                    var no = $(".keranjang .tbodyLoop").attr('data-no')
-                    var newNo = parseInt(no)+1
-                    $(".keranjang .tbodyLoop").attr('data-no',newNo)
+                    var subtotal = parseInt(hargaIDR) - parseInt(data);
+                    var no = $(".keranjang .tbodyLoop").attr("data-no");
+                    var newNo = parseInt(no) + 1;
+                    $(".keranjang .tbodyLoop").attr("data-no", newNo);
                     $(".keranjang .tbodyLoop").append(`
                     <tr data-tr='${newNo}' class='tr'>
                         <td colspan='6' class='p-0'>
@@ -398,7 +410,9 @@ $(document).ready(function() {
                                         </div>
                                     </td>
                                     <td width='15%' class='tdDiskon'><input type='hidden' class='inputDiskon' name='diskon[]' value='${data}'> ${diskon}</td>
-                                    <td width='15%' class='tdSubtotal'><input type='hidden' name='subtotal[]' value='${subtotal}' class='inputSubtotal'> <span> ${formatRupiah(subtotal)}</span></td>
+                                    <td width='15%' class='tdSubtotal'><input type='hidden' name='subtotal[]' value='${subtotal}' class='inputSubtotal'> <span> ${formatRupiah(
+                        subtotal
+                    )}</span></td>
                                     <td width='10%'><a href='' title="Hapus" class='deleteCart'><span class='fa fa-trash fa-lg'></span></a></td>
                                 </tr>
                                 <tr>
@@ -409,97 +423,147 @@ $(document).ready(function() {
                             </table>
                         </td>
                     </tr>
-                    `)
+                    `);
                     getTfoot();
-                    $(".keranjang .tbodyLoop .tr[data-tr='"+newNo+"'] .deleteCart").click(function(e){
-                        e.preventDefault()
-                        deleteCart($(this))
-                    })
-                    $(".keranjang .tbodyLoop .tr[data-tr='"+newNo+"'] .change-qty .btnqty").click(function(e){
-                        e.preventDefault()
-                        changeQty($(this))
-                    })
+                    $(
+                        ".keranjang .tbodyLoop .tr[data-tr='" +
+                            newNo +
+                            "'] .deleteCart"
+                    ).click(function(e) {
+                        e.preventDefault();
+                        deleteCart($(this));
+                    });
+                    $(
+                        ".keranjang .tbodyLoop .tr[data-tr='" +
+                            newNo +
+                            "'] .change-qty .btnqty"
+                    ).click(function(e) {
+                        e.preventDefault();
+                        changeQty($(this));
+                    });
                 }
-            })
+            });
         }
     }
-    $(".keranjang .tbodyLoop .tr .change-qty .btnqty").click(function(e){
-        e.preventDefault()
-        changeQty($(this))
-    })
+    $(".keranjang .tbodyLoop .tr .change-qty .btnqty").click(function(e) {
+        e.preventDefault();
+        changeQty($(this));
+    });
 
-    function changeQty(thisParam){
+    function changeQty(thisParam) {
         var no = thisParam.closest(".tr").attr("data-tr");
-        var tipe = thisParam.data('tipe')
-        var input = ".keranjang .tbodyLoop .tr[data-tr='"+no+"'] .inputQty"
-        var qty = parseInt($(input).val())
-        var harga = parseInt($(".keranjang .tbodyLoop .tr[data-tr='"+no+"'] .inputHarga").val())
-        var update = true
-        if(tipe=='min'){
-            if(qty>1){
-                newQty = qty-1
-                $(input).val(newQty)
+        var tipe = thisParam.data("tipe");
+        var input = ".keranjang .tbodyLoop .tr[data-tr='" + no + "'] .inputQty";
+        var qty = parseInt($(input).val());
+        var harga = parseInt(
+            $(
+                ".keranjang .tbodyLoop .tr[data-tr='" + no + "'] .inputHarga"
+            ).val()
+        );
+        var update = true;
+        if (tipe == "min") {
+            if (qty > 1) {
+                newQty = qty - 1;
+                $(input).val(newQty);
+            } else {
+                update = false;
             }
-            else{
-                update = false
-            }
+        } else {
+            newQty = qty + 1;
+            $(input).val(newQty);
         }
-        else{
-            newQty = qty+1
-            $(input).val(newQty)
-        }
-        if(update){
-            var subtotal = harga * newQty
-            $(".keranjang .tbodyLoop .tr[data-tr='"+no+"'] .tdSubtotal .inputSubtotal").val(subtotal)
-            $(".keranjang .tbodyLoop .tr[data-tr='"+no+"'] .tdSubtotal span").html(formatRupiah(subtotal))
+        if (update) {
+            var subtotal = harga * newQty;
+            $(
+                ".keranjang .tbodyLoop .tr[data-tr='" +
+                    no +
+                    "'] .tdSubtotal .inputSubtotal"
+            ).val(subtotal);
+            $(
+                ".keranjang .tbodyLoop .tr[data-tr='" +
+                    no +
+                    "'] .tdSubtotal span"
+            ).html(formatRupiah(subtotal));
             getTfoot();
         }
-
     }
-    $(".keranjang .tbodyLoop .tr .deleteCart").click(function(e){
-        e.preventDefault()
-        deleteCart($(this))
-    })
-    function deleteCart(thisParam){
-        if(confirm('Apakah anda yakin?')){
+    $(".keranjang .tbodyLoop .tr .deleteCart").click(function(e) {
+        e.preventDefault();
+        deleteCart($(this));
+    });
+    function deleteCart(thisParam) {
+        if (confirm("Apakah anda yakin?")) {
             var no = thisParam.closest(".tr").attr("data-tr");
-            var selector = ".keranjang .tbodyLoop .tr[data-tr='"+no+"']"
+            var selector = ".keranjang .tbodyLoop .tr[data-tr='" + no + "']";
 
-            var kodeMenu = $(selector+" .inputKodeMenu").val()
-            $(".menu[data-menu='"+kodeMenu+"']").attr('data-pick','false')
-            
-            $(selector).remove()
-            var numbOfNo = parseInt($(".keranjang .tbodyLoop").attr('data-no'))
-            var newNumbOfNo = numbOfNo - 1
-            $(".keranjang .tbodyLoop").attr('data-no',newNumbOfNo)
-            var updateNo = 0
-            $(".keranjang .tbodyLoop .tr").each(function(key,val){
-                updateNo++
-                $(this).attr('data-tr',updateNo)
-                $(".keranjang .tbodyLoop tr[data-tr='"+updateNo+"'] .no").html(updateNo)
-            })
-            getTfoot()
+            var kodeMenu = $(selector + " .inputKodeMenu").val();
+            $(".menu[data-menu='" + kodeMenu + "']").attr("data-pick", "false");
+
+            if ($(".box-penjualan form").hasClass("formEdit")) {
+                if ($(selector + " .idDetail").length == 1) {
+                    var idDetail = $(selector + " .idDetail").val();
+                    $(".formEdit").prepend(
+                        `<input type='hidden' name='id_delete[]' value='${idDetail}'>`
+                    );
+                }
+            }
+
+            $(selector).remove();
+            var numbOfNo = parseInt($(".keranjang .tbodyLoop").attr("data-no"));
+            var newNumbOfNo = numbOfNo - 1;
+            $(".keranjang .tbodyLoop").attr("data-no", newNumbOfNo);
+            var updateNo = 0;
+            $(".keranjang .tbodyLoop .tr").each(function(key, val) {
+                updateNo++;
+                $(this).attr("data-tr", updateNo);
+                $(
+                    ".keranjang .tbodyLoop tr[data-tr='" + updateNo + "'] .no"
+                ).html(updateNo);
+            });
+            getTfoot();
         }
     }
-    $(".menu").click(function(){
-        pickMenu($(this))
-    })
-    function getTfoot(){
-        var no = parseInt($(".keranjang .tbodyLoop").attr('data-no'))
+    $(".menu").click(function() {
+        pickMenu($(this));
+    });
+    function getTfoot() {
+        var no = parseInt($(".keranjang .tbodyLoop").attr("data-no"));
         var qty = 0;
         var diskon = 0;
         var subtotal = 0;
-        var selector = ".keranjang .tbodyLoop"
+        var selector = ".keranjang .tbodyLoop";
         for (let i = 1; i <= no; i++) {
-            qty = qty + parseInt($(selector+"  .tr[data-tr='"+i+"'] .inputQty").val())
-            diskon = diskon + parseInt($(selector+"  .tr[data-tr='"+i+"'] .tdDiskon .inputDiskon").val())
-            subtotal = subtotal + parseInt($(selector+"  .tr[data-tr='"+i+"'] .tdSubtotal .inputSubtotal").val())
+            qty =
+                qty +
+                parseInt(
+                    $(selector + "  .tr[data-tr='" + i + "'] .inputQty").val()
+                );
+            diskon =
+                diskon +
+                parseInt(
+                    $(
+                        selector +
+                            "  .tr[data-tr='" +
+                            i +
+                            "'] .tdDiskon .inputDiskon"
+                    ).val()
+                );
+            subtotal =
+                subtotal +
+                parseInt(
+                    $(
+                        selector +
+                            "  .tr[data-tr='" +
+                            i +
+                            "'] .tdSubtotal .inputSubtotal"
+                    ).val()
+                );
         }
         var total = subtotal - diskon;
 
-        $("#tfootQty").html(qty)
-        $("#tfootDiskon").html(formatRupiah(diskon))
-        $("#tfootSubtotal").html(formatRupiah(subtotal))
-        $("#total").html(formatRupiah(total))
+        $("#tfootQty").html(qty);
+        $("#tfootDiskon").html(formatRupiah(diskon));
+        $("#tfootSubtotal").html(formatRupiah(subtotal));
+        $("#total").html(formatRupiah(total));
     }
 });

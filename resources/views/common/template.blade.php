@@ -195,12 +195,12 @@
                       <span class="nav-link-text">Penjualan</span>
                     </a>
                   </li>
-                  <li class="nav-item">
+<!--                   <li class="nav-item">
                     <a class="nav-link" href="{{ route('pembayaran') }}">
                       <span class="nav-link-text">Pembayaran</span>
                     </a>
                   </li>
-                  <li class="nav-item">
+ -->                  <li class="nav-item">
                     <a class="nav-link" href="{{route('laporan-penjualan')}}?tipe=general">
                       <span class="nav-link-text">Laporan Penjualan</span>
                     </a>

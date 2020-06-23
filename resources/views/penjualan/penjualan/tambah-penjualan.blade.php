@@ -31,7 +31,7 @@
                   </div>                
                 </div>
               </form>
-              <div class="row row-menu">
+              <div class="row row-menu" data-urlDiskon="{{route('get-diskon')}}">
                 @include('penjualan.penjualan.loop-menu')
               </div>
             </div>
@@ -45,6 +45,16 @@
     @csrf
     <div class="container py-4">
       <div class="col-md-12">
+      @if (session('status'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('status') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <br>
+      @endif
+
         <input type="hidden" name="kode_penjualan" id='kode' value='{{$kode_penjualan}}'>
         <h2>{{$kode_penjualan}}</h2>
         <hr class="mt-1">
