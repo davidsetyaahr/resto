@@ -21,9 +21,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="Start your development with a Dashboard for Bootstrap 4.">
   <meta name="author" content="Creative Tim">
-  <title>Argon Dashboard - Free Dashboard for Bootstrap 4</title>
+  <title>{{$pageInfo}} - Baratha Coffee</title>
   <!-- Favicon -->
-  <link rel="icon" href="{{ asset('assets/img/brand/favicon.png') }}" type="image/png">
+  <link rel="icon" href="{{ asset('assets/img/coffee.png') }}" type="image/png">
   <!-- Fonts -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
   <!-- Icons -->
@@ -50,7 +50,7 @@
       <!-- Brand -->
       <div class="sidenav-header  align-items-center">
         <a class="navbar-brand" href="javascript:void(0)">
-          <img src="{{ asset('assets/img/brand/logo.png') }}" class="navbar-brand-img" alt="...">
+          <img src="{{ asset('assets/img/coffee.png') }}" class="navbar-brand-img" alt="...">
         </a>
       </div>
       <div class="navbar-inner">
@@ -63,6 +63,29 @@
                 <i class="ni ni-tv-2 text-primary"></i>
                 <span class="nav-link-text">Dashboard</span>
               </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link collapsed" href="" data-toggle="collapse" data-target="#penjualan" aria-expanded='false'>
+                <i class="ni ni-cart text-blue"></i>
+                <span class="nav-link-text">Penjualan</span>
+              </a>
+                <ul class="navbar-nav nav-collapse collapse" id="penjualan">
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ route('penjualan.index') }}">
+                      <span class="nav-link-text">Penjualan</span>
+                    </a>
+                  </li>
+<!--                   <li class="nav-item">
+                    <a class="nav-link" href="{{ route('pembayaran') }}">
+                      <span class="nav-link-text">Pembayaran</span>
+                    </a>
+                  </li>
+ -->                  <li class="nav-item">
+                    <a class="nav-link" href="{{route('laporan-penjualan')}}?tipe=general">
+                      <span class="nav-link-text">Laporan Penjualan</span>
+                    </a>
+                  </li>
+                </ul>
             </li>
             <li class="nav-item">
               <a class="nav-link collapsed" href="" data-toggle="collapse" data-target="#master-barang" aria-expanded='false'>
@@ -180,29 +203,6 @@
                   <li class="nav-item">
                     <a class="nav-link" href="{{url('kas/laporan-kas')}}">
                       <span class="nav-link-text">Laporan Kas</span>
-                    </a>
-                  </li>
-                </ul>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link collapsed" href="" data-toggle="collapse" data-target="#penjualan" aria-expanded='false'>
-                <i class="ni ni-cart text-blue"></i>
-                <span class="nav-link-text">Penjualan</span>
-              </a>
-                <ul class="navbar-nav nav-collapse collapse" id="penjualan">
-                  <li class="nav-item">
-                    <a class="nav-link" href="{{ route('penjualan.index') }}">
-                      <span class="nav-link-text">Penjualan</span>
-                    </a>
-                  </li>
-<!--                   <li class="nav-item">
-                    <a class="nav-link" href="{{ route('pembayaran') }}">
-                      <span class="nav-link-text">Pembayaran</span>
-                    </a>
-                  </li>
- -->                  <li class="nav-item">
-                    <a class="nav-link" href="{{route('laporan-penjualan')}}?tipe=general">
-                      <span class="nav-link-text">Laporan Penjualan</span>
                     </a>
                   </li>
                 </ul>
