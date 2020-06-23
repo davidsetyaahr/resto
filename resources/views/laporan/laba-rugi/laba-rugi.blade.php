@@ -107,7 +107,7 @@
                     <tr>
                       <td class="text-center"><b>Laba Rugi</b></td>
                       <td class="text-center"><b>{{number_format($labaRugi, 0, ',', '.')}}</b></td>
-                      </tr>
+                    </tr>
                   </tfoot>
                 </table>
               </div>

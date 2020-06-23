@@ -204,6 +204,11 @@ class BarangController extends Controller
             $barang = Barang::where('kode_barang', $kode)->get();
         }
 
-        return view('master-barang.posisi-stock.posisi-stock', $this->param, ['barang' => $barang, 'allBarang' => $allBarang]);
+        if ($request->get('print') == 'true') {
+            return view('master-barang.posisi-stock.print', $this->param, ['barang' => $barang, 'allBarang' => $allBarang]);
+        }
+        else{
+            return view('master-barang.posisi-stock.posisi-stock', $this->param, ['barang' => $barang, 'allBarang' => $allBarang]);
+        }
     }
 }

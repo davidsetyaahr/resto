@@ -37,6 +37,11 @@ class LabaRugiController extends Controller
         $this->param['totalPemakaian'] = $totalPemakaian;
         $this->param['totalKasKeluar'] = $totalKasKeluar;
 
-        return view('laporan.laba-rugi.laba-rugi', $this->param);
+        if ($request->get('print') == 'true') {
+            return view('laporan.laba-rugi.print', $this->param);
+        }
+        else{
+            return view('laporan.laba-rugi.laba-rugi', $this->param);
+        }
     }
 }
