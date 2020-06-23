@@ -207,15 +207,38 @@
                   </li>
                 </ul>
             </li>
+            <li class="nav-item">
+              <a class="nav-link collapsed" href="" data-toggle="collapse" data-target="#laporan" aria-expanded='false'>
+                <i class="ni ni-archive-2 text-purple"></i>
+                <span class="nav-link-text">Laporan</span>
+              </a>
+                <ul class="navbar-nav nav-collapse collapse" id="laporan">
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ route('laba-rugi') }}">
+                      <span class="nav-link-text">Laba Rugi</span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ route('menu-terlaris') }}">
+                      <span class="nav-link-text">Menu Terlaris</span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ route('menu-paling-menghasilkan') }}">
+                      <span class="nav-link-text">Menu Paling Menghasilkan</span>
+                    </a>
+                  </li>
+                </ul>
+            </li>
           </ul>
           <!-- Divider -->
-          <ul class="navbar-nav lima-section">
+          {{-- <ul class="navbar-nav lima-section">
             <li class="nav-item">
               <a class="nav-link active active-pro" href="upgrade.html">
                 <span class="nav-link-text text-success"><  By Lima Digital /></span>
               </a>
             </li>
-          </ul>
+          </ul> --}}
         </div>
       </div>
     </div>

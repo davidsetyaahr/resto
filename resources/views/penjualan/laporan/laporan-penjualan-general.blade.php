@@ -18,12 +18,14 @@
         $item = 0;
         $qty = 0;
         $total = 0;
+        $total_diskon = 0;
     ?>
     @foreach ($penjualan as $value)
     <?php 
         $item = $item + $value->jumlah_item;
         $qty = $qty + $value->jumlah_qty;
-        $total = $qty + $value->total_harga;
+        $total = $total + $value->total_harga;
+        $total_diskon = $total_diskon + $value->total_diskon;
     ?>
             <tr>
             <td>{{$loop->iteration}}</td>
@@ -44,7 +46,7 @@
         <td>{{$item}}</td>
         <td>{{$qty}}</td>
         <td>{{number_format($total,0,',','.')}}</td>
-        <td></td>
+        <td>{{number_format($total_diskon,0,',','.')}}</td>
         </tr>
     </tfoot>
     </table>

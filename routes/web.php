@@ -24,7 +24,12 @@ Route::prefix('master-barang/')->group(function() {
     Route::resource('barang', 'BarangController');
     Route::get('barang-minimum', 'BarangController@barangMinimum')->name('barang-minimum');
     Route::get('posisi-stock', 'BarangController@posisiStock')->name('posisi-stock');
+
 });
+Route::prefix('laporan/')->group(function() {
+    Route::get('laba-rugi', 'LabaRugiController@index')->name('laba-rugi');
+});
+
 Route::prefix('pembelian-barang/')->group(function() {
     Route::resource('supplier', 'SupplierController');
     Route::get('pembelian/addDetailPembelian', 'PembelianController@addDetailPembelian');
@@ -52,6 +57,7 @@ Route::prefix('penjualan/')->group(function() {
     Route::get('penjualan/filter', 'PenjualanController@filter');
     Route::get('laporan-penjualan', 'PenjualanController@laporanPenjualan')->name('laporan-penjualan');
     Route::get('menu-terlaris', 'PenjualanController@menuTerlaris')->name('menu-terlaris');
+    Route::get('menu-paling-menghasilkan', 'PenjualanController@menuPalingMenghasilkan')->name('menu-paling-menghasilkan');
     Route::get('pembayaran', 'PenjualanController@listPembayaran')->name('pembayaran');
     Route::get('pembayaran/{kode}', 'PenjualanController@pembayaran')->name('penjualan.bayar');
     Route::put('pembayaran/save/{kode}', 'PenjualanController@savePembayaran')->name('pembayaran.save');
