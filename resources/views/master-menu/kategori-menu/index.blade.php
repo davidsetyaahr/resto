@@ -58,14 +58,13 @@
                             </a>
                             <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
                               <a class="dropdown-item" href="{{ route('kategori-menu.edit', $value->id_kategori_menu) }}">Edit</a>
-                              {{-- fitur delete sementara non aktif --}}
-                              {{-- <form action="{{ route('kategori-menu.destroy', $value->id_kategori_menu) }}" method="post">
+                              {{--<form action="{{ route('kategori-menu.destroy', $value->id_kategori_menu) }}" method="post">
                                 @csrf
                                 @method('delete')
                                 <button type="button" class="mr-1 dropdown-item" onclick="confirm('{{ __("Apakah anda yakin ingin menghapus?") }}') ? this.parentElement.submit() : ''">
                                   Hapus
                                 </button>
-                              </form> --}}
+                              </form>--}}
                               
                             </div>
                           </div>

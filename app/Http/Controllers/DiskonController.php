@@ -77,6 +77,18 @@ class DiskonController extends Controller
         return json_encode((array)$detail[0]);
     }
 
+    public function addEditDetailDiskon()
+    {
+        $fields = array(
+            'kode_menu' => 'kode_menu',
+            'harga_jual' => 'harga_jual',
+            'harga_setelah_diskon' => 'harga_setelah_diskon',
+        );
+        $next = $_GET['biggestNo']+1;
+        $menu = Menu::select('kode_menu','nama','harga_jual')->get();
+        return view('master-menu.diskon.edit-detail-diskon', ['hapus' => true, 'no' => $next, 'menu' => $menu, 'fields' => $fields, 'idDetail' => '0']);
+    }
+
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -131,7 +143,14 @@ class DiskonController extends Controller
      */
     public function edit($id)
     {
-        //
+        $this->param['pageInfo'] = 'Edit Diskon';
+        $this->param['btnRight']['text'] = 'Lihat Diskon';
+        $this->param['btnRight']['link'] = route('diskon.index');
+        $this->param['diskon'] = Diskon::findOrFail($id);
+        $this->param['detail'] = \DB::table(\DB::raw('detail_diskon as dt'))->select('id_detail_diskon','dt.kode_menu', 'm.harga_jual')->join('menu as m', 'm.kode_menu', '=', 'dt.kode_menu')->where('id_diskon',$id)->get();
+        $this->param['menu'] = Menu::select('kode_menu', 'nama', 'harga_jual')->get();
+
+        return view('master-menu.diskon.edit-diskon', $this->param);
     }
 
     /**

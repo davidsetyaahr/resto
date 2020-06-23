@@ -128,6 +128,9 @@ class KategoriMenuController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $KategoriMenu = KategoriMenu::findOrFail($id);
+        $KategoriMenu->delete();
+
+        return redirect()->route('kategori-menu.index')->withStatus('Data berhasil dihapus.');
     }
 }
