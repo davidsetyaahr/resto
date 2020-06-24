@@ -197,14 +197,14 @@ $(document).ready(function() {
         barang($(this));
     });
 
-    $("#debit_only").hide();
+    $("#no_kartu").prop('disabled',true);
     $("#jenis_bayar").change(function() {
         var thisVal = $(this).val();
         if (thisVal == "Debit") {
-            $("#debit_only").show();
+            $("#no_kartu").prop('disabled',false);
             $("#no_kartu").attr("required", true);
         } else {
-            $("#debit_only").hide();
+            $("#no_kartu").prop('disabled',true);
         }
     });
 
@@ -213,6 +213,7 @@ $(document).ready(function() {
         var total = parseInt($("#total").val());
         var grand_total = total - diskon_tambahan;
         $("#grand_total").val(grand_total);
+        $("#idrGrandTotal").html(formatRupiah(grand_total));
     });
 
     $("#bayar").keyup(function() {

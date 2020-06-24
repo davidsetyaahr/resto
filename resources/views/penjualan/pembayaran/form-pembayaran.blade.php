@@ -13,43 +13,48 @@
             <form action="{{ route('pembayaran.save', $penjualan->kode_penjualan) }}" method="post">
               @csrf
               @method('put')
+              <input type="hidden" id="kode" name='kode_penjualan' value="{{$penjualan->kode_penjualan}}" readonly>
               <div class="card-body">
               <h6 class="heading-small text-muted mb-4">Informasi Umum</h6>
-                  <div class="row pl-lg-4">
-                    <div class="col-md-4 mb-2">
-                        <label for="" class="form-control-label">Kode Penjualan</label>
-                        <input type="text" class="form-control" id="kode" name='kode_penjualan' value="{{$penjualan->kode_penjualan}}" readonly>
-                    </div>
-                    <div class="col-md-4 mb-2">
+                  <div class="row">
+                    <div class="col-md-3 mb-2">
                         <label for="" class="form-control-label">Nama Customer</label>
-                        <input type="text" class="form-control @error('nama_customer') is-invalid @enderror" name='nama_customer' value="{{$penjualan->nama_customer}}" readonly>
+                        <div class="form-line-check">
+                          <span class='fa fa-check-circle'></span>
+                          <input type="text" class="form-control form-line @error('nama_customer') is-invalid @enderror" name='nama_customer' value="{{$penjualan->nama_customer}}" readonly>
+                        </div>
                     </div>
 
-                    <div class="col-md-4 mb-2">
+                    <div class="col-md-3 mb-2">
                         <label for="" class="form-control-label">No Handphone</label>
-                        <input type="number" class="form-control @error('no_hp') is-invalid @enderror" name='no_hp' value="{{$penjualan->no_hp}}" readonly>
+                        <div class="form-line-check">
+                          <span class='fa fa-check-circle'></span>
+                          <input type="number" class="form-control form-line @error('no_hp') is-invalid @enderror" name='no_hp' value="{{$penjualan->no_hp}}" readonly>
+                      </div>
                     </div>
                     
-                    <div class="col-md-4 mb-2">
+                    <div class="col-md-3 mb-2">
                         <label for="" class="form-control-label">No Meja</label>
-                        <input type="number" class="form-control @error('no_meja') is-invalid @enderror" name='no_meja' value="{{$penjualan->no_meja}}" readonly>
+                        <div class="form-line-check">
+                          <span class='fa fa-check-circle'></span>
+                         <input type="number" class="form-control form-line @error('no_meja') is-invalid @enderror" name='no_meja' value="{{$penjualan->no_meja}}" readonly>
+                        </div>
                     </div>
-                    
-                    <div class="col-md-4 mb-2">
+
+                    <div class="col-md-3 mb-2">
                         <label for="" class="form-control-label">Jenis Order</label>
-                        <select name="jenis_order" class="form-control select2 @error('jenis_order') is-invalid @enderror " disabled>
-                          <option value="">--Pilih Jenis Order--</option>
-                          <option value="Dine In" {{$penjualan->jenis_order == 'Dine In' ? 'selected' : ''}} >Dine In</option>
-                          <option value="Take Away" {{$penjualan->jenis_order == 'Take Away' ? 'selected' : ''}} >Take Away</option>
-                        </select>
+                        <div class="form-line-check">
+                          <span class='fa fa-check-circle'></span>
+                          <input type="text" class="form-control form-line @error('jenis_order') is-invalid @enderror" name='jenis_order' value="{{$penjualan->jenis_order}}" readonly>
+                      </div>
                     </div>
                   </div>
-                  <hr class="my-4">
-                  <h6 class="heading-small text-muted mb-4">Detail Penjualan</h6>
-                  <table class="table align-items-center table-flush">
+                  <h6 class="heading-small text-muted my-4">Detail Penjualan</h6>
+                  <table class="table align-items-center table-flush table-striped table-hover">
                     <thead class="thead-light">
                       <tr>
                         <th>#</th>
+                        <th>Menu</th>
                         <th>Kode Menu</th>
                         <th>Nama</th>
                         <th>Quantity</th>
@@ -59,14 +64,24 @@
                       </tr>
                     </thead>
                     <tbody class="list">
+                    @php 
+                      $qty = 0;
+                      $harga = 0;
+                      $diskon = 0;
+                      $subtotal = 0;
+                    @endphp
                     @foreach ($detail as $value)
                       @php
-                          $nama = \App\Menu::select('nama')->where('kode_menu', $value->kode_menu)->get()[0]->nama;
+                          $menu = \App\Menu::select('nama','foto')->where('kode_menu', $value->kode_menu)->get()[0];
+                          $qty = $qty + $value->qty;
+                          $diskon = $diskon + $value->diskon;
+                          $subtotal = $subtotal + $value->sub_total;
                       @endphp
                       <tr>
                         <td>{{$loop->iteration}}</td>
+                        <td><img src="{{asset('assets/img/menu/'.$menu->foto)}}" width='150px' class='img-thumbnail' alt=""></td>
                         <td>{{$value->kode_menu}}</td>
-                        <td>{{$nama}}</td>
+                        <td>{{$menu->nama}}</td>
                         <td>{{$value->qty}}</td>
                         <td>{{number_format($value->sub_total + $value->diskon,0,',','.')}}</td>
                         <td>{{number_format($value->diskon,0,',','.')}}</td>
@@ -74,21 +89,26 @@
                       </tr>
                     @endforeach
                     </tbody>
+                    <tfoot class='bg-dark text-white'>
+                      <tr>
+                        <td colspan='4'></td>
+                        <td>{{$qty}}</td>
+                        <td>{{number_format($harga,0,',','.')}}</td>
+                        <td>{{number_format($diskon,0,',','.')}}</td>
+                        <td>{{number_format($subtotal,0,',','.')}}</td>
+                      </tr>
+                    </tfoot>
                   </table>
                   <hr>
                   <div class="row">
                     <div class="col-4 mb-2">
                       <label for=""><strong>Total</strong></label>
                       <input type="number" name="total" id="total" class="form-control" value="{{($penjualan->total_harga - $penjualan->total_diskon) + $penjualan->total_ppn }}" readonly>
-                      <span class="text-muted"><i>*sudah termasuk PPN 10%</i></span>
+                      <small class="text-muted"><i>*sudah termasuk PPN 10%</i></small>
                     </div>
                     <div class="col-4 mb-2">
                       <label for=""><strong>Potongan</strong></label>
                       <input type="number" name="diskon_tambahan" id="diskon_tambahan" class="form-control" value="{{old('diskon_tambahan', 0)}}">
-                    </div>
-                    <div class="col-4 mb-2">
-                      <label for=""><strong>Grand Total</strong></label>
-                      <input type="number" name="grand_total" id="grand_total" class="form-control" value="{{($penjualan->total_harga - $penjualan->total_diskon) + $penjualan->total_ppn }}" readonly>
                     </div>
                     <div class="col-4 mb-2">
                       <label for=""><strong>Terbayar</strong></label>
@@ -126,10 +146,17 @@
                         @enderror --}}
                       </div>
                     </div>
+                    <div class="col-md-6 mt-3">
+                      <h1 class='text-dark'>Grand Total : Rp. <span class="text-orange" id='idrGrandTotal'>{{number_format($penjualan->total_harga - $penjualan->total_diskon + $penjualan->total_ppn,0,',','.')}}</span></h1>
+                      <input type="hidden" name="grand_total" id="grand_total" class="form-control form-line text-lg text-orange font-weight-bold" value="{{($penjualan->total_harga - $penjualan->total_diskon) + $penjualan->total_ppn }}">
+                    </div>
+                    <div class="col-md-6 mt-3 text-right">
+                        <button type="submit" class="btn btn-primary"><span class="fa fa-save"></span> Simpan</button>
+                        <button type="reset" class="btn btn-secondary"><span class="fa fa-times"></span> Reset</button>
+
+                    </div>
                   </div>
                   <div class="mt-4">
-                  <button type="submit" class="btn btn-primary"><span class="fa fa-save"></span> Simpan</button>
-                  <button type="reset" class="btn btn-secondary"><span class="fa fa-times"></span> Reset</button>
                   </div>
               </div>
             </form>

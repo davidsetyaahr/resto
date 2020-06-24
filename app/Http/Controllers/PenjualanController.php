@@ -304,9 +304,9 @@ class PenjualanController extends Controller
     
     public function pembayaran($kode)
     {
-        $this->param['pageInfo'] = 'Pembayaran';
-        $this->param['btnRight']['text'] = 'Pembayaran';
-        $this->param['btnRight']['link'] = route('pembayaran');
+        $this->param['pageInfo'] = 'Pembayaran Dengan Kode '.$kode;
+        $this->param['btnRight']['text'] = 'Lihat Penjualan';
+        $this->param['btnRight']['link'] = route('penjualan.index');
 
         $penjualan = Penjualan::findOrFail($kode);
         $detail = DetailPenjualan::where('kode_penjualan', $kode)->get();
@@ -331,7 +331,7 @@ class PenjualanController extends Controller
 
         $penjualan->save();
 
-        return redirect()->route('pembayaran')->withStatus('Pembayaran berhasil.');    
+        return redirect()->route('penjualan.index')->withStatus('Pembayaran berhasil.');    
     }
     public function filter()
     {

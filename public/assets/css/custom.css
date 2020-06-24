@@ -138,6 +138,25 @@
     border: none;
     border-bottom: 1px solid #dee2e6;
     border-radius: 0px;
+    background: none !important;
+}
+.form-line-check{
+    position: relative;
+}
+.form-line-check span{
+    color: #2dce89;
+    font-size : 14px;
+    position: absolute;
+    top : 50%;
+    left : 5px;
+    transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+}
+.form-line-check input{
+    padding-left : 30px;
+    font-size : 16px;
 }
 .row-menu .col-md-3 {
     padding-left: 10px;
@@ -209,7 +228,7 @@
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
 }
-.box-penjualan .sticky-bottom {
+.sticky-bottom {
     position: absolute;
     bottom: 0;
     width: 100%;
@@ -217,7 +236,8 @@
     background: white;
     box-shadow: 0 0 2rem 0 rgba(136, 152, 170, 0.15);
 }
-.box-penjualan .sticky-bottom .btn {
+.btn-rounded-left,
+.sticky-bottom .btn {
     border-top-left-radius: 30px;
 }
 .box-penjualan form {
@@ -250,4 +270,12 @@
 }
 .keranjang td, .keranjang th{
     white-space: normal;
+}
+.form-pembayaran{
+    position: fixed;
+    bottom: 0;
+    margin-left: 250px;
+    left : 0;
+    background: #fff;
+    z-index: 1000;
 }

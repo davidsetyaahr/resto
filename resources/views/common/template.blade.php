@@ -65,27 +65,10 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link collapsed" href="" data-toggle="collapse" data-target="#penjualan" aria-expanded='false'>
+              <a class="nav-link" href="{{ route('penjualan.index') }}">
                 <i class="ni ni-cart text-blue"></i>
                 <span class="nav-link-text">Penjualan</span>
               </a>
-                <ul class="navbar-nav nav-collapse collapse" id="penjualan">
-                  <li class="nav-item">
-                    <a class="nav-link" href="{{ route('penjualan.index') }}">
-                      <span class="nav-link-text">Penjualan</span>
-                    </a>
-                  </li>
-<!--                   <li class="nav-item">
-                    <a class="nav-link" href="{{ route('pembayaran') }}">
-                      <span class="nav-link-text">Pembayaran</span>
-                    </a>
-                  </li>
- -->                  <li class="nav-item">
-                    <a class="nav-link" href="{{route('laporan-penjualan')}}?tipe=general">
-                      <span class="nav-link-text">Laporan Penjualan</span>
-                    </a>
-                  </li>
-                </ul>
             </li>
             <li class="nav-item">
               <a class="nav-link collapsed" href="" data-toggle="collapse" data-target="#master-barang" aria-expanded='false'>
@@ -213,6 +196,11 @@
                 <span class="nav-link-text">Laporan</span>
               </a>
                 <ul class="navbar-nav nav-collapse collapse" id="laporan">
+                 <li class="nav-item">
+                    <a class="nav-link" href="{{route('laporan-penjualan')}}?tipe=general">
+                      <span class="nav-link-text">Laporan Penjualan</span>
+                    </a>
+                  </li>
                   <li class="nav-item">
                     <a class="nav-link" href="{{ route('laba-rugi') }}">
                       <span class="nav-link-text">Laba Rugi</span>
