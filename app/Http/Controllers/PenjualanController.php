@@ -166,7 +166,7 @@ class PenjualanController extends Controller
 
             $newDetail->save();
         }
-        return redirect()->route('penjualan.create')->withStatus('Data berhasil ditambahkan.');
+        return redirect()->route('cetak-bill', ['kode' => $request->get('kode_penjualan')]);
     }
 
     public function show($id)
@@ -419,4 +419,21 @@ class PenjualanController extends Controller
 
         return view('laporan.laporan-menu.menu-paling-menghasilkan', ['laporan' => $laporan], $this->param);
     }
+
+    public function cetakBill($kode)
+    {
+        $penjualan = Penjualan::findOrFail($kode);
+        $detail = DetailPenjualan::where('kode_penjualan', $kode)->get();
+        $resto = \DB::table('perusahaan')->select('nama', 'alamat', 'kota', 'telepon', 'email')->where('id_perusahaan', 1)->get();
+        return view('penjualan.cetak-bill.cetak', ['penjualan' => $penjualan, 'detail' => $detail, 'resto' => $resto[0]]);
+    }
+
+    // public function cetakStruk($kode)
+    // {
+    //     $penjualan = Penjualan::findOrFail($kode);
+    //     $detail = DetailPenjualan::where('kode_pj', $kode)->get();
+    //     $toko = \App\SettingToko::findOrFail(1);
+
+    //     return view('penjualan.cetak-struk', ['penjualan' => $penjualan, 'detail' => $detail, 'toko' => $toko]);
+    // }
 }

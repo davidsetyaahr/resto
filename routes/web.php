@@ -60,6 +60,7 @@ Route::prefix('penjualan/')->group(function() {
     Route::get('menu-paling-menghasilkan', 'PenjualanController@menuPalingMenghasilkan')->name('menu-paling-menghasilkan');
     Route::get('pembayaran', 'PenjualanController@listPembayaran')->name('pembayaran');
     Route::get('pembayaran/{kode}', 'PenjualanController@pembayaran')->name('penjualan.bayar');
+    Route::get('cetak-bill/{kode}', 'PenjualanController@cetakBill')->name('cetak-bill');
     Route::put('pembayaran/save/{kode}', 'PenjualanController@savePembayaran')->name('pembayaran.save');
     Route::resource('penjualan', 'PenjualanController');
 });
