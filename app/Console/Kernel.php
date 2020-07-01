@@ -24,8 +24,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('backup:clean')->daily();
-        $schedule->command('backup:run')->daily();
+        $schedule->command('backup:clean')->timezone('Asia/Jakarta')->dailyAt('19:04');
+        $schedule->command('backup:run')->timezone('Asia/Jakarta')->dailyAt('19:04');
+        $schedule->command('backup:run')->timezone('Asia/Jakarta')->everyMinute();
         // $schedule->command('inspire')->hourly();
     }
 

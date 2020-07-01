@@ -56,7 +56,7 @@
                   @enderror
                   <br>
 
-                  <label for="" class="form-control-label">Stock</label>
+                  <label for="" class="form-control-label">Stock Awal</label>
                   <input type="number" name="stock" value="{{old('stock', $barang->stock)}}" class="form-control @error('stock') is-invalid @enderror" placeholder="ex : 25">
                   @error('stock')
                     <span class="invalid-feedback" role="alert">
@@ -65,7 +65,7 @@
                   @enderror
                   <br>
 
-                  <label for="" class="form-control-label">Saldo</label>
+                  <label for="" class="form-control-label">Saldo Awal</label>
                   <input type="number" name="saldo" value="{{old('saldo', $barang->saldo)}}" class="form-control @error('saldo') is-invalid @enderror" placeholder="ex : 4000000">
                   @error('saldo')
                     <span class="invalid-feedback" role="alert">

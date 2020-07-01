@@ -147,10 +147,10 @@ class BarangController extends Controller
         $barang->id_kategori_barang = $request->get('id_kategori_barang');
         $barang->nama = $request->get('nama');
         $barang->satuan = $request->get('satuan');
-        $barang->stock = $request->get('stock');
+        $barang->stock += $request->get('stock');
         $barang->saldo = $request->get('saldo');
-        $barang->stock_awal = $request->get('stock_awal');
-        $barang->saldo_awal = $request->get('saldo_awal');
+        $barang->stock_awal = $request->get('stock');
+        $barang->saldo_awal = $request->get('saldo');
         $barang->minimum_stock = $request->get('minimum_stock');
         $barang->exp_date = $request->get('exp_date');
         $barang->keterangan = $request->get('keterangan');
