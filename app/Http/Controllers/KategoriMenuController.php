@@ -67,7 +67,7 @@ class KategoriMenuController extends Controller
 
         $newKategoriMenu->save();
 
-        return redirect()->route('kategori-menu.index')->withStatus('Data berhasil ditambahkan.');
+        return redirect()->route('kategori-menu.create')->withStatus('Data berhasil ditambahkan.');
     }
 
     /**
