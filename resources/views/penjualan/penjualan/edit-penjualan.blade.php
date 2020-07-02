@@ -60,14 +60,21 @@
         <h2>{{$penjualan->kode_penjualan}}</h2>
         <hr class="mt-1">
         <div class="row">
-          <div class="col-md-6">
-            <input type="number" class="form-control form-line @error('no_meja') is-invalid @enderror" name='no_meja' value="{{old('no_meja', $penjualan->no_meja)}}" placeholder='Nomor  Meja' autocomplete='off'>
-            @error('no_meja')
+        <div class="col-md-6 form-line">
+            <select name="id_meja" id="" class="form-control select2 @error('id_meja') is-invalid @enderror">
+              <option value="">Nomor Meja</option>
+              <option value="{{$mejaSelected->id_meja}}" {{old('id_meja', $penjualan->id_meja) == $mejaSelected->id_meja ? 'selected' : ''}}>{{$mejaSelected->nama_meja}}</option>
+              @foreach($meja as $meja)
+                <option value="{{$meja->id_meja}}" {{old('id_meja', $penjualan->id_meja) == $meja->id_meja ? 'selected' : ''}}>{{$meja->nama_meja}}</option>
+              @endforeach
+            </select>
+            @error('id_meja')
             <span class="invalid-feedback" role="alert">
               <strong>{{ $message }}</strong>
             </span>
             @enderror
           </div>
+
           <div class="col-md-6">
             <input type="text" class="form-control form-line @error('nama_customer') is-invalid @enderror" name='nama_customer' value="{{old('nama_customer',$penjualan->nama_customer)}}" placeholder='Nama Customer' autocomplete='off'>
             @error('nama_customer')

@@ -8,6 +8,7 @@ use App\Penjualan;
 use App\DetailPenjualan;
 use App\KategoriMenu;
 use \App\Menu;
+use \App\Meja;
 use \App\DetailDiskon;
 
 class PenjualanController extends Controller
@@ -23,8 +24,10 @@ class PenjualanController extends Controller
         $this->param['pageInfo'] = 'Daftar Penjualan';
         $this->param['btnRight']['text'] = 'Tambah Penjualan';
         $this->param['btnRight']['link'] = route('penjualan.create');
-        $this->param['penjualan'] = Penjualan::where('status_bayar','Belum Bayar')->paginate(10);
-        
+        $this->param['penjualan'] = \DB::table('penjualan as p')->select('p.kode_penjualan','p.nama_customer','p.jenis_order','p.waktu','p.total_harga','p.total_diskon','m.nama_meja','p.total_diskon_tambahan','p.status_bayar')->join('meja as m','p.id_meja','m.id_meja')->where('status_bayar','Belum Bayar')->paginate(10);
+
+        $this->param['meja'] = Meja::orderBy('nama_meja','asc')->get();
+
         return view('penjualan.penjualan.list-penjualan', $this->param);
     }
 
@@ -110,6 +113,10 @@ class PenjualanController extends Controller
         $this->param['kode_penjualan'] = $this->getKode();
         $this->param['kategori'] = KategoriMenu::select('id_kategori_menu','kategori_menu')->get();
         $this->param['menu'] = Menu::where('status', '=', 'Ready')->select('kode_menu','nama','foto','harga_jual')->get();
+        $this->param['meja'] = \DB::table('meja')->whereNotIn('id_meja', function($query){
+            $query->select('id_meja')->from('penjualan')->where('status_bayar','Belum Bayar');
+        })->orderBy('nama_meja','asc')->get();
+
         
         return view('penjualan.penjualan.tambah-penjualan', $this->param);
     }
@@ -119,7 +126,7 @@ class PenjualanController extends Controller
         $validatedData = $request->validate([
             'kode_penjualan' => 'required',
             'nama_customer' => 'required',
-            'no_meja' => 'required|numeric',
+            'id_meja' => 'required|numeric',
             'jenis_order' => 'required',
             'kode_menu.*' => 'required',
             'qty.*' => 'required|integer|min:1',
@@ -141,7 +148,7 @@ class PenjualanController extends Controller
         $newPenjualan->kode_penjualan = $request->get('kode_penjualan');
         $newPenjualan->nama_customer = $request->get('nama_customer');
         $newPenjualan->no_hp = $request->get('no_hp');
-        $newPenjualan->no_meja = $request->get('no_meja');
+        $newPenjualan->id_meja = $request->get('id_meja');
         $newPenjualan->jenis_order = $request->get('jenis_order');
         $newPenjualan->jumlah_item = count($_POST['kode_menu']);
         $newPenjualan->jumlah_qty = $ttlQty;
@@ -182,6 +189,12 @@ class PenjualanController extends Controller
         $this->param['kategori'] = KategoriMenu::select('id_kategori_menu','kategori_menu')->get();
         $this->param['menu'] = Menu::where('status', '=', 'Ready')->select('kode_menu','nama','foto','harga_jual')->get();
         $this->param['penjualan'] = Penjualan::findOrFail($kodePenjualan);
+        $this->param['mejaSelected'] = Meja::where('id_meja',$this->param['penjualan']->id_meja)->get()[0];
+        $this->param['meja'] = \DB::table('meja')->whereNotIn('id_meja', function($query){
+            $query->select('id_meja')->from('penjualan')
+            ->where('status_bayar','Belum Bayar');
+        })->orderBy('nama_meja','asc')->get();
+
         $this->param['detail'] = \DB::table('detail_penjualan as dp')->select('dp.*','dp.sub_total as subtotal','m.harga_jual as harga','m.nama as nama_menu')->join('menu as m','dp.kode_menu','m.kode_menu')->where('kode_penjualan',$kodePenjualan)->get()->toArray();
         $getKodeMenu = DetailPenjualan::select('kode_menu')->where('kode_penjualan',$kodePenjualan)->get()->toArray();
         $arrKode = [];
@@ -204,7 +217,7 @@ class PenjualanController extends Controller
         $validatedData = $request->validate([
             'kode_penjualan' => 'required',
             'nama_customer' => 'required',
-            'no_meja' => 'required|numeric',
+            'id_meja' => 'required|numeric',
             'jenis_order' => 'required',
             'kode_menu.*' => 'required',
             'qty.*' => 'required|integer|min:1',
@@ -262,7 +275,7 @@ class PenjualanController extends Controller
         ->update([
             'nama_customer' => $_POST['nama_customer'],
             'no_hp' => $_POST['no_hp'],
-            'no_meja' => $_POST['no_meja'],
+            'id_meja' => $_POST['id_meja'],
             'jenis_order' => $_POST['jenis_order'],
             'jumlah_item' => count($_POST['kode_menu']),
             'total_harga' => $totalHarga,
@@ -308,7 +321,7 @@ class PenjualanController extends Controller
         $this->param['btnRight']['text'] = 'Lihat Penjualan';
         $this->param['btnRight']['link'] = route('penjualan.index');
 
-        $penjualan = Penjualan::findOrFail($kode);
+        $penjualan = \DB::table('penjualan as p')->select('p.*','m.nama_meja')->join('meja as m','p.id_meja','m.id_meja')->where('kode_penjualan',$kode)->get()[0];
         $detail = DetailPenjualan::where('kode_penjualan', $kode)->get();
 
         return view('penjualan.pembayaran.form-pembayaran', ['penjualan' => $penjualan, 'detail' => $detail], $this->param);

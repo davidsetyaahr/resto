@@ -37,7 +37,9 @@
                         <label for="" class="form-control-label">No Meja</label>
                         <div class="form-line-check">
                           <span class='fa fa-check-circle'></span>
-                         <input type="number" class="form-control form-line @error('no_meja') is-invalid @enderror" name='no_meja' value="{{$penjualan->no_meja}}" readonly>
+                          <select class='form-control form-line' name='id_meja'>
+                            <option value="{{$penjualan->id_meja}}">{{$penjualan->nama_meja}}</option>
+                          </select>
                         </div>
                     </div>
 

@@ -5,6 +5,26 @@
         <div class="card">
             <div class="card-header">
               <div class="row align-items-center">
+                <div class="col">
+                  <?php 
+                    foreach ($meja as $key => $value) {
+                      $cek = \DB::table('penjualan')->select('id_meja')->where('id_meja',$value->id_meja)->where('status_bayar','Belum Bayar')->count();
+                      if($cek==0){
+                        $class = 'success';
+                        $url = url('penjualan/penjualan/create?id_meja='.$value->id_meja);
+                      }
+                      else{
+                        $class = 'danger cursor-disabled';
+                        $url = '';
+                      }
+                  ?>
+                    <a href="{{$url}}" class='btn btn-{{$class}}'>{{$value->nama_meja}}</a>
+                  <?php
+                    }
+                  ?>
+                </div>
+              </div> 
+              <div class="row align-items-center mt-3">
                 <div class="col-8">
                   <h3 class="mb-0">{{$pageInfo}}</h3>
                 </div>
@@ -39,6 +59,7 @@
                 <thead class="thead-light">
                   <tr>
                     <th>#</th>
+                    <th>Meja</th>
                     <th>Kode Penjualan</th>
                     <th>Waktu</th>
                     <th>Customer</th>
@@ -57,6 +78,7 @@
                 @foreach ($penjualan as $value)
                       <tr>
                         <td>{{$no}}</td>
+                        <td>{{$value->nama_meja}}</td>
                         <td>{{$value->kode_penjualan}}</td>
                         <td>{{date('d-m-Y H:i:s', strtotime($value->waktu))}}</td>
                         <td>{{$value->nama_customer}}</td>
