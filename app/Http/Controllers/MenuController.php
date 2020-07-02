@@ -36,16 +36,32 @@ class MenuController extends Controller
         return \view('master-menu.menu.index', ['menus' => $menus], $this->param);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function getKode()
+    {
+        $lastKode = Menu::select('kode_menu')
+        ->orderBy('kode_menu','desc')
+        ->skip(0)->take(1)
+        ->get();
+
+        if(count($lastKode)==0){
+            $kode = "MN-0001";
+        }
+        else{
+            $ex = explode('-', $lastKode[0]->kode_menu);
+            $no = (int)$ex[1] + 1;
+            $newNo = sprintf("%04s", $no);
+            $kode = $ex[0].'-'.$newNo;
+        }
+
+        return $kode;
+    }
+
     public function create()
     {
         $this->param['pageInfo'] = 'Tambah Menu';
         $this->param['btnRight']['text'] = 'Lihat Data';
         $this->param['btnRight']['link'] = route('menu.index');
+        $this->param['kode_menu'] = $this->getKode();
 
         $kategoris = KategoriMenu::get();
         return \view('master-menu.menu.create', ['kategoris' => $kategoris], $this->param);

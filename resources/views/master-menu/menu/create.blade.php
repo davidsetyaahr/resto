@@ -27,7 +27,7 @@
                 @csrf
                 <div class="card-body">
                     <label for="" class="form-control-label">Kode Menu</label>
-                    <input type="text" name="kode_menu" value="{{old('kode_menu')}}" class="form-control @error('kode_menu') is-invalid @enderror" placeholder="ex : MN0001">
+                    <input type="text" name="kode_menu" value="{{$kode_menu}}" class="form-control @error('kode_menu') is-invalid @enderror" readonly>
                     @error('kode_menu')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
