@@ -78,6 +78,7 @@
                   @endforeach
                 </tbody>
               </table>
+              {{$supplier->appends(Request::all())->links()}}
             </div>
          </div>
     </div>

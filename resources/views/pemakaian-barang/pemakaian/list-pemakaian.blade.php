@@ -83,14 +83,8 @@
                       @endphp
                   @endforeach
                 </tbody>
-                <tfoot>
-                  <tr>
-                    <td>
-                      {{$pemakaian->appends(Request::all())->links()}}
-                    </td>
-                  </tr>
-                </tfoot>
               </table>
+              {{$pemakaian->appends(Request::all())->links()}}
             </div>
          </div>
     </div>
