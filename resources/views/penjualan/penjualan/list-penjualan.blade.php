@@ -115,14 +115,8 @@
 
                   @endforeach
                 </tbody>
-                <tfoot>
-                  <tr>
-                    <td>
-                      {{$penjualan->appends(Request::all())->links()}}
-                    </td>
-                  </tr>
-                </tfoot>
               </table>
+              {{$penjualan->appends(Request::all())->links()}}
             </div>
          </div>
     </div>

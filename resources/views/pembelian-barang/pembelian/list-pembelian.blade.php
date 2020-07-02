@@ -80,6 +80,7 @@
                   @endforeach
                 </tbody>
               </table>
+              {{$pembelian->appends(Request::all())->links()}}
             </div>
          </div>
     </div>

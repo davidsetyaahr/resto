@@ -80,14 +80,8 @@
                     </tr>
                     @endforeach
                 </tbody>
-                <tfoot>
-                  <tr>
-                    <td>
-                      {{$diskon->appends(Request::all())->links()}}
-                    </td>
-                  </tr>
-                </tfoot>
               </table>
+              {{$diskon->appends(Request::all())->links()}}
             </div>
          </div>
     </div>

@@ -84,14 +84,8 @@
                     @endforeach
                   </tr>
                 </tbody>
-                <tfoot>
-                    <tr>
-                      <td>
-                        {{$menus->appends(Request::all())->links()}}
-                      </td>
-                    </tr>
-                  </tfoot>
-              </table>
+            </table>
+            {{$menus->appends(Request::all())->links()}}
             </div>
          </div>
     </div>

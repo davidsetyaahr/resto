@@ -76,14 +76,8 @@
                       @endphp
                   @endforeach
                 </tbody>
-                <tfoot>
-                  <tr>
-                    <td>
-                      {{$kategori_menu->appends(Request::all())->links()}}
-                    </td>
-                  </tr>
-                </tfoot>
               </table>
+              {{$kategori_menu->appends(Request::all())->links()}}
             </div>
          </div>
     </div>

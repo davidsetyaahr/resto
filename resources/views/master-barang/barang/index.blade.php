@@ -93,14 +93,8 @@
                       @endphp
                   @endforeach
                 </tbody>
-                <tfoot>
-                  <tr>
-                    <td>
-                      {{$barangs->appends(Request::all())->links()}}
-                    </td>
-                  </tr>
-                </tfoot>
               </table>
+              {{$barangs->appends(Request::all())->links()}}
             </div>
          </div>
     </div>

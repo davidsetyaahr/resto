@@ -91,14 +91,8 @@
                       @endphp
                   @endforeach
                 </tbody>
-                <tfoot>
-                  <tr>
-                    <td>
-                      {{$kas->appends(Request::all())->links()}}
-                    </td>
-                  </tr>
-                </tfoot>
               </table>
+              {{$kas->appends(Request::all())->links()}}
             </div>
          </div>
     </div>
