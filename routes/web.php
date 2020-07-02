@@ -80,4 +80,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('kas', 'KasController');
 
     Route::get('/home', 'HomeController@index')->name('home');
+
+    Route::resource('user', 'UserController');
 });
