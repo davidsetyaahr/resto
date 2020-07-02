@@ -89,7 +89,7 @@ class BarangController extends Controller
 
         $newBarang->save();
 
-        return redirect()->route('barang.index')->withStatus('Data berhasil ditambahkan.');
+        return redirect()->route('barang.store')->withStatus('Data berhasil ditambahkan.');
     }
 
     /**
