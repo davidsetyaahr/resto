@@ -87,7 +87,7 @@ class MenuController extends Controller
 
         $newMenu->save();
 
-        return redirect()->route('menu.store')->withStatus('Data berhasil ditambahkan.');
+        return redirect()->route('menu.create')->withStatus('Data berhasil ditambahkan.');
     }
 
     /**
