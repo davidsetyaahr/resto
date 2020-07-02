@@ -61,6 +61,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('pembayaran', 'PenjualanController@listPembayaran')->name('pembayaran');
         Route::get('pembayaran/{kode}', 'PenjualanController@pembayaran')->name('penjualan.bayar');
         Route::get('cetak-bill/{kode}', 'PenjualanController@cetakBill')->name('cetak-bill');
+        Route::get('cetak-dapur/{kode}', 'PenjualanController@cetakDapur')->name('cetak-dapur');
         Route::put('pembayaran/save/{kode}', 'PenjualanController@savePembayaran')->name('pembayaran.save');
         Route::resource('penjualan', 'PenjualanController');
     });
