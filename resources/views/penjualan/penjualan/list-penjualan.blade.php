@@ -18,7 +18,7 @@
                         $url = '';
                       }
                   ?>
-                    <a href="{{$url}}" class='btn btn-{{$class}}'>{{$value->nama_meja}}</a>
+                    <a href="{{$url}}" class='my-1 btn btn-{{$class}}'>{{$value->nama_meja}}</a>
                   <?php
                     }
                   ?>
@@ -98,6 +98,7 @@
                               <i class="fas fa-ellipsis-v"></i>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                            <a class="dropdown-item" href="{{ route('cetak-bill', $value->kode_penjualan) }}">Cetak Bill</a>
                             <a class="dropdown-item" href="{{ route('penjualan.bayar', $value->kode_penjualan) }}">Pembayaran</a>
                               <a class="dropdown-item" href="{{ url('penjualan/'.$value->kode_penjualan.'/edit') }}">Edit</a>
                               <form action="{{ route('penjualan.destroy', $value->kode_penjualan) }}" method="post">

@@ -173,7 +173,7 @@ class PenjualanController extends Controller
 
             $newDetail->save();
         }
-        return redirect()->route('cetak-bill', ['kode' => $request->get('kode_penjualan')]);
+        return redirect()->route('cetak-dapur', ['kode' => $request->get('kode_penjualan')]);
     }
 
     public function show($id)
@@ -435,10 +435,19 @@ class PenjualanController extends Controller
 
     public function cetakBill($kode)
     {
-        $penjualan = Penjualan::findOrFail($kode);
-        $detail = DetailPenjualan::where('kode_penjualan', $kode)->get();
+        $penjualan = \DB::table('penjualan as p')->select('p.kode_penjualan', 'p.waktu','m.nama_meja')->join('meja as m','p.id_meja','m.id_meja')->where('p.kode_penjualan',$kode)->get()[0];
+        $detail = \DB::table('detail_penjualan as dp')->select('dp.qty','dp.sub_total','m.nama','m.harga_jual')->join('menu as m','dp.kode_menu','m.kode_menu')->where('dp.kode_penjualan', $kode)->get();
         $resto = \DB::table('perusahaan')->select('nama', 'alamat', 'kota', 'telepon', 'email')->where('id_perusahaan', 1)->get();
-        return view('penjualan.cetak-bill.cetak', ['penjualan' => $penjualan, 'detail' => $detail, 'resto' => $resto[0]]);
+        return view('penjualan.cetak.cetak-bill', ['penjualan' => $penjualan, 'detail' => $detail, 'resto' => $resto[0]]);
+    }
+
+    public function cetakDapur($kode)
+    {
+        $penjualan = \DB::table('penjualan as p')->select('p.kode_penjualan', 'p.waktu','m.nama_meja')->join('meja as m','p.id_meja','m.id_meja')->where('p.kode_penjualan',$kode)->get()[0];
+        $bar = \DB::table('detail_penjualan as dp')->select('dp.qty','m.nama','dp.keterangan')->join('menu as m','dp.kode_menu','m.kode_menu')->where('dp.kode_penjualan', $kode)->where('m.jenis_menu','Bar')->get();
+        $dapur = \DB::table('detail_penjualan as dp')->select('dp.qty','m.nama','dp.keterangan')->join('menu as m','dp.kode_menu','m.kode_menu')->where('dp.kode_penjualan', $kode)->where('m.jenis_menu','Dapur')->get();        
+        $resto = \DB::table('perusahaan')->select('nama', 'alamat', 'kota', 'telepon', 'email')->where('id_perusahaan', 1)->get();
+        return view('penjualan.cetak.cetak-dapur', ['penjualan' => $penjualan, 'bar' => $bar,'dapur' => $dapur, 'resto' => $resto[0]]);
     }
 
     // public function cetakStruk($kode)
