@@ -573,6 +573,7 @@ class ComposerStaticInitbe04c6a6788aba38fcaf024ba860fb9e
         'App\\Kas' => __DIR__ . '/../..' . '/app/Kas.php',
         'App\\KategoriBarang' => __DIR__ . '/../..' . '/app/KategoriBarang.php',
         'App\\KategoriMenu' => __DIR__ . '/../..' . '/app/KategoriMenu.php',
+        'App\\Meja' => __DIR__ . '/../..' . '/app/Meja.php',
         'App\\Menu' => __DIR__ . '/../..' . '/app/Menu.php',
         'App\\Pemakaian' => __DIR__ . '/../..' . '/app/Pemakaian.php',
         'App\\Pembelian' => __DIR__ . '/../..' . '/app/Pembelian.php',

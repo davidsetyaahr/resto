@@ -45,7 +45,8 @@
                 </thead>
                 <tbody class="list">
                   @php
-                      $no = 1;
+                    $page = Request::get('page');
+                    $no = !$page || $page == 1 ? 1 : ($page - 1) * 10 + 1;
                   @endphp
                   @foreach ($kategori_menu as $value)
                       <tr>
@@ -75,6 +76,13 @@
                       @endphp
                   @endforeach
                 </tbody>
+                <tfoot>
+                  <tr>
+                    <td>
+                      {{$kategori_menu->appends(Request::all())->links()}}
+                    </td>
+                  </tr>
+                </tfoot>
               </table>
             </div>
          </div>

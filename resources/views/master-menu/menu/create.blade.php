@@ -85,12 +85,26 @@
                         </span>
                     @enderror
                     <br>
-                    
+
+                    <label for="" class="form-control-label">Jenis Menu</label>
+                    <select name="jenis_menu" class="form-control select2 @error ('jenis_menu') is-invalid @enderror" id="">
+                    <option value="">---Pilih Jenis---</option>
+                    <option value="Bar" {{old('jenis_menu') == "Bar" ? 'selected' : ''}}>Bar</option>
+                    <option value="Dapur" {{old('jenis_menu') == "Dapur" ? 'selected' : ''}}>Dapur</option>
+                    </select>
+                    @error('jenis_menu')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                    <br>
+                    <br>
+
                     <label for="" class="form-control-label">Status Menu</label>
                     <select name="status" class="form-control select2 @error ('status') is-invalid @enderror" id="">
                     <option value="">---Pilih Status---</option>
                     <option value="Habis" {{old('status') == "Habis" ? 'selected' : ''}}>Habis</option>
-                    <option value="Ready" {{old('status') == "Aktif" ? 'selected' : ''}}>Ready</option>
+                    <option value="Ready" {{old('status') == "Ready" ? 'selected' : ''}}>Ready</option>
                     </select>
                     @error('status')
                         <span class="invalid-feedback" role="alert">

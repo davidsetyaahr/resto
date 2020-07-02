@@ -65,15 +65,19 @@ class MenuController extends Controller
             'nama' => 'required|max:30',
             'hpp' => 'required|numeric',
             'harga_jual' => 'required|numeric',
-            'foto' => 'required|image',
             'status' => 'required',
+            'jenis_menu' => 'required',
         ]);
+        if ($request->file('foto')) {
+            $foto = $request->file('foto');
+            $pathUpload = 'public/assets/img/menu';
+            $foto->move($pathUpload,time().".".$foto->getClientOriginalName());
+            $namaFoto = time().".".$foto->getClientOriginalName();
+        }
+        else{
+            $namaFoto = 'default-menu.png';
+        }
 
-        $foto = $request->file('foto');
-
-        $pathUpload = 'public/assets/img/menu';
-        $foto->move($pathUpload,time().".".$foto->getClientOriginalName());
-        $namaFoto = time().".".$foto->getClientOriginalName();
 
         $newMenu = new Menu;
 
@@ -84,6 +88,7 @@ class MenuController extends Controller
         $newMenu->harga_jual = $request->get('harga_jual');
         $newMenu->foto = $namaFoto;
         $newMenu->status = $request->get('status');
+        $newMenu->jenis_menu = $request->get('jenis_menu');
 
         $newMenu->save();
 
@@ -138,6 +143,7 @@ class MenuController extends Controller
             'harga_jual' => 'required|numeric',
             'foto' => 'image',
             'status' => 'required',
+            'jenis_menu' => 'required',
         ]);        
 
         $menu->nama = $request->get('nama');
@@ -145,13 +151,14 @@ class MenuController extends Controller
         $menu->hpp = $request->get('hpp');
         $menu->harga_jual = $request->get('harga_jual');
         if($request->file('foto')){
-            // $foto = $request->file('foto');
+            $foto = $request->file('foto');
             $pathUpload = 'public/assets/img/menu';
             $foto->move($pathUpload,time().".".$foto->getClientOriginalName());
             $namaFoto = time().".".$foto->getClientOriginalName();
             $menu->foto = $namaFoto;
         }
         $menu->status = $request->get('status');
+        $menu->jenis_menu = $request->get('jenis_menu');
 
         $menu->save();
 

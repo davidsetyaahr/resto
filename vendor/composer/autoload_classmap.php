@@ -47,6 +47,7 @@ return array(
     'App\\Kas' => $baseDir . '/app/Kas.php',
     'App\\KategoriBarang' => $baseDir . '/app/KategoriBarang.php',
     'App\\KategoriMenu' => $baseDir . '/app/KategoriMenu.php',
+    'App\\Meja' => $baseDir . '/app/Meja.php',
     'App\\Menu' => $baseDir . '/app/Menu.php',
     'App\\Pemakaian' => $baseDir . '/app/Pemakaian.php',
     'App\\Pembelian' => $baseDir . '/app/Pembelian.php',
