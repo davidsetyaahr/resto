@@ -51,6 +51,7 @@ class PenjualanController extends Controller
 
         $diskon = DetailDiskon::select('diskon.jenis_diskon', 'diskon.diskon', \DB::raw('COUNT(jenis_diskon) AS jml'))
         ->join('diskon', 'diskon.id_diskon', '=', 'detail_diskon.id_diskon')
+        ->where('start_date', '<=', "$current_date")
         ->where('end_date', '>=',"$current_date")
         ->where('kode_menu', $kode)
         ->get();

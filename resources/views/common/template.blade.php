@@ -59,19 +59,25 @@
           <!-- Nav items -->
           <ul class="navbar-nav">
             <li class="nav-item">
-              <a class="nav-link active" href="{{url('/')}}">
+              <a class="nav-link {{Request::segment(1) == '' ? 'active' : ''}}" href="{{url('/')}}">
                 <i class="ni ni-tv-2 text-primary"></i>
                 <span class="nav-link-text">Dashboard</span>
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{{ route('penjualan.create') }}">
+              <a class="nav-link {{Request::segment(1) == 'user' ? 'active' : ''}}" href="{{route('user.index')}}">
+                <i class="ni ni-single-02 text-cyan"></i>
+                <span class="nav-link-text">Master User</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {{Request::segment(1) == 'penjualan' ? 'active' : ''}}" href="{{ route('penjualan.create') }}">
                 <i class="ni ni-cart text-blue"></i>
                 <span class="nav-link-text">Penjualan</span>
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link collapsed" href="" data-toggle="collapse" data-target="#master-barang" aria-expanded='false'>
+              <a class="nav-link collapsed {{Request::segment(1) == 'master-barang' ? 'active' : ''}}" href="" data-toggle="collapse" data-target="#master-barang" aria-expanded='false'>
                 <i class="ni ni-box-2 text-info"></i>
                 <span class="nav-link-text">Master Barang</span>
               </a>
@@ -99,7 +105,7 @@
                 </ul>
             </li>
             <li class="nav-item">
-              <a class="nav-link collapsed" href="" data-toggle="collapse" data-target="#pembelian-barang" aria-expanded='false'>
+              <a class="nav-link collapsed {{Request::segment(1) == 'pembelian-barang' ? 'active' : ''}}" href="" data-toggle="collapse" data-target="#pembelian-barang" aria-expanded='false'>
                 <i class="ni ni-bag-17 text-yellow"></i>
                 <span class="nav-link-text">Pembelian Barang</span>
               </a>
@@ -122,7 +128,7 @@
                 </ul>
             </li>
             <li class="nav-item">
-              <a class="nav-link collapsed" href="" data-toggle="collapse" data-target="#pemakaian-barang" aria-expanded='false'>
+              <a class="nav-link collapsed {{Request::segment(1) == 'pemakaian-barang' ? 'active' : ''}}" href="" data-toggle="collapse" data-target="#pemakaian-barang" aria-expanded='false'>
                 <i class="ni ni-basket text-orange"></i>
                 <span class="nav-link-text">Pemakaian Barang</span>
               </a>
@@ -150,7 +156,7 @@
                 </ul>
             </li>
             <li class="nav-item">
-              <a class="nav-link collapsed" href="" data-toggle="collapse" data-target="#menu" aria-expanded='false'>
+              <a class="nav-link collapsed {{Request::segment(1) == 'master-menu' ? 'active' : ''}}" href="" data-toggle="collapse" data-target="#menu" aria-expanded='false'>
                 <i class="ni ni-bullet-list-67 text-dark"></i>
                 <span class="nav-link-text">Master Menu</span>
               </a>
@@ -173,7 +179,7 @@
                 </ul>
             </li>
             <li class="nav-item">
-              <a class="nav-link collapsed" href="" data-toggle="collapse" data-target="#kas-keluar" aria-expanded='false'>
+              <a class="nav-link collapsed {{Request::segment(1) == 'kas' ? 'active' : ''}}" href="" data-toggle="collapse" data-target="#kas-keluar" aria-expanded='false'>
                 <i class="ni ni-money-coins text-success"></i>
                 <span class="nav-link-text">Kas</span>
               </a>
@@ -191,7 +197,7 @@
                 </ul>
             </li>
             <li class="nav-item">
-              <a class="nav-link collapsed" href="" data-toggle="collapse" data-target="#laporan" aria-expanded='false'>
+              <a class="nav-link collapsed {{Request::segment(1) == 'laporan' ? 'active' : ''}}" href="" data-toggle="collapse" data-target="#laporan" aria-expanded='false'>
                 <i class="ni ni-archive-2 text-purple"></i>
                 <span class="nav-link-text">Laporan</span>
               </a>
