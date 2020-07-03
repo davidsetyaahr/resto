@@ -8,7 +8,7 @@
     }
 ?>
 
-<div class="col-md-3">
+<div class="col-md-3 col-6">
     <div class="menu" data-pick='{{$pick}}' data-menu='{{$data->kode_menu}}'>
         <div class="img">
             <img src="{{asset('assets/img/menu/'.$data->foto)}}" class="img-fluid" alt="">
