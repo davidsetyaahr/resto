@@ -515,6 +515,10 @@
   <!-- Argon JS -->
   <script src="{{ asset('assets/js/argon.js?v=1.2.0') }}"></script>
   <script src="{{ asset('assets/js/custom.js') }}"></script>
+  @if (Request::segment(1) == '')
+      
+  {!! $penjualanChart->script() !!}
+  @endif
 </body>
 
 </html>

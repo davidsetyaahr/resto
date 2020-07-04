@@ -102,6 +102,24 @@
         </div>
       </div>
     </div>
+    <div class="row">
+      <div class="col-xl-12">
+        <div class="card bg-default">
+          <div class="card-header bg-transparent">
+            <div class="row align-items-center">
+              <div class="col">
+                <h6 class="text-light text-uppercase ls-1 mb-1">Grafik Penjualan</h6>
+                <h5 class="h3 text-white mb-0">Jumlah Penjualan Per Bulan</h5>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <!-- Chart -->
+            {!! $penjualanChart->container() !!}
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 @endsection
