@@ -91,35 +91,38 @@
                     </span>
                   @enderror
                   <br>
-
-                  <label for="" class="form-control-label">Level</label>
-                  <br>                  
-                  <div class="custom-control custom-radio custom-control-inline  ml-2 mr-5">
-                    <input type="radio" value="Accounting" id="level1" name="level" class="custom-control-input" @error('level') is-invalid @enderror" {{old('level', $user->level) == 'Accounting' ? 'checked' : ''}}>
-                    <label class="custom-control-label" for="level1">Accounting</label>
-                  </div>
                   
-                  <div class="custom-control custom-radio custom-control-inline mr-5">
-                    <input type="radio" value="Kasir" id="level2" name="level" class="custom-control-input" @error('level') is-invalid @enderror" {{old('level', $user->level) == 'Kasir' ? 'checked' : ''}}>
-                    <label class="custom-control-label" for="level2">Kasir</label>
-                  </div>
+                  @if (\Auth::user()->level == 'Owner')
+                    <label for="" class="form-control-label">Level</label>
+                    <br>                  
+                    <div class="custom-control custom-radio custom-control-inline  ml-2 mr-5">
+                      <input type="radio" value="Accounting" id="level1" name="level" class="custom-control-input" @error('level') is-invalid @enderror" {{old('level', $user->level) == 'Accounting' ? 'checked' : ''}}>
+                      <label class="custom-control-label" for="level1">Accounting</label>
+                    </div>
+                    
+                    <div class="custom-control custom-radio custom-control-inline mr-5">
+                      <input type="radio" value="Kasir" id="level2" name="level" class="custom-control-input" @error('level') is-invalid @enderror" {{old('level', $user->level) == 'Kasir' ? 'checked' : ''}}>
+                      <label class="custom-control-label" for="level2">Kasir</label>
+                    </div>
+                    
+                    <div class="custom-control custom-radio custom-control-inline mr-5">
+                      <input type="radio" value="Owner" id="level3" name="level" class="custom-control-input" @error('level') is-invalid @enderror" {{old('level', $user->level) == 'Owner' ? 'checked' : ''}}>
+                      <label class="custom-control-label" for="level3">Owner</label>
+                    </div>
+                    
+                    <div class="custom-control custom-radio custom-control-inline mr-5">
+                      <input type="radio" value="Waiters" id="level4" name="level" class="custom-control-input" @error('level') is-invalid @enderror" {{old('level', $user->level) == 'Waiters' ? 'checked' : ''}}>
+                      <label class="custom-control-label" for="level4">Waiters</label>
+                    </div>
+                    @error('level')
+                      <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                      </span>
+                    @enderror
+                    <br>
+                    <br>
+                  @endif
                   
-                  <div class="custom-control custom-radio custom-control-inline mr-5">
-                    <input type="radio" value="Owner" id="level3" name="level" class="custom-control-input" @error('level') is-invalid @enderror" {{old('level', $user->level) == 'Owner' ? 'checked' : ''}}>
-                    <label class="custom-control-label" for="level3">Owner</label>
-                  </div>
-                  
-                  <div class="custom-control custom-radio custom-control-inline mr-5">
-                    <input type="radio" value="Waiters" id="level4" name="level" class="custom-control-input" @error('level') is-invalid @enderror" {{old('level', $user->level) == 'Waiters' ? 'checked' : ''}}>
-                    <label class="custom-control-label" for="level4">Waiters</label>
-                  </div>
-                  @error('level')
-                    <span class="invalid-feedback" role="alert">
-                      <strong>{{ $message }}</strong>
-                    </span>
-                  @enderror
-                  <br>
-                  <br>
 
                   <button type="submit" class="btn btn-primary"><span class="fa fa-save"></span> Simpan</button>
                   <button type="reset" class="btn btn-secondary"><span class="fa fa-times"></span> Reset</button>

@@ -384,6 +384,7 @@
                     <img alt="Image placeholder" src="{{ asset('assets/img/theme/team-4.jpg') }}">
                   </span> --}}
                   <div class="media-body  ml-2  d-none d-lg-block">
+                    <i class="ni ni-circle-08"></i>
                     <span class="mb-0 text-sm  font-weight-bold">{{\Auth::user()->nama}}</span>
                   </div>
                 </div>
@@ -392,21 +393,13 @@
                 <div class="dropdown-header noti-title">
                   <h6 class="text-overflow m-0">Welcome!</h6>
                 </div>
-                <a href="#!" class="dropdown-item">
+                <a href="{{ route('user.edit', \Auth::user()->id) }}" class="dropdown-item">
                   <i class="ni ni-single-02"></i>
-                  <span>My profile</span>
+                  <span>Edit Profile</span>
                 </a>
                 <a href="#!" class="dropdown-item">
                   <i class="ni ni-settings-gear-65"></i>
                   <span>Settings</span>
-                </a>
-                <a href="#!" class="dropdown-item">
-                  <i class="ni ni-calendar-grid-58"></i>
-                  <span>Activity</span>
-                </a>
-                <a href="#!" class="dropdown-item">
-                  <i class="ni ni-support-16"></i>
-                  <span>Support</span>
                 </a>
                 <div class="dropdown-divider"></div>
                 <a href="#!" class="dropdown-item" href="{{ route('logout') }}"
