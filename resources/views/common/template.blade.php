@@ -15,7 +15,6 @@
 -->
 <!DOCTYPE html>
 <html>
-
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -38,12 +37,16 @@
 </head>
 
 <body>
+<div class="body-click {{!is_null(old('kode_menu.0')) ? 'show' : ''}}"></div>
 <div class="loading">
   <div class="info">
     <img src="{{asset('assets/img/loading.gif')}}" alt="">
     <p>Loading...</p>
   </div>
 </div>
+  <?php 
+    if(\Auth::user()->level!='Waiters'){
+  ?>
   <!-- Sidenav -->
   <nav class="sidenav navbar navbar-vertical  fixed-left  navbar-expand-xs navbar-light bg-white" id="sidenav-main">
     <div class="scrollbar-inner">
@@ -237,6 +240,7 @@
       </div>
     </div>
   </nav>
+  <?php } ?>
   <!-- Main content -->
   <div class="main-content" id="panel">
     <!-- Topnav -->
@@ -244,6 +248,9 @@
     <nav class="navbar navbar-top navbar-expand navbar-dark bg-primary-opacity border-bottom">
       <div class="container-fluid">
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <?php 
+         if(\Auth::user()->level!='Waiters'){
+        ?>
         <div class="mr-sm-3">
           <a href="" class="fullpage-version"><span class="fa fa-chevron-left"></span></a>
         </div>
@@ -376,7 +383,9 @@
               </div>
             </li> --}}
           </ul>
-          <ul class="navbar-nav align-items-center  ml-auto ml-md-0 ">
+      <?php } ?>
+
+          <ul class="navbar-nav align-items-center  ml-auto">
             <li class="nav-item dropdown">
               <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <div class="media align-items-center">
@@ -467,10 +476,10 @@
         <div class="row align-items-center justify-content-lg-between">
           <div class="col-lg-6">
             <div class="copyright text-center  text-lg-left  text-muted">
-              &copy; 2020 <a href="https://www.creative-tim.com" class="font-weight-bold ml-1" target="_blank">Creative Tim</a>
+              &copy; 2020 <a href="https://limadigital.id/" class="font-weight-bold ml-1" target="_blank">Resto By Lima Digital</a>
             </div>
           </div>
-          <div class="col-lg-6">
+<!--           <div class="col-lg-6">
             <ul class="nav nav-footer justify-content-center justify-content-lg-end">
               <li class="nav-item">
                 <a href="https://www.creative-tim.com" class="nav-link" target="_blank">Creative Tim</a>
@@ -486,7 +495,8 @@
               </li>
             </ul>
           </div>
-        </div>
+ -->        </div>
+
       </footer>
     </div>
   </div>

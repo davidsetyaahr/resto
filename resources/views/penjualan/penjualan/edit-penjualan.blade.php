@@ -38,7 +38,9 @@
         </div>
     </div>
 </div>
-<div class="box-penjualan">
+<div class="box-penjualan {{!is_null(old('kode_menu')) ? 'show' : ''}}">
+<div class="toggle-cart"><span class="fa fa-shopping-cart"></span></div>
+
   <div class="relative">
 
   <form action="{{ route('penjualan.update', $penjualan->kode_penjualan) }}" method="post" class='formEdit'>
@@ -160,7 +162,7 @@
                           <input type='hidden' name='kode_menu[]' class='inputKodeMenu' value="{{$value['kode_menu']}}"> 
                           <input type='hidden' name='nama_menu[]' class='inputNamaMenu' value="{{$value['nama_menu']}}">
                           {{$value['nama_menu']}}</td>
-                          <td width='25%'>
+                          <td width='25%' class='px-0'>
                               <div class="change-qty">
                                   <input type="hidden" name="harga[]" value="{{$value['harga']}}" class="inputHarga">
                                   <button class='btnqty' data-tipe='min'>-</button>
@@ -215,6 +217,12 @@
     body.classList.add('fullpage')
     body.classList.add('penjualan')
     var span = document.querySelector('.fullpage-version span')
+    <?php 
+      if(\Auth::user()->level!='Waiters'){
+        ?>    
     span.classList.add('fa-chevron-right')
+    <?php } else{ ?>
+        body.classList.add('waiters')
+    <?php } ?>
 </script>
 @endsection

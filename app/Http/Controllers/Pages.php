@@ -13,7 +13,12 @@ class Pages extends Controller
     }
     public function dashboard()
     {
-        return view('pages.dashboard', $this->param);
+        if(\Auth::user()->level=='Waiters'){
+            return redirect()->route('penjualan.create');
+        }   
+        else{
+            return view('pages.dashboard', $this->param);
+        }     
     }
     public function form()
     {

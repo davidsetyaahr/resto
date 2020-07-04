@@ -402,7 +402,7 @@ $(document).ready(function() {
                                     <input type='hidden' name='kode_menu[]' class='inputKodeMenu' value='${kode}'> 
                                     <input type='hidden' name='nama_menu[]' class='inputNamaMenu' value='${namaMenu}'> 
                                     ${namaMenu}</td>
-                                    <td width='25%'>
+                                    <td width='25%' class='px-0'>
                                         <input type="hidden" name="harga[]" value="${hargaIDR}" class="inputHarga">
                                         <div class="change-qty">
                                             <button class='btnqty' data-tipe='min'>-</button>
@@ -567,4 +567,8 @@ $(document).ready(function() {
         $("#tfootSubtotal").html(formatRupiah(subtotal));
         $("#total").html(formatRupiah(total));
     }
+    $(".toggle-cart,.body-click").click(function() {
+        $(".box-penjualan").toggleClass('show')
+        $(".body-click").toggleClass('show')
+    })
 });
