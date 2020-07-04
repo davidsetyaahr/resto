@@ -5,22 +5,29 @@
         <div class="card">
             <div class="card-header">
             <div class="row align-items-center">
-                <div class="col-8">
+                <div class="col-2">
                   <h3 class="mb-0">{{$pageInfo}}</h3>
                 </div>
-                <div class="col-4 text-right">
-                    <form action="{{ route('menu.index') }}" class="navbar-search navbar-search-light" id="navbar-search-main">
-                        <div class="form-group mb-0">
-                        <div class="input-group input-group-alternative input-group-merge">
-                            <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fas fa-search"></i></span>
+                <div class="col-6 offset-4">
+                    <form action="{{ route('menu.index') }}">
+                        <div class="row">
+                            <div class="col-5">
+                                <input name="keyword" class="form-control" placeholder="Cari menu..." type="text" value="{{Request::get('keyword')}}">
                             </div>
-                        <input name="keyword" class="form-control" placeholder="Search" type="text" value="{{Request::get('keyword')}}">
+                            <div class="col-5">
+                                <select name="kategori-menu" id="kategori-menu" class="form-control select2" width="100%">
+                                    <option value="">Semua Kategori</option>
+                                    @foreach ($kategori as $item)
+                                        <option value="{{$item->id_kategori_menu}}" {{Request::get('kategori-menu') == $item->id_kategori_menu ? 'selected' : ''}} > {{$item->kategori_menu}} </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-1">
+                                <button type="submit" class="btn btn-info">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
                         </div>
-                        </div>
-                        <button type="button" class="close" data-action="search-close" data-target="#navbar-search-main" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                        </button>
                     </form>
                 </div>
               </div>

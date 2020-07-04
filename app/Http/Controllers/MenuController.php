@@ -26,14 +26,19 @@ class MenuController extends Controller
         $this->param['btnRight']['link'] = route('menu.create');
 
         $keyword = $request->get('keyword');
+        $keywordKategori = $request->get('kategori-menu');
+        
+        $kategori = KategoriMenu::get();
+        $menus = Menu::with('kategori');
 
-        if($keyword){
-            $menus = Menu::with('kategori')->where('nama', 'LIKE', "%$keyword%")->orWhere('kode_menu', 'LIKE', "%$keyword%")->paginate(10);
+        if($keywordKategori){
+            $menus->where('id_kategori_menu', $keywordKategori);
         }
-        else{
-            $menus = Menu::with('kategori')->paginate(10);
+
+        if ($keyword) {
+            $menus->where('nama', 'LIKE', "%$keyword%");
         }
-        return \view('master-menu.menu.index', ['menus' => $menus], $this->param);
+        return \view('master-menu.menu.index', ['menus' => $menus->paginate(10), 'kategori' => $kategori], $this->param);
     }
 
     public function getKode()
