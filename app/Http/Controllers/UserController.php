@@ -130,4 +130,33 @@ class UserController extends Controller
     {
         //
     }
+
+    public function gantiPassword()
+    {
+        $this->param['pageInfo'] = 'Ganti Password';
+        $this->param['btnRight']['text'] = '';
+        $this->param['btnRight']['link'] = '#';
+
+        return \view('master-user.user.ganti-password', $this->param);
+    }
+
+    public function updatePassword(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+        $request->validate([
+            'password' => 'required',
+            'konfirmasi_password' => 'required|same:password',
+            'old_password' => ['required', function ($attribute, $value, $fail) use ($user) {
+                if (!\Hash::check($value, $user->password)) {
+                    return $fail(__('Password lama tidak sesuai.'));
+                }
+            }],
+        ]);
+
+        $user->password = \Hash::make($request->get('password'));
+
+        $user->save();
+
+        return redirect()->route('user.ganti-password')->withStatus(__('Password berhasil diperbarui.'));
+    }
 }

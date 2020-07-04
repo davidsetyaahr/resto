@@ -9,8 +9,9 @@
         <th>Jenis Order</th>
         <th>Jumlah Item</th>
         <th>Jumlah Qty</th>
-        <th>Total Harga</th>
         <th>Diskon</th>
+        <th>Total</th>
+        <th>Keterangan</th>
         </tr>
     </thead>
     <tbody class="list">
@@ -21,11 +22,16 @@
         $total_diskon = 0;
     ?>
     @foreach ($penjualan as $value)
-    <?php 
+    <?php
         $item = $item + $value->jumlah_item;
         $qty = $qty + $value->jumlah_qty;
-        $total = $total + $value->total_harga;
-        $total_diskon = $total_diskon + $value->total_diskon;
+        $total_diskon = $total_diskon + $value->total_diskon + $value->total_diskon_tambahan;
+        $subtotal = $value->total_harga - $value->total_diskon + $value->total_ppn - $value->total_diskon_tambahan;
+        if ($value->isTravel=='True') {
+            $biaya_travel = $subtotal/100*10;
+            $subtotal = $subtotal - $biaya_travel;
+        }
+        $total = $total + $subtotal;
     ?>
             <tr>
             <td>{{$loop->iteration}}</td>
@@ -35,8 +41,13 @@
             <td>{{$value->jenis_order}}</td>
             <td>{{$value->jumlah_item}}</td>
             <td>{{$value->jumlah_qty}}</td>
-            <td>{{number_format($value->total_harga,0,',','.')}}</td>
             <td>{{number_format($value->total_diskon + $value->total_diskon_tambahan,0,',','.')}}</td>
+            <td>{{number_format($subtotal,0,',','.')}}</td>
+            @if ($value->isTravel=='True')
+                <td>Travel</td>
+            @else
+                <td>Umum</td>
+            @endif
             </tr>
         @endforeach
     </tbody>
@@ -45,8 +56,9 @@
         <td colspan='5' class='text-center'><b>TOTAL</b></td>
         <td>{{$item}}</td>
         <td>{{$qty}}</td>
-        <td>{{number_format($total,0,',','.')}}</td>
         <td>{{number_format($total_diskon,0,',','.')}}</td>
+        <td>{{number_format($total,0,',','.')}}</td>
+        <td></td>
         </tr>
     </tfoot>
     </table>

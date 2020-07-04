@@ -159,6 +159,12 @@ class PenjualanController extends Controller
         $newPenjualan->jumlah_qty = $ttlQty;
         $newPenjualan->jenis_bayar = '';
         $newPenjualan->total_diskon = $totalDiskon;
+        if($request->get('isTravel')){
+            $newPenjualan->isTravel = $request->get('isTravel');
+        }
+        else{
+            $newPenjualan->isTravel = 'False';
+        }
 
         $newPenjualan->save();
 

@@ -14,6 +14,11 @@ use Illuminate\Support\Facades\Route;
 */
 Auth::routes();
 Route::group(['middleware' => ['auth']], function () {
+
+    Route::get('user/ganti-password/', 'UserController@gantiPassword')->name('user.ganti-password');
+
+    Route::put('user/update-password/{id}', 'UserController@updatePassword')->name('user.update-password');
+
     Route::get('/','Pages@dashboard');
     Route::prefix('pages/')->group(function() {
         Route::get('list-data','Pages@list');
