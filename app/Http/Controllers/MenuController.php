@@ -12,7 +12,7 @@ class MenuController extends Controller
     private $param;
     public function __construct()
     {
-        $this->param['icon'] = 'ni-box-2 text-primary';
+        $this->param['icon'] = 'ni-bullet-list-67 text-dark';
     }
     /**
      * Display a listing of the resource.
