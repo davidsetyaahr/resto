@@ -28,7 +28,7 @@
         $total_diskon = $total_diskon + $value->total_diskon + $value->total_diskon_tambahan;
         $subtotal = $value->total_harga - $value->total_diskon + $value->total_ppn - $value->total_diskon_tambahan;
         if ($value->isTravel=='True') {
-            $biaya_travel = $subtotal/100*10;
+            $biaya_travel = ($subtotal - $value->total_ppn) * 10/100;
             $subtotal = $subtotal - $biaya_travel;
         }
         $total = $total + $subtotal;

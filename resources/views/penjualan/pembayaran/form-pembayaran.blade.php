@@ -148,11 +148,19 @@
                         @enderror --}}
                       </div>
                     </div>
-                    <div class="col-md-6 mt-3">
+                    <div class="col-md-8 mt-4">
+                      <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="isTravel" name="isTravel" value="True" {{old('isTravel') == 'True' ? 'checked' : ''}}>
+                        <label class="custom-control-label" for="isTravel">Travel</label>
+                        <br>
+                        <h5 class="text-default">*Khusus Customer Travel</h5>
+                      </div>
+                    </div>
+                    <div class="col-md-4 mt-3">
                       <h1 class='text-dark'>Grand Total : Rp. <span class="text-orange" id='idrGrandTotal'>{{number_format($penjualan->total_harga - $penjualan->total_diskon + $penjualan->total_ppn,0,',','.')}}</span></h1>
                       <input type="hidden" name="grand_total" id="grand_total" class="form-control form-line text-lg text-orange font-weight-bold" value="{{($penjualan->total_harga - $penjualan->total_diskon) + $penjualan->total_ppn }}">
                     </div>
-                    <div class="col-md-6 mt-3 text-right">
+                    <div class="col-md-3 mt-3">
                         <button type="submit" class="btn btn-primary"><span class="fa fa-save"></span> Simpan</button>
                         <button type="reset" class="btn btn-secondary"><span class="fa fa-times"></span> Reset</button>
 

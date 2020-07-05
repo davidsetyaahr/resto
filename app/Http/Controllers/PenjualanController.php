@@ -159,12 +159,7 @@ class PenjualanController extends Controller
         $newPenjualan->jumlah_qty = $ttlQty;
         $newPenjualan->jenis_bayar = '';
         $newPenjualan->total_diskon = $totalDiskon;
-        if($request->get('isTravel')){
-            $newPenjualan->isTravel = $request->get('isTravel');
-        }
-        else{
-            $newPenjualan->isTravel = 'False';
-        }
+        $newPenjualan->isTravel = 'False';
 
         $newPenjualan->save();
 
@@ -348,6 +343,12 @@ class PenjualanController extends Controller
         $penjualan->total_diskon_tambahan = $request->get('diskon_tambahan');
         $penjualan->bayar = $request->get('bayar');
         $penjualan->kembalian = $request->get('kembalian');
+        if($request->get('isTravel')){
+            $penjualan->isTravel = $request->get('isTravel');
+        }
+        else{
+            $penjualan->isTravel = 'False';
+        }
 
         $penjualan->save();
 
@@ -378,14 +379,14 @@ class PenjualanController extends Controller
         $this->param['btnRight']['link'] = route('penjualan.create');
         if(isset($_GET['dari']) && isset($_GET['sampai'])){
             if($_GET['tipe']=='general'){
-                $this->param['penjualan'] = Penjualan::where('status_bayar','Sudah Bayar')->whereBetween('waktu',[$_GET['dari'],$_GET['sampai']])->orderBy('waktu','asc')->get();
+                $this->param['penjualan'] = Penjualan::where('status_bayar','Sudah Bayar')->whereBetween('waktu',[$_GET['dari'] . ' 00:00:00',$_GET['sampai'] . ' 23:59:59'])->orderBy('waktu','asc')->get();
             }
             else if($_GET['tipe']=='menu-favorit'){
-                $this->param['menu'] = \DB::table('menu as m')->select(\DB::raw('m.kode_menu,m.nama, SUM(dp.qty) as qty, sum(sub_total) as total'))->leftJoin('detail_penjualan as dp','m.kode_menu','dp.kode_menu')->join('penjualan as p', 'dp.kode_penjualan','p.kode_penjualan')->where('p.status_bayar','Sudah Bayar')->whereBetween('p.waktu',[$_GET['dari'],$_GET['sampai']])->groupBy('m.kode_menu')->orderBy('qty','desc')->orderBy('total','desc')->get();
+                $this->param['menu'] = \DB::table('menu as m')->select(\DB::raw('m.kode_menu,m.nama, SUM(dp.qty) as qty, sum(sub_total) as total'))->leftJoin('detail_penjualan as dp','m.kode_menu','dp.kode_menu')->join('penjualan as p', 'dp.kode_penjualan','p.kode_penjualan')->where('p.status_bayar','Sudah Bayar')->whereBetween('p.waktu',[$_GET['dari'] . ' 00:00:00',$_GET['sampai'] . ' 23:59:59'])->groupBy('m.kode_menu')->orderBy('qty','desc')->orderBy('total','desc')->get();
             }
             else if($_GET['tipe']=='tidak-terjual'){
                 $this->param['menu'] = \DB::table('menu as m')->select('m.kode_menu','m.nama','m.hpp','m.harga_jual','m.status')->whereNotIn('m.kode_menu', function($query){
-                    $query->select('dp.kode_menu')->from('detail_penjualan as dp')->join('penjualan as p','dp.kode_penjualan','p.kode_penjualan')->where('p.status_bayar','Sudah Bayar')->whereBetween('p.waktu',[$_GET['dari'],$_GET['sampai']]);
+                    $query->select('dp.kode_menu')->from('detail_penjualan as dp')->join('penjualan as p','dp.kode_penjualan','p.kode_penjualan')->where('p.status_bayar','Sudah Bayar')->whereBetween('p.waktu',[$_GET['dari'] . ' 00:00:00',$_GET['sampai']. ' 23:59:59']);
                 })->orderBy('m.kode_menu','asc')->get();
             }
         }

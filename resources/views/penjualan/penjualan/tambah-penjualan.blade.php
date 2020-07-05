@@ -101,14 +101,7 @@
               </span>
             @enderror
           </div>
-          <div class="col-md-6 mt-4">
-            <div class="custom-control custom-checkbox">
-              <input type="checkbox" class="custom-control-input" id="isTravel" name="isTravel" value="True" {{old('isTravel') == 'True' ? 'checked' : ''}}>
-              <label class="custom-control-label" for="isTravel">Travel</label>
-              <br>
-              <h5 class="text-default">*Khusus Customer Travel</h5>
-            </div>
-          </div>
+          
         </div>
         <h2 class='mt-4'>Keranjang Menu</h2>
         <div class="table-responsive">
