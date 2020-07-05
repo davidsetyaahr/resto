@@ -94,8 +94,8 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $user = User::findOrFail($id);
-        $isUniqueUsername = $user->username == $request->get('username') ? "" : "|unique:user";
-        $isUniqueEmail = $user->email == $request->get('email') ? "" : "|unique:user";
+        $isUniqueUsername = $user->username == $request->get('username') ? "" : "|unique:users";
+        $isUniqueEmail = $user->email == $request->get('email') ? "" : "|unique:users";
 
         $validatedData = $request->validate([
             'nama' => 'required',
