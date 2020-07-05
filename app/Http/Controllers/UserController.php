@@ -74,7 +74,7 @@ class UserController extends Controller
         $newUser->no_hp = $request->get('no_hp');
         $newUser->alamat = $request->get('alamat');
         $newUser->level = $request->get('level');
-        $newUser->password = \Hash::make($request->get('level'));
+        $newUser->password = \Hash::make($request->get('password'));
 
         $newUser->save();
 

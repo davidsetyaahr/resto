@@ -67,12 +67,17 @@
                 <span class="nav-link-text">Dashboard</span>
               </a>
             </li>
+
+            @if (\Auth::user()->level == 'Owner')
             <li class="nav-item">
               <a class="nav-link {{Request::segment(1) == 'user' ? 'active' : ''}}" href="{{route('user.index')}}">
                 <i class="ni ni-single-02 text-cyan"></i>
                 <span class="nav-link-text">Master User</span>
               </a>
             </li>
+            @endif
+
+            @if (\Auth::user()->level == 'Owner' || \Auth::user()->level == 'Kasir')
             <li class="nav-item">
               <a class="nav-link {{Request::segment(1) == 'penjualan' ? 'active' : ''}}" href="{{ route('penjualan.create') }}">
                 <i class="ni ni-cart text-blue"></i>
@@ -181,6 +186,9 @@
                   </li>
                 </ul>
             </li>
+            @endif
+
+            @if (\Auth::user()->level == 'Accounting' || \Auth::user()->level == 'Owner')
             <li class="nav-item">
               <a class="nav-link collapsed {{Request::segment(1) == 'kas' ? 'active' : ''}}" href="" data-toggle="collapse" data-target="#kas-keluar" aria-expanded='false'>
                 <i class="ni ni-money-coins text-success"></i>
@@ -199,6 +207,9 @@
                   </li>
                 </ul>
             </li>
+            @endif
+
+            @if (\Auth::user()->level == 'Owner')
             <li class="nav-item">
               <a class="nav-link collapsed {{Request::segment(1) == 'laporan' ? 'active' : ''}}" href="" data-toggle="collapse" data-target="#laporan" aria-expanded='false'>
                 <i class="ni ni-archive-2 text-purple"></i>
@@ -227,6 +238,7 @@
                   </li>
                 </ul>
             </li>
+            @endif
           </ul>
           <!-- Divider -->
           {{-- <ul class="navbar-nav lima-section">
