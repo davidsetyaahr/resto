@@ -98,8 +98,12 @@
                               <i class="fas fa-ellipsis-v"></i>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                            <a class="dropdown-item" href="{{ route('cetak-bill', $value->kode_penjualan) }}">Cetak Bill</a>
-                            <a class="dropdown-item" href="{{ route('penjualan.bayar', $value->kode_penjualan) }}">Pembayaran</a>
+                            <?php 
+                              if(\Auth::user()->level!='Waiters'){
+                            ?>
+                              <a class="dropdown-item" href="{{ route('cetak-bill', $value->kode_penjualan) }}">Cetak Bill</a>
+                              <a class="dropdown-item" href="{{ route('penjualan.bayar', $value->kode_penjualan) }}">Pembayaran</a>
+                              <?php } ?>
                               <a class="dropdown-item" href="{{ url('penjualan/'.$value->kode_penjualan.'/edit') }}">Edit</a>
                               <form action="{{ route('penjualan.destroy', $value->kode_penjualan) }}" method="post">
                                 @csrf
@@ -120,6 +124,7 @@
               {{$penjualan->appends(Request::all())->links()}}
             </div>
          </div>
+         
     </div>
 </div>
 @endsection

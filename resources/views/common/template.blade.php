@@ -37,7 +37,7 @@
 </head>
 
 <body>
-<div class="body-click {{!is_null(old('kode_menu.0')) ? 'show' : ''}}"></div>
+<div class="body-click {{!is_null(old('kode_menu.0')) && \Auth::user()->level=='Waiters' ? 'show' : ''}}"></div>
 <div class="loading">
   <div class="info">
     <img src="{{asset('assets/img/loading.gif')}}" alt="">
@@ -392,7 +392,7 @@
                   {{-- <span class="avatar avatar-sm rounded-circle">
                     <img alt="Image placeholder" src="{{ asset('assets/img/theme/team-4.jpg') }}">
                   </span> --}}
-                  <div class="media-body  ml-2  d-none d-lg-block">
+                  <div class="media-body  ml-2 d-lg-block">
                     <i class="ni ni-circle-08"></i>
                     <span class="mb-0 text-sm  font-weight-bold">{{\Auth::user()->nama}}</span>
                   </div>
