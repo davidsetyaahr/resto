@@ -37,7 +37,7 @@
 </head>
 
 <body>
-<div class="body-click {{!is_null(old('kode_menu.0')) ? 'show' : ''}}"></div>
+<div class="body-click {{!is_null(old('kode_menu.0')) && \Auth::user()->level=='Waiters' ? 'show' : ''}}"></div>
 <div class="loading">
   <div class="info">
     <img src="{{asset('assets/img/loading.gif')}}" alt="">
