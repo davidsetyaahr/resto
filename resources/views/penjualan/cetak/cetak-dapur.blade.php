@@ -32,6 +32,7 @@ if(count($dapur)!=0){
     $Data .= "ORDERAN DAPUR\n";
     $Data .=$penjualan->nama_meja."\n";
     $Data .=$penjualan->kode_penjualan."\n";
+    $Data .=$penjualan->jenis_order."\n";
     $Data .="--------------------------------------------\n";
     $Data .=$item;
     if($keterangan<>Null || $keterangan<>''){
@@ -87,6 +88,7 @@ if(count($bar)!=0){
     $Data .= "ORDERAN BAR\n";
     $Data .=$penjualan->nama_meja."\n";
     $Data .=$penjualan->kode_penjualan."\n";
+    $Data .=$penjualan->jenis_order."\n";
     $Data .="--------------------------------------------\n";
     $Data .=$item;
     if($keterangan<>Null || $keterangan<>''){
