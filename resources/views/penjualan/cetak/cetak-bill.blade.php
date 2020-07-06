@@ -43,7 +43,7 @@
         $Data .= $kiri;
         $Data .= "------------------------------------------------\n";
         $Data .= "Sub Total " . str_pad(number_format($subtotal, 0, ",", "."), 38, $spasi, STR_PAD_LEFT) . "\n";
-        $Data .= "Total+PPN " . str_pad(number_format($total, 0, ",", "."), 38, $spasi, STR_PAD_LEFT) . "\n";
+        $Data .= "Total(+PPN)" . str_pad(number_format($total, 0, ",", "."), 38, $spasi, STR_PAD_LEFT) . "\n";
         
         $Data .= "\n";
         $Data .= "\n";
