@@ -14,7 +14,7 @@
         $qty=0;
         $total = 0;
     ?>
-    @foreach ($menu as $value)
+    @foreach ($penjualan as $value)
     <?php 
         $qty = $qty + $value->qty;
         $total = $total + $value->total;
