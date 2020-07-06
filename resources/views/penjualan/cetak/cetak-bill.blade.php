@@ -14,6 +14,8 @@
           $item .= number_format($hasild->sub_total, 0, ",", ".") . "\n";
           $subtotal+=$hasild->sub_total;
         }
+        $ppn = 10*$subtotal/100;
+        $total = $subtotal + $ppn;
         $tmpdir = sys_get_temp_dir();
         $file = tempnam($tmpdir, 'ctk');
         $handle = fopen($file, 'w');
@@ -41,6 +43,7 @@
         $Data .= $kiri;
         $Data .= "------------------------------------------------\n";
         $Data .= "Sub Total " . str_pad(number_format($subtotal, 0, ",", "."), 38, $spasi, STR_PAD_LEFT) . "\n";
+        $Data .= "Total+PPN " . str_pad(number_format($total, 0, ",", "."), 38, $spasi, STR_PAD_LEFT) . "\n";
         
         $Data .= "\n";
         $Data .= "\n";
