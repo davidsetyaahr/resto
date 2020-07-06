@@ -11,7 +11,7 @@
               </div>
             </div>
             <div class="card-body">
-              <form action="" method="" id="formFilterMenu">
+              <form data-url="{{url('penjualan/penjualan/filter')}}" method="" id="formFilterMenu">
               <div class="row mb-4">
                   <div class="col-md-12">
                     <div class="input-group mb-2">

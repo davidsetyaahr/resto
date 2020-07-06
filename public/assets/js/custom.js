@@ -339,11 +339,12 @@ $(document).ready(function() {
         e.preventDefault();
         var idKategori = $("#idKategori").val();
         var key = $("#key").val();
+        var url = $(this).attr('data-url')
 
         $.ajax({
             type: "get",
             data: { idKategori: idKategori, key: key },
-            url: "filter",
+            url: url,
             beforeSend: function() {
                 $(".loading").addClass("show");
             },
