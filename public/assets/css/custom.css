@@ -1,3 +1,20 @@
+@media print {
+    body{
+        font-size : 14px;
+    }
+	table, table tr, table tr td{
+		border : 1px solid #cfcfcf;
+	}
+	thead{
+		background-color: #f1404c !important;
+		color: white;
+		-webkit-print-color-adjust: exact;
+	}
+	tfoot{
+		background-color: #dadce0 !important;
+		-webkit-print-color-adjust: exact;
+	}
+}
 .lima-section,
 .lima-section li a {
     position: absolute !important;

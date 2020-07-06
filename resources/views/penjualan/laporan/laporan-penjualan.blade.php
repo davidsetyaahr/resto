@@ -5,8 +5,15 @@
         <div class="card">
             <div class="card-header">
               <div class="row align-items-center">
-                <div class="col-8">
+                <div class="col-6">
                   <h3 class="mb-0">{{$pageInfo}}</h3>
+                </div>
+                <div class="col-6 text-right">
+                <?php 
+                    if(isset($_GET['tipe']) && isset($_GET['dari'])){
+                ?>
+                  <a href="<?= route('laporan-penjualan.print')."?tipe=$_GET[tipe]&dari=$_GET[dari]&sampai=$_GET[sampai]" ?>" class="btn btn-info btn-sm"><span class="fa fa-print"></span> Cetak Laporan</a>
+                <?php } ?>
                 </div>
               </div>
             </div>

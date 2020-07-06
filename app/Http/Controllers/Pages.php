@@ -23,7 +23,7 @@ class Pages extends Controller
             $pjPerBulan = [];
 
             foreach ($bulan as $key => $val) {
-                $pj = \App\Penjualan::whereYear('waktu', $tahun)->whereMonth('waktu', $val)->count();
+                $pj = \App\Penjualan::where('status_bayar','Sudah Bayar')->whereYear('waktu', $tahun)->whereMonth('waktu', $val)->count();
                 array_push($pjPerBulan, $pj);
             }
 

@@ -11,7 +11,7 @@
         </tr>
     </thead>
     <tbody class="list">
-    @foreach ($menu as $value)
+    @foreach ($penjualan as $value)
         <tr>
             <td>{{$loop->iteration}}</td>
             <td>{{$value->kode_menu}}</td>

@@ -54,7 +54,7 @@
                 </div>
               @endif
             </div>
-            <div class="table-responsive">
+            <div class="table-responsive" style='min-height:180px'>
               <table class="table align-items-center table-flush">
                 <thead class="thead-light">
                   <tr>
