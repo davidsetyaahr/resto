@@ -209,21 +209,16 @@
             </li>
             @endif
 
-            @if (\Auth::user()->level == 'Owner')
+            @if (\Auth::user()->level == 'Owner' || \Auth::user()->level == 'Kasir' || \Auth::user()->level == 'Accounting')
             <li class="nav-item">
               <a class="nav-link collapsed {{Request::segment(1) == 'laporan' ? 'active' : ''}}" href="" data-toggle="collapse" data-target="#laporan" aria-expanded='false'>
                 <i class="ni ni-archive-2 text-purple"></i>
                 <span class="nav-link-text">Laporan</span>
               </a>
                 <ul class="navbar-nav nav-collapse collapse" id="laporan">
-                 <li class="nav-item">
+                  <li class="nav-item">
                     <a class="nav-link" href="{{route('laporan-penjualan')}}?tipe=general">
                       <span class="nav-link-text">Laporan Penjualan</span>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="{{ route('laba-rugi') }}">
-                      <span class="nav-link-text">Laba Rugi</span>
                     </a>
                   </li>
                   <li class="nav-item">
@@ -236,6 +231,13 @@
                       <span class="nav-link-text">Menu Paling Menghasilkan</span>
                     </a>
                   </li>
+                  @if (\Auth::user()->level == 'Owner' || \Auth::user()->level == 'Accounting')
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ route('laba-rugi') }}">
+                      <span class="nav-link-text">Laba Rugi</span>
+                    </a>
+                  </li>
+                  @endif
                 </ul>
             </li>
             @endif
