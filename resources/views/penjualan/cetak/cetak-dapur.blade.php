@@ -32,7 +32,8 @@ if(count($dapur)!=0){
     $Data .= "ORDERAN DAPUR\n";
     $Data .=$penjualan->nama_meja."\n";
     $Data .=$penjualan->kode_penjualan."\n";
-    $Data .="--------------------------------------------\n";
+    $Data .=$penjualan->jenis_order."\n";
+   $Data .="--------------------------------------------\n";
     $Data .=$item;
     if($keterangan<>Null || $keterangan<>''){
         $Data .=$keterangan;
@@ -55,7 +56,7 @@ if(count($dapur)!=0){
     $Data .= Chr(29).Chr(86).Chr(49); #Auto Cutter
     fwrite($handle, $Data);
     fclose($handle);
-    copy($file,"//192.168.137.1/Dapur"); # Lakukan cetak
+    copy($file,"//192.168.137.105/Dapur"); # Lakukan cetak
     unlink($file);
 }
 if(count($bar)!=0){
@@ -87,6 +88,8 @@ if(count($bar)!=0){
     $Data .= "ORDERAN BAR\n";
     $Data .=$penjualan->nama_meja."\n";
     $Data .=$penjualan->kode_penjualan."\n";
+    $Data .=$penjualan->jenis_order."\n";
+
     $Data .="--------------------------------------------\n";
     $Data .=$item;
     if($keterangan<>Null || $keterangan<>''){
@@ -110,12 +113,12 @@ if(count($bar)!=0){
     $Data .= Chr(29).Chr(86).Chr(49); #Auto Cutter
     fwrite($handle, $Data);
     fclose($handle);
-    copy($file,"//192.168.137.1/Bar"); # Lakukan cetak
+    copy($file,"//192.168.137.105/Bar"); # Lakukan cetak
     unlink($file);
 }
 
 ?>
 
 <script>
-      window.location.href = 'http://localhost:3301/newresto/penjualan/penjualan/create'
+      window.location.href = 'http://192.168.137.105:3301/newresto/penjualan/penjualan/create'
 </script>
