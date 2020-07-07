@@ -1,5 +1,11 @@
 
 <?php 
+    if(isset($_GET['payment'])){
+      $text = 'Payment Bill';
+    }
+    else{
+      $text = 'Guest Bill';
+    }
     //justification
     $tengah = Chr(27) . Chr(97) . Chr(1);
     $kiri = Chr(27) . Chr(97) . Chr(0);
@@ -35,15 +41,25 @@
         $Data .= "www.barathahotel.id\n";
         $Data .= "\n";
         $Data .= $kiri;
-        $Data .= "Guest Check\n";
+        $Data .= $text."\n";
         $Data .= $penjualan->nama_meja."\n";
         $Data .= $penjualan->kode_penjualan."\n";
         $Data .= "------------------------------------------------\n";
         $Data .= $item;
         $Data .= $kiri;
         $Data .= "------------------------------------------------\n";
-        $Data .= "Sub Total " . str_pad(number_format($subtotal, 0, ",", "."), 35, $spasi, STR_PAD_LEFT) . "\n";
-        $Data .= "Total(+PPN)" . str_pad(number_format($total, 0, ",", "."), 35, $spasi, STR_PAD_LEFT) . "\n";
+        $Data .= "Sub Total " . str_pad(number_format($subtotal, 0, ",", "."), 38, $spasi, STR_PAD_LEFT) . "\n";
+        $Data .= "Total(+PPN)" . str_pad(number_format($total, 0, ",", "."), 37, $spasi, STR_PAD_LEFT) . "\n";
+        if(isset($_GET['payment'])){
+          $ttlDiskon = $penjualan->total_diskon + $penjualan->total_diskon_tambahan;
+          if($ttlDiskon > 0){
+            $Data .= "Diskon" . str_pad(number_format($ttlDiskon, 0, ",", "."), 42, $spasi, STR_PAD_LEFT) . "\n";
+          }
+          $Data .= "------------------------------------------------\n";
+          $Data .= "Bayar" . str_pad(number_format($penjualan->bayar, 0, ",", "."), 43, $spasi, STR_PAD_LEFT) . "\n";
+          $Data .= "Kembalian" . str_pad(number_format($penjualan->kembalian, 0, ",", "."), 39, $spasi, STR_PAD_LEFT) . "\n";
+        }        
+
         
         $Data .= "\n";
         $Data .= "\n";
