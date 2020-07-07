@@ -1,0 +1,1 @@
+php artisan backup:run
