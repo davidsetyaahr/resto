@@ -49,7 +49,10 @@
         $Data .= $kiri;
         $Data .= "------------------------------------------------\n";
         $Data .= "Sub Total " . str_pad(number_format($subtotal, 0, ",", "."), 38, $spasi, STR_PAD_LEFT) . "\n";
-        $Data .= "Total(+PPN)" . str_pad(number_format($total, 0, ",", "."), 37, $spasi, STR_PAD_LEFT) . "\n";
+        $Data .= "PPN" . str_pad(number_format($ppn, 0, ",", "."), 45, $spasi, STR_PAD_LEFT) . "\n";
+        $Data .= "------------------------------------------------\n";
+        $Data .= "Total " . str_pad(number_format($total, 0, ",", "."), 42, $spasi, STR_PAD_LEFT) . "\n";
+
         if(isset($_GET['payment'])){
           $ttlDiskon = $penjualan->total_diskon + $penjualan->total_diskon_tambahan;
           if($ttlDiskon > 0){
@@ -60,7 +63,11 @@
           $Data .= "Kembalian" . str_pad(number_format($penjualan->kembalian, 0, ",", "."), 39, $spasi, STR_PAD_LEFT) . "\n";
         }        
 
-        
+        $Data .= $tengah;
+        $Data .= "\n";
+        $Data .= "\n";
+
+        $Data .= "Learn,Share,Be Successfull\n";        
         $Data .= "\n";
         $Data .= "\n";
         $Data .= "\n";
