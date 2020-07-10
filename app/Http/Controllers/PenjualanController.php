@@ -303,8 +303,13 @@ class PenjualanController extends Controller
             'jumlah_qty' => $totalQty,
             'total_diskon' => $totalDiskon,
         ]);
-
-        return redirect()->route('cetak-dapur', ['kode' => $kodePenjualan.'?update=up'])->with('data',$param);
+        
+        if(count($param['dapur'])!=0 || count($param['bar'])!=0){
+            return redirect()->route('cetak-dapur', ['kode' => $kodePenjualan.'?update=up'])->with('data',$param);
+        }
+        else{
+            return redirect()->route('edit-penjualan', ['kode' => $kodePenjualan]);
+        }
     }
 
     /**
