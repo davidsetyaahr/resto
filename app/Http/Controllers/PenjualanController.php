@@ -357,7 +357,8 @@ class PenjualanController extends Controller
         $penjualan->jenis_bayar = $request->get('jenis_bayar');
         $penjualan->no_kartu = $request->get('no_kartu');
         $penjualan->status_bayar = 'Sudah Bayar';
-        $penjualan->total_diskon_tambahan = $request->get('diskon_tambahan');
+        $diskon = $request->get('diskon') > 0 ? $request->get('diskon') * $request->get('total') / 100 : 0;
+        $penjualan->total_diskon_tambahan = $request->get('diskon_tambahan') + $diskon;
         $penjualan->bayar = $request->get('bayar');
         $penjualan->kembalian = $request->get('kembalian');
         if($request->get('isTravel')){

@@ -208,10 +208,24 @@ $(document).ready(function() {
         }
     });
 
-    $("#diskon_tambahan").keyup(function() {
+    $(".diskon_tambahan").keyup(function() {
         var diskon_tambahan = parseInt($(this).val());
+        var tipe = $(this).data('tipe')
         var total = parseInt($("#total").val());
-        var grand_total = total - diskon_tambahan;
+        var diskon = 0;
+        if(tipe=='persen'){
+            var otherDisc = parseInt($(".diskon_tambahan[data-tipe='rp']").val())
+            diskon = (diskon_tambahan * total / 100) + otherDisc;
+        }
+        else{
+            var getOtherDisc = parseInt($(".diskon_tambahan[data-tipe='persen']").val())
+            var otherDisc = 0;
+            if(getOtherDisc>0){
+                otherDisc = getOtherDisc * total / 100;
+            }
+            diskon = diskon_tambahan + otherDisc
+        }
+        var grand_total = total - diskon;
         $("#grand_total").val(grand_total);
         $("#idrGrandTotal").html(formatRupiah(grand_total));
     });
