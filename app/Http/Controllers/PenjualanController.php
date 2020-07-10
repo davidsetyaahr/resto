@@ -10,7 +10,7 @@ use App\KategoriMenu;
 use \App\Menu;
 use \App\Meja;
 use \App\DetailDiskon;
-
+use Session;
 class PenjualanController extends Controller
 {
     private $param;
@@ -228,6 +228,9 @@ class PenjualanController extends Controller
         $totalHarga = 0;
         $totalDiskon = 0;
         $totalQty = 0;
+        $param['dapur'] = [];
+        $param['bar'] = [];
+        $param['update'] = 'up';
         foreach ($_POST['kode_menu'] as $key => $value) {
 
             $totalHarga += $_POST['qty'][$key] * $_POST['harga'][$key];
@@ -246,6 +249,19 @@ class PenjualanController extends Controller
                 $newDetail->diskon = $_POST['diskon'][$key];
     
                 $newDetail->save();
+
+                $cekJenis = Menu::select('jenis_menu')->where('kode_menu',$_POST['kode_menu'][$key])->get()[0];
+                $arr = array(
+                    'qty' => $_POST['qty'][$key],
+                    'nama' => $_POST['nama_menu'][$key],
+                    'keterangan' => $_POST['keterangan'][$key]
+                );
+
+                if($cekJenis->jenis_menu=='Dapur'){
+                    $param['dapur'][count($param['dapur'])] = $arr;
+                }else{
+                    $param['bar'][count($param['bar'])] = $arr;
+                }
             }
             else{
                 $getDetail = DetailPenjualan::select('qty','keterangan')->where('id_detail_penjualan',$_POST['id_detail'][$key])->get()[0];
@@ -286,8 +302,8 @@ class PenjualanController extends Controller
             'jumlah_qty' => $totalQty,
             'total_diskon' => $totalDiskon,
         ]);
-        
-        return redirect()->route('edit-penjualan',['kode' => $kodePenjualan])->withStatus('Data berhasil diperbarui.');
+
+        return redirect()->route('cetak-dapur', ['kode' => $kodePenjualan.'?update=up'])->with('data',$param);
     }
 
     /**
@@ -352,7 +368,7 @@ class PenjualanController extends Controller
 
         $penjualan->save();
 
-        return redirect()->route('penjualan.index')->withStatus('Pembayaran berhasil.');    
+        return redirect()->route('cetak-bill',$kode.'?payment=pay');    
     }
     public function filter()
     {
@@ -473,7 +489,7 @@ class PenjualanController extends Controller
 
     public function cetakBill($kode)
     {
-        $penjualan = \DB::table('penjualan as p')->select('p.kode_penjualan', 'p.waktu','m.nama_meja')->join('meja as m','p.id_meja','m.id_meja')->where('p.kode_penjualan',$kode)->get()[0];
+        $penjualan = \DB::table('penjualan as p')->select('p.kode_penjualan', 'p.waktu','m.nama_meja','p.total_diskon','p.total_diskon_tambahan','p.bayar','p.kembalian')->join('meja as m','p.id_meja','m.id_meja')->where('p.kode_penjualan',$kode)->get()[0];
         $detail = \DB::table('detail_penjualan as dp')->select('dp.qty','dp.sub_total','m.nama','m.harga_jual')->join('menu as m','dp.kode_menu','m.kode_menu')->where('dp.kode_penjualan', $kode)->get();
         $resto = \DB::table('perusahaan')->select('nama', 'alamat', 'kota', 'telepon', 'email')->where('id_perusahaan', 1)->get();
         return view('penjualan.cetak.cetak-bill', ['penjualan' => $penjualan, 'detail' => $detail, 'resto' => $resto[0]]);
@@ -482,9 +498,16 @@ class PenjualanController extends Controller
     public function cetakDapur($kode)
     {
         $penjualan = \DB::table('penjualan as p')->select('p.kode_penjualan', 'p.waktu','m.nama_meja','p.jenis_order')->join('meja as m','p.id_meja','m.id_meja')->where('p.kode_penjualan',$kode)->get()[0];
-        $bar = \DB::table('detail_penjualan as dp')->select('dp.qty','m.nama','dp.keterangan')->join('menu as m','dp.kode_menu','m.kode_menu')->where('dp.kode_penjualan', $kode)->where('m.jenis_menu','Bar')->get();
-        $dapur = \DB::table('detail_penjualan as dp')->select('dp.qty','m.nama','dp.keterangan')->join('menu as m','dp.kode_menu','m.kode_menu')->where('dp.kode_penjualan', $kode)->where('m.jenis_menu','Dapur')->get();        
+        if(!empty(Session::get('data')['update'])){
+            $bar = Session::get('data')['bar'];
+            $dapur = Session::get('data')['dapur'];
+        }
+        else{
+            $bar = \DB::table('detail_penjualan as dp')->select('dp.qty','m.nama','dp.keterangan')->join('menu as m','dp.kode_menu','m.kode_menu')->where('dp.kode_penjualan', $kode)->where('m.jenis_menu','Bar')->get();
+            $dapur = \DB::table('detail_penjualan as dp')->select('dp.qty','m.nama','dp.keterangan')->join('menu as m','dp.kode_menu','m.kode_menu')->where('dp.kode_penjualan', $kode)->where('m.jenis_menu','Dapur')->get();        
+        }
         $resto = \DB::table('perusahaan')->select('nama', 'alamat', 'kota', 'telepon', 'email')->where('id_perusahaan', 1)->get();
+
         return view('penjualan.cetak.cetak-dapur', ['penjualan' => $penjualan, 'bar' => $bar,'dapur' => $dapur, 'resto' => $resto[0]]);
     }
 

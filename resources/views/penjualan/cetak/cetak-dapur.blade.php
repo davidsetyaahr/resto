@@ -2,13 +2,21 @@
 //justification
 $tengah = Chr(27) . Chr(97) . Chr(1);
 $kiri = Chr(27) . Chr(97) . Chr(0);
-
+$updateText = isset($_GET['update']) ? '(TAMBAHAN)' : '';
 if(count($dapur)!=0){
     $item = '';
     $keterangan = '';
-    foreach ($dapur as $key => $hasil) {
-        $item .=$hasil->qty." ".$hasil->nama."\n";
-        $keterangan .= $hasil->keterangan;
+    if(empty($_GET['update'])){
+        foreach ($dapur as $key => $hasil) {
+            $keterangan .= $hasil->keterangan<>Null || $hasil->keterangan<>'' ?  "(".$hasil->keterangan.")" : '';
+            $item .=$hasil->qty." ".$hasil->nama.$keterangan."\n";
+        }
+    }
+    else{
+        foreach ($dapur as $key => $hasil) {
+            $keterangan .= $hasil['keterangan']<>Null || $hasil['keterangan']<>'' ?  "(".$hasil['keterangan'].")" : '';
+            $item .=$hasil['qty']." ".$hasil['nama'].$keterangan."\n";
+        }
     }
     //jam order
     $jam_order=Date('d-m-Y H:i:s',strtotime($penjualan->waktu));
@@ -29,15 +37,12 @@ if(count($dapur)!=0){
     $Data .= $condensed1;
     $Data .= "\n";
     $Data .= "\n";
-    $Data .= "ORDERAN DAPUR\n";
+    $Data .= "ORDERAN DAPUR ".$updateText."\n";
     $Data .=$penjualan->nama_meja."\n";
     $Data .=$penjualan->kode_penjualan."\n";
     $Data .=$penjualan->jenis_order."\n";
    $Data .="--------------------------------------------\n";
     $Data .=$item;
-    if($keterangan<>Null || $keterangan<>''){
-        $Data .=$keterangan;
-    }
     $Data .="--------------------------------------------\n";
     $Data .=$tengah;
     $Data .=$jam_order;
@@ -62,9 +67,17 @@ if(count($dapur)!=0){
 if(count($bar)!=0){
     $item = '';
     $keterangan = '';
-    foreach ($bar as $key => $hasil) {
-        $item .=$hasil->qty." ".$hasil->nama."\n";
-        $keterangan .= $hasil->keterangan;
+    if(empty($_GET['update'])){
+        foreach ($bar as $key => $hasil) {
+            $keterangan .= $hasil->keterangan<>Null || $hasil->keterangan<>'' ?  "(".$hasil->keterangan.")" : '';
+            $item .=$hasil->qty." ".$hasil->nama.$keterangan."\n";
+        }
+    }
+    else{
+        foreach ($bar as $key => $hasil) {
+            $keterangan .= $hasil['keterangan']<>Null || $hasil['keterangan']<>'' ?  "(".$hasil['keterangan'].")" : '';
+            $item .=$hasil['qty']." ".$hasil['nama'].$keterangan."\n";
+        }
     }
     //jam order
     $jam_order=Date('d-m-Y H:i:s',strtotime($penjualan->waktu));
@@ -85,16 +98,13 @@ if(count($bar)!=0){
     $Data .= $condensed1;
     $Data .= "\n";
     $Data .= "\n";
-    $Data .= "ORDERAN BAR\n";
+    $Data .= "ORDERAN BAR ".$updateText."\n";
     $Data .=$penjualan->nama_meja."\n";
     $Data .=$penjualan->kode_penjualan."\n";
     $Data .=$penjualan->jenis_order."\n";
 
     $Data .="--------------------------------------------\n";
     $Data .=$item;
-    if($keterangan<>Null || $keterangan<>''){
-        $Data .=$keterangan;
-    }
     $Data .="--------------------------------------------\n";
     $Data .=$tengah;
     $Data .=$jam_order;
