@@ -8,13 +8,13 @@ if(count($dapur)!=0){
     $keterangan = '';
     if(empty($_GET['update'])){
         foreach ($dapur as $key => $hasil) {
-            $keterangan .= $hasil->keterangan<>Null || $hasil->keterangan<>'' ?  "(".$hasil->keterangan.")" : '';
+            $keterangan = $hasil->keterangan!='' ?  "(".$hasil->keterangan.")" : '';
             $item .=$hasil->qty." ".$hasil->nama.$keterangan."\n";
         }
     }
     else{
         foreach ($dapur as $key => $hasil) {
-            $keterangan .= $hasil['keterangan']<>Null || $hasil['keterangan']<>'' ?  "(".$hasil['keterangan'].")" : '';
+            $keterangan = $hasil['keterangan']<>Null || $hasil['keterangan']<>'' ?  "(".$hasil['keterangan'].")" : '';
             $item .=$hasil['qty']." ".$hasil['nama'].$keterangan."\n";
         }
     }
@@ -69,13 +69,13 @@ if(count($bar)!=0){
     $keterangan = '';
     if(empty($_GET['update'])){
         foreach ($bar as $key => $hasil) {
-            $keterangan .= $hasil->keterangan<>Null || $hasil->keterangan<>'' ?  "(".$hasil->keterangan.")" : '';
+            $keterangan = $hasil->keterangan<>Null || $hasil->keterangan<>'' ?  "(".$hasil->keterangan.")" : '';
             $item .=$hasil->qty." ".$hasil->nama.$keterangan."\n";
         }
     }
     else{
         foreach ($bar as $key => $hasil) {
-            $keterangan .= $hasil['keterangan']<>Null || $hasil['keterangan']<>'' ?  "(".$hasil['keterangan'].")" : '';
+            $keterangan = $hasil['keterangan']<>Null || $hasil['keterangan']<>'' ?  "(".$hasil['keterangan'].")" : '';
             $item .=$hasil['qty']." ".$hasil['nama'].$keterangan."\n";
         }
     }
@@ -125,10 +125,18 @@ if(count($bar)!=0){
     fclose($handle);
     copy($file,"//192.168.137.105/Bar"); # Lakukan cetak
     unlink($file);
+
+}
+if(isset($_GET['update'])){
+    $updateText = '(TAMBAHAN)';
+    $url = 'http://192.168.137.105:3301/newresto/penjualan/'.$penjualan->kode_penjualan.'/edit';
+}
+else{
+    $updateText = '';
+    $url = 'http://192.168.137.105:3301/newresto/penjualan/penjualan/create';
 }
 
 ?>
-
 <script>
-      window.location.href = 'http://192.168.137.105:3301/newresto/penjualan/penjualan/create'
+      window.location.href = '<?php echo $url ?>'
 </script>

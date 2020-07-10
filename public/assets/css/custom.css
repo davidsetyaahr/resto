@@ -312,7 +312,7 @@ select.form-line, input.form-line,textarea.form-line, .form-line .select2-contai
     border-top-left-radius: 30px;
 }
 .box-penjualan form {
-    max-height: 680px;
+    max-height: 900px;
     overflow: auto;
 }
 .change-qty{
