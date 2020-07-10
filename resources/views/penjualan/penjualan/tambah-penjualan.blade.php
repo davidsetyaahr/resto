@@ -74,7 +74,7 @@
             @enderror
           </div>
           <div class="col-md-6">
-            <input type="text" class="form-control form-line @error('nama_customer') is-invalid @enderror" name='nama_customer' value="{{old('nama_customer')}}" placeholder='Nama Customer' autocomplete='off'>
+            <input type="text" class="form-control form-line @error('nama_customer') is-invalid @enderror" name='nama_customer' value="{{old('nama_customer', 'Guest')}}" placeholder='Nama Customer' autocomplete='off'>
             @error('nama_customer')
             <span class="invalid-feedback" role="alert">
               <strong>{{ $message }}</strong>
@@ -82,7 +82,7 @@
             @enderror
           </div>
           <div class="col-md-6 mt-3">
-            <input type="number" class="form-control form-line @error('no_hp') is-invalid @enderror" name='no_hp' value="{{old('no_hp')}}" placeholder='Nomor Hp' autocomplete='off'>
+            <input type="number" class="form-control form-line @error('no_hp') is-invalid @enderror" name='no_hp' value="{{old('no_hp', '0')}}" placeholder='Nomor Hp' autocomplete='off'>
               @error('no_hp')
               <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>
