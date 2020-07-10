@@ -115,7 +115,7 @@ class PenjualanController extends Controller
         $this->param['kode_penjualan'] = $this->getKode();
         $this->param['kategori'] = KategoriMenu::select('id_kategori_menu','kategori_menu')->get();
         $this->param['menu'] = Menu::where('status', '=', 'Ready')->select('kode_menu','nama','foto','harga_jual')->get();
-        $this->param['meja'] = \DB::table('meja')->whereNotIn('id_meja', function($query){
+        $this->param['meja'] = \DB::table('meja')->where('nama_meja','Room')->orWhereNotIn('id_meja', function($query){
             $query->select('id_meja')->from('penjualan')->where('status_bayar','Belum Bayar');
         })->orderBy('nama_meja','asc')->get();
 

@@ -207,6 +207,17 @@ $(document).ready(function() {
             $("#no_kartu").prop('disabled',true);
         }
     });
+    
+    $("#nomor_kamar").prop('disabled',true);
+    $("#jenis_order").change(function() {
+        var thisVal = $(this).val();
+        if (thisVal == "Room Order") {
+            $("#nomor_kamar").prop('disabled',false);
+            $("#nomor_kamar").attr("required", true);
+        } else {
+            $("#nomor_kamar").prop('disabled',true);
+        }
+    });
 
     $(".diskon_tambahan").keyup(function() {
         var diskon_tambahan = parseInt($(this).val());
