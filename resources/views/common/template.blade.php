@@ -84,6 +84,7 @@
                 <span class="nav-link-text">Penjualan</span>
               </a>
             </li>
+            @if(\Auth::user()->level == 'Owner')
             <li class="nav-item">
               <a class="nav-link collapsed {{Request::segment(1) == 'master-barang' ? 'active' : ''}}" href="" data-toggle="collapse" data-target="#master-barang" aria-expanded='false'>
                 <i class="ni ni-box-2 text-info"></i>
@@ -186,6 +187,7 @@
                   </li>
                 </ul>
             </li>
+            @endif
             @endif
 
             @if (\Auth::user()->level == 'Accounting' || \Auth::user()->level == 'Owner')
