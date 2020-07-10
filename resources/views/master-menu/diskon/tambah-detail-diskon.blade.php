@@ -1,25 +1,17 @@
-<div class="row row-detail mb-3" data-no='{{$no}}'>
-    <div class="col-md-5 {{isset($n)&&$errors->has('kode_menu.'.$n) ? ' is-invalid' : ''}}">
-        <label for="" class="form-control-label">Menu</label>
-        <select name="kode_menu[]" class="form-control select2 menu">
-            <option value="">---Pilih Menu---</option>
-            @foreach ($menu as $item)
-        <option value="{{$item->kode_menu}}" {{ isset($n)&&old('kode_menu.'.$n) == $item->kode_menu ? 'selected' : ''}}>{{$item->kode_menu.'~'.$item->nama}}</option>
+<div class="row row-detail mb-4" data-no='{{$no}}'>
+    <div class="col-md-5 {{isset($n)&&$errors->has('id_kategori_menu.'.$n) ? ' is-invalid' : ''}}">
+        <label for="" class="form-control-label">Kategori Menu</label>
+        <select name="id_kategori_menu[]" class="form-control select2">
+            <option value="">---Pilih Kategori Menu---</option>
+            @foreach ($kategori_menu as $item)
+                <option value="{{$item->id_kategori_menu}}" {{ isset($n)&&old('id_kategori_menu.'.$n) == $item->id_kategori_menu ? 'selected' : ''}}>{{$item->kategori_menu}}</option>
             @endforeach
         </select>
-        @if (isset($n)&&$errors->has('kode_menu.'.$n))
+        @if (isset($n)&&$errors->has('id_kategori_menu.'.$n))
             <span class="invalid-feedback" role="alert">
-            <strong>{{ $errors->first('kode_menu.'.$n) }}</strong>
+            <strong>{{ $errors->first('id_kategori_menu.'.$n) }}</strong>
             </span>
         @endif
-    </div>
-    <div class="col-md-3">
-        <label for="" class="form-control-label">Harga Jual</label>
-    <input type="text" value="{{isset($n) ? old('harga_jual.'.$n) : ''}}" name="harga_jual[]" id="harga_jual" class="form-control" readonly>
-    </div>
-    <div class="col-md-3">
-        <label for="" class="form-control-label">Harga Setelah Diskon</label>
-    <input type="text" value="{{isset($n) ? old('harga_jual.'.$n) : ''}}" name="harga_setelah_diskon[]" class="form-control" readonly id="harga_setelah_diskon">
     </div>
     
     <div class="col-md-1">

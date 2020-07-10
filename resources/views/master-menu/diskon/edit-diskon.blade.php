@@ -84,13 +84,12 @@
                   <hr class="my-4">
                   <h6 class="heading-small text-muted mb-4">Detail Diskon</h6>
                 <div class="pl-lg-4" id="urlAddDetail" data-url="{{url('master-menu/diskon/addEditDetailDiskon')}}">
-                  @if (!is_null(old('kode_menu')))
+                  @if (!is_null(old('id_kategori_menu')))
                       @php
                           $loop = array();
-                          foreach(old('kode_menu') as $i => $val){
+                          foreach(old('id_kategori_menu') as $i => $val){
                             $loop[] = array(
-                              'kode_menu' => old('kode_menu.'.$i),
-                              'harga_jual' => old('harga_jual.'.$i),
+                              'id_kategori_menu' => old('id_kategori_menu.'.$i),
                           );
                           }
                       @endphp
@@ -105,17 +104,16 @@
                           $no++;
                           $linkHapus = $no==1 ? false : true;
                           $fields = array(
-                              'kode_menu' => 'kode_menu.'.$n,
-                              'harga_jual' => 'harga_jual.'.$n,
+                              'id_kategori_menu' => 'id_kategori_menu.'.$n,
                         );
-                        if (!is_null(old('kode_menu'))) {
+                        if (!is_null(old('id_kategori_menu'))) {
                           $idDetail = old('id_detail_diskon.'.$n);
                         }
                         else {
                           $idDetail = $edit->id_detail_diskon;
                         }
                       @endphp
-                      @include('master-menu.diskon.edit-detail-diskon',['hapus' => $linkHapus, 'no' => $no, 'menu' => $menu])
+                      @include('master-menu.diskon.edit-detail-diskon',['hapus' => $linkHapus, 'no' => $no, 'kategori_menu' => $kategori_menu])
                   @endforeach
                   @endif
                 </div> 

@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use \App\Diskon;
 use \App\DetailDiskon;
-use \App\Menu;
+use \App\KategoriMenu;
 
 class DiskonController extends Controller
 {
@@ -43,12 +43,12 @@ class DiskonController extends Controller
      */
     public function create()
     {
-        $menu = Menu::get();
+        $kategori_menu = KategoriMenu::get();
         $this->param['pageInfo'] = 'Tambah Data';
         $this->param['btnRight']['text'] = 'List Data';
         $this->param['btnRight']['link'] = route('diskon.index');
 
-        return view('master-menu.diskon.create', $this->param, ['menu' => $menu]);
+        return view('master-menu.diskon.create', $this->param, ['kategori_menu' => $kategori_menu]);
     }
 
     /**
@@ -61,32 +61,32 @@ class DiskonController extends Controller
     public function addDetailDiskon()
     {
         $next = $_GET['biggestNo']+1;
-        $menu = menu::get();
-        return view('master-menu.diskon.tambah-detail-diskon', ['hapus' => true, 'no' => $next, 'menu' => $menu]);
+        $kategori_menu = KategoriMenu::get();
+        return view('master-menu.diskon.tambah-detail-diskon', ['hapus' => true, 'no' => $next, 'kategori_menu' => $kategori_menu]);
     }
 
-    public function getDetailMenu()
-    {
-        $kode = $_GET['kode'];
-        $detail = \DB::table('menu')
-        ->select('harga_jual')
-        ->where('kode_menu', $kode)
-        ->get();
+    // public function getDetailMenu()
+    // {
+    //     $kode = $_GET['kode'];
+    //     $detail = \DB::table('menu')
+    //     ->select('harga_jual')
+    //     ->where('kode_menu', $kode)
+    //     ->get();
 
-        // print_r($detail);
-        return json_encode((array)$detail[0]);
-    }
+    //     // print_r($detail);
+    //     return json_encode((array)$detail[0]);
+    // }
 
     public function addEditDetailDiskon()
     {
         $fields = array(
-            'kode_menu' => 'kode_menu',
-            'harga_jual' => 'harga_jual',
-            'harga_setelah_diskon' => 'harga_setelah_diskon',
+            'id_kategori_menu' => 'id_kategori_menu',
+            // 'harga_jual' => 'harga_jual',
+            // 'harga_setelah_diskon' => 'harga_setelah_diskon',
         );
         $next = $_GET['biggestNo']+1;
-        $menu = Menu::select('kode_menu','nama','harga_jual')->get();
-        return view('master-menu.diskon.edit-detail-diskon', ['hapus' => true, 'no' => $next, 'menu' => $menu, 'fields' => $fields, 'idDetail' => '0']);
+        $kategori_menu = KategoriMenu::select('id_kategori_menu','kategori_menu')->get();
+        return view('master-menu.diskon.edit-detail-diskon', ['hapus' => true, 'no' => $next, 'kategori_menu' => $kategori_menu, 'fields' => $fields, 'idDetail' => '0']);
     }
 
     public function store(Request $request)
@@ -97,7 +97,7 @@ class DiskonController extends Controller
             'diskon' => 'required|numeric',
             'start_date' => 'required|date',
             'end_date' => 'required|date',
-            'kode_menu.*' => 'required',
+            'id_kategori_menu.*' => 'required',
         ]);
 
         $newDiskon = new Diskon;
@@ -112,11 +112,11 @@ class DiskonController extends Controller
         $getIdDiskon =  Diskon::select(\DB::raw("max(id_diskon) as id"))->get();
         $id_diskon = $getIdDiskon[0]->id;
 
-        foreach($_POST['kode_menu'] as $key => $value){
+        foreach($_POST['id_kategori_menu'] as $key => $value){
             $newDetailDiskon = new DetailDiskon;
 
             $newDetailDiskon->id_diskon = $id_diskon;
-            $newDetailDiskon->kode_menu = $value;
+            $newDetailDiskon->id_kategori_menu = $value;
 
             $newDetailDiskon->save();
         }
@@ -147,8 +147,8 @@ class DiskonController extends Controller
         $this->param['btnRight']['text'] = 'Lihat Diskon';
         $this->param['btnRight']['link'] = route('diskon.index');
         $this->param['diskon'] = Diskon::findOrFail($id);
-        $this->param['detail'] = \DB::table(\DB::raw('detail_diskon as dt'))->select('id_detail_diskon','dt.kode_menu', 'm.harga_jual')->join('menu as m', 'm.kode_menu', '=', 'dt.kode_menu')->where('id_diskon',$id)->get();
-        $this->param['menu'] = Menu::select('kode_menu', 'nama', 'harga_jual')->get();
+        $this->param['detail'] = \DB::table('detail_diskon')->select('id_detail_diskon','id_kategori_menu')->where('id_diskon',$id)->get();
+        $this->param['kategori_menu'] = KategoriMenu::select('id_kategori_menu', 'kategori_menu')->get();
 
         return view('master-menu.diskon.edit-diskon', $this->param);
     }
@@ -162,7 +162,49 @@ class DiskonController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validatedData = $request->validate([
+            'nama_diskon' => 'required',
+            'jenis_diskon' => 'required',
+            'diskon' => 'required|numeric',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date',
+            'id_kategori_menu.*' => 'required',
+        ]);
+
+        foreach ($_POST['id_kategori_menu'] as $key => $value) {
+            if($_POST['id_detail_diskon'][$key]!=0){
+                $getDetail = DetailDiskon::select('id_kategori_menu')->where('id_detail_diskon',$_POST['id_detail_diskon'][$key])->get()[0];
+
+                if($_POST['id_kategori_menu'][$key] != $getDetail['id_kategori_menu']){
+                    DetailDiskon::where('id_detail_diskon',$_POST['id_detail_diskon'][$key])
+                    ->update([
+                        'id_kategori_menu' => $_POST['id_kategori_menu'][$key],
+                    ]);
+                }
+            }
+            else{
+                $newDetail = new DetailDiskon;
+                $newDetail->id_diskon = $id;
+                $newDetail->id_kategori_menu = $_POST['id_kategori_menu'][$key];
+                $newDetail->save();
+            }
+        }
+        if(isset($_POST['id_delete'])){
+            foreach ($_POST['id_delete'] as $key => $value) {
+                DetailDiskon::where('id_detail_diskon', $value)->delete();
+            }
+        }
+        
+        Diskon::where('id_diskon', $id)
+        ->update([
+            'nama_diskon' => $_POST['nama_diskon'],
+            'jenis_diskon' => $_POST['jenis_diskon'],
+            'diskon' => $_POST['diskon'],
+            'start_date' => $_POST['start_date'],
+            'end_date' => $_POST['end_date'],
+        ]);
+
+        return redirect()->route('diskon.index')->withStatus('Data berhasil diperbarui.');
     }
 
     /**
@@ -173,6 +215,9 @@ class DiskonController extends Controller
      */
     public function destroy($id)
     {
-        //
+        DetailDiskon::where('id_diskon', $id)->delete();
+        Diskon::where('id_diskon', $id)->delete();
+
+        return redirect()->route('diskon.index')->withStatus('Data berhasil dihapus.');
     }
 }
