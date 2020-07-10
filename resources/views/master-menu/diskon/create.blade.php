@@ -81,13 +81,13 @@
                   <hr class="my-4">
                   <h6 class="heading-small text-muted mb-4">Detail Diskon</h6>
                   <div class="pl-lg-4" id="urlAddDetail" data-url="{{url('master-menu/diskon/addDetailDiskon')}}">
-                    @if (!is_null(old('kode_menu')))
-                      @foreach (old('kode_menu') as $n => $value)
+                    @if (!is_null(old('id_kategori_menu')))
+                      @foreach (old('id_kategori_menu') as $n => $value)
                         @php $no++ @endphp
-                        @include('master-menu.diskon.tambah-detail-diskon', ['hapus' => false, 'no' => $no, 'menu' => $menu])
+                        @include('master-menu.diskon.tambah-detail-diskon', ['hapus' => false, 'no' => $no, 'kategori_menu' => $kategori_menu])
                       @endforeach
                     @endif
-                      @include('master-menu.diskon.tambah-detail-diskon', ['hapus' => false, 'no' => 1, 'menu' => $menu])
+                      @include('master-menu.diskon.tambah-detail-diskon', ['hapus' => false, 'no' => 1, 'kategori_menu' => $kategori_menu])
                   </div>
                   <br>
                   <div class="mt-4">

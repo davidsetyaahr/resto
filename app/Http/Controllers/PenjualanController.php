@@ -46,14 +46,15 @@ class PenjualanController extends Controller
     {
         $current_date = date('Y-m-d H:i:s');
         $kode = $_GET['kode'];
-        $menu = Menu::select('harga_jual')->where('kode_menu', $kode)->get();
+        $menu = Menu::select('harga_jual', 'id_kategori_menu')->where('kode_menu', $kode)->get();
         $harga_jual = $menu[0]->harga_jual;
+        $id_kategori_menu = $menu[0]->id_kategori_menu;
 
         $diskon = DetailDiskon::select('diskon.jenis_diskon', 'diskon.diskon', \DB::raw('COUNT(jenis_diskon) AS jml'))
         ->join('diskon', 'diskon.id_diskon', '=', 'detail_diskon.id_diskon')
         ->where('start_date', '<=', "$current_date")
         ->where('end_date', '>=',"$current_date")
-        ->where('kode_menu', $kode)
+        ->where('id_kategori_menu', $id_kategori_menu)
         ->get();
         $potongan = 0;
         if ($diskon[0]->jml > 0) {
@@ -356,7 +357,8 @@ class PenjualanController extends Controller
         $penjualan->jenis_bayar = $request->get('jenis_bayar');
         $penjualan->no_kartu = $request->get('no_kartu');
         $penjualan->status_bayar = 'Sudah Bayar';
-        $penjualan->total_diskon_tambahan = $request->get('diskon_tambahan');
+        $diskon = $request->get('diskon') > 0 ? $request->get('diskon') * $request->get('total') / 100 : 0;
+        $penjualan->total_diskon_tambahan = $request->get('diskon_tambahan') + $diskon;
         $penjualan->bayar = $request->get('bayar');
         $penjualan->kembalian = $request->get('kembalian');
         if($request->get('isTravel')){

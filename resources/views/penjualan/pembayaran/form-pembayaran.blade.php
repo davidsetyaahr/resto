@@ -90,27 +90,34 @@
                         <td>{{number_format($value->sub_total,0,',','.')}}</td>
                       </tr>
                     @endforeach
+                      <tr>
+                        <td colspan='4' class='text-center'>PPN(10%)</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>{{number_format($penjualan->total_ppn,0,',','.')}}</td>
+                      </tr>
                     </tbody>
                     <tfoot class='bg-dark text-white'>
                       <tr>
-                        <td colspan='4'></td>
-                        <td>{{$qty}}</td>
-                        <td>{{number_format($harga,0,',','.')}}</td>
-                        <td>{{number_format($diskon,0,',','.')}}</td>
-                        <td>{{number_format($subtotal,0,',','.')}}</td>
+                        <td colspan='4' class='text-center'>TOTAL</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>{{number_format(($penjualan->total_harga - $penjualan->total_diskon) + $penjualan->total_ppn,0,',','.')}}</td>
                       </tr>
                     </tfoot>
                   </table>
                   <hr>
                   <div class="row">
+                      <input type="hidden" name="total" id="total" class="form-control" value="{{($penjualan->total_harga - $penjualan->total_diskon) + $penjualan->total_ppn }}" readonly>
                     <div class="col-4 mb-2">
-                      <label for=""><strong>Total</strong></label>
-                      <input type="number" name="total" id="total" class="form-control" value="{{($penjualan->total_harga - $penjualan->total_diskon) + $penjualan->total_ppn }}" readonly>
-                      <small class="text-muted"><i>*sudah termasuk PPN 10%</i></small>
+                      <label for=""><strong>Diskon(%)</strong></label>
+                      <input type="number" name="diskon" class="form-control diskon_tambahan" data-tipe='persen' value="{{old('diskon', 0)}}">
                     </div>
                     <div class="col-4 mb-2">
                       <label for=""><strong>Potongan</strong></label>
-                      <input type="number" name="diskon_tambahan" id="diskon_tambahan" class="form-control" value="{{old('diskon_tambahan', 0)}}">
+                      <input type="number" name="diskon_tambahan" class="form-control diskon_tambahan" value="{{old('diskon_tambahan', 0)}}" data-tipe='rp'>
                     </div>
                     <div class="col-4 mb-2">
                       <label for=""><strong>Terbayar</strong></label>

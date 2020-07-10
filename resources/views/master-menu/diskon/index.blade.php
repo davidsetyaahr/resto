@@ -67,7 +67,7 @@
                           </a>
                           <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
                           <a class="dropdown-item" href="{{ route('diskon.edit', $value->id_diskon) }}">Edit</a>
-                            <form action="#" method="post">
+                            <form action="{{ route('diskon.destroy', $value->id_diskon) }}" method="post">
                               @csrf
                               @method('delete')
                               <button type="button" class="mr-1 dropdown-item" onclick="confirm('{{ __("Apakah anda yakin ingin menghapus?") }}') ? this.parentElement.submit() : ''">
