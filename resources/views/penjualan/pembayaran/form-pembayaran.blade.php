@@ -97,6 +97,15 @@
                         <td></td>
                         <td>{{number_format($penjualan->total_ppn,0,',','.')}}</td>
                       </tr>
+                      @if ($penjualan->jenis_order == 'Room Order')
+                        <tr>
+                          <td colspan='4' class='text-center'>Room Charge(10%)</td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td>{{number_format($penjualan->room_charge,0,',','.')}}</td>
+                        </tr>
+                      @endif
                     </tbody>
                     <tfoot class='bg-dark text-white'>
                       <tr>
@@ -104,13 +113,13 @@
                         <td></td>
                         <td></td>
                         <td></td>
-                        <td>{{number_format(($penjualan->total_harga - $penjualan->total_diskon) + $penjualan->total_ppn,0,',','.')}}</td>
+                        <td>{{number_format(($penjualan->total_harga - $penjualan->total_diskon) + $penjualan->total_ppn + $penjualan->room_charge,0,',','.')}}</td>
                       </tr>
                     </tfoot>
                   </table>
                   <hr>
                   <div class="row">
-                      <input type="hidden" name="total" id="total" class="form-control" value="{{($penjualan->total_harga - $penjualan->total_diskon) + $penjualan->total_ppn }}" readonly>
+                      <input type="hidden" name="total" id="total" class="form-control" value="{{($penjualan->total_harga - $penjualan->total_diskon) + $penjualan->total_ppn + $penjualan->room_charge }}" readonly>
                     <div class="col-4 mb-2">
                       <label for=""><strong>Diskon(%)</strong></label>
                       <input type="number" name="diskon" class="form-control diskon_tambahan" data-tipe='persen' value="{{old('diskon', 0)}}">
@@ -164,8 +173,8 @@
                       </div>
                     </div>
                     <div class="col-md-4 mt-3">
-                      <h1 class='text-dark'>Grand Total : Rp. <span class="text-orange" id='idrGrandTotal'>{{number_format($penjualan->total_harga - $penjualan->total_diskon + $penjualan->total_ppn,0,',','.')}}</span></h1>
-                      <input type="hidden" name="grand_total" id="grand_total" class="form-control form-line text-lg text-orange font-weight-bold" value="{{($penjualan->total_harga - $penjualan->total_diskon) + $penjualan->total_ppn }}">
+                      <h1 class='text-dark'>Grand Total : Rp. <span class="text-orange" id='idrGrandTotal'>{{number_format($penjualan->total_harga - $penjualan->total_diskon + $penjualan->total_ppn + $penjualan->room_charge,0,',','.')}}</span></h1>
+                      <input type="hidden" name="grand_total" id="grand_total" class="form-control form-line text-lg text-orange font-weight-bold" value="{{($penjualan->total_harga - $penjualan->total_diskon) + $penjualan->total_ppn + $penjualan->room_charge }}">
                     </div>
                     <div class="col-md-3 mt-3">
                         <button type="submit" class="btn btn-primary"><span class="fa fa-save"></span> Simpan</button>

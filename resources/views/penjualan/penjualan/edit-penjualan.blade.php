@@ -94,15 +94,24 @@
               @enderror
             </div>
             <div class="col-md-6 mt-3">
-              <select name="jenis_order" class="form-control form-line @error('jenis_order') is-invalid @enderror ">
+              <select name="jenis_order" class="form-control form-line @error('jenis_order') is-invalid @enderror " id="jenis_order">
               <option value="">Jenis Order</option>
               <option value="Dine In" {{old('jenis_order', $penjualan->jenis_order) == 'Dine In' ? 'selected' : ''}} >Dine In</option>
               <option value="Take Away" {{old('jenis_order',$penjualan->jenis_order) == 'Take Away' ? 'selected' : ''}} >Take Away</option>
+              <option value="Room Order" {{old('jenis_order',$penjualan->jenis_order) == 'Room Order' ? 'selected' : ''}} >Room Order</option>
             </select>
             @error('jenis_order')
             <span class="invalid-feedback" role="alert">
               <strong>{{ $message }}</strong>
               </span>
+            @enderror
+          </div>
+          <div class="col-md-6 mt-3">
+            <input type="text" class="form-control form-line @error('nomor_kamar') is-invalid @enderror" name='nomor_kamar' value="{{old('nomor_kamar', $penjualan->nomor_kamar)}}" placeholder='Nomor Kamar' autocomplete='off' id="nomor_kamar">
+            @error('nomor_kamar')
+            <span class="invalid-feedback" role="alert">
+              <strong>{{ $message }}</strong>
+            </span>
             @enderror
           </div>
         </div>

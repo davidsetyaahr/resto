@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddNomorRoom extends Migration
+class AddRoomCharge extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class AddNomorRoom extends Migration
     public function up()
     {
         Schema::table('penjualan', function (Blueprint $table) {
-            $table->string('nomor_kamar', 8)->nullable()->after('id_meja');
+            $table->integer('room_charge')->nullable();
         });
     }
 
@@ -26,7 +26,7 @@ class AddNomorRoom extends Migration
     public function down()
     {
         Schema::table('penjualan', function (Blueprint $table) {
-            $table->dropColumn('nomor_kamar');
+            $table->dropColumn('room_charge');
         });
     }
 }

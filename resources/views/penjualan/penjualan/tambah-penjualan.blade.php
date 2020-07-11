@@ -103,7 +103,7 @@
             @enderror
           </div>
           <div class="col-md-6 mt-3">
-            <input type="number" class="form-control form-line @error('nomor_kamar') is-invalid @enderror" name='nomor_kamar' value="{{old('nomor_kamar', 'Guest')}}" placeholder='Nomor Kamar' autocomplete='off' id="nomor_kamar">
+            <input type="text" class="form-control form-line @error('nomor_kamar') is-invalid @enderror" name='nomor_kamar' value="{{old('nomor_kamar')}}" placeholder='Nomor Kamar' autocomplete='off' id="nomor_kamar">
             @error('nomor_kamar')
             <span class="invalid-feedback" role="alert">
               <strong>{{ $message }}</strong>

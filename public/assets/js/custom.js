@@ -207,8 +207,11 @@ $(document).ready(function() {
             $("#no_kartu").prop('disabled',true);
         }
     });
-    
-    $("#nomor_kamar").prop('disabled',true);
+    if ($('#jenis_order').val() == 'Room Order') {
+        $("#nomor_kamar").prop('disabled',false);
+        $("#nomor_kamar").attr("required", true);
+    }
+    $("#nomor_kamar").prop('disabled',false);
     $("#jenis_order").change(function() {
         var thisVal = $(this).val();
         if (thisVal == "Room Order") {

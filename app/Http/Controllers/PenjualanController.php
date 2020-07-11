@@ -143,8 +143,9 @@ class PenjualanController extends Controller
             $totalDiskon += $_POST['diskon'][$key];
         }
 
-        $total = $totalHarga - $totalDiskon;
+        $total = $totalHarga - $totalDiskon; // harga setelah diskon
         $totalPpn = $total * 10 / 100;
+        $room_charge = 0;
 
         $newPenjualan = new Penjualan;
         $newPenjualan->kode_penjualan = $request->get('kode_penjualan');
@@ -161,6 +162,11 @@ class PenjualanController extends Controller
         $newPenjualan->jenis_bayar = '';
         $newPenjualan->total_diskon = $totalDiskon;
         $newPenjualan->isTravel = 'False';
+        if ($request->get('jenis_order') == 'Room Order') {
+            $newPenjualan->nomor_kamar = $request->get('nomor_kamar');
+            $room_charge = $total * 10 /100;
+        }
+        $newPenjualan->room_charge = $room_charge;
 
         $newPenjualan->save();
 
@@ -289,7 +295,13 @@ class PenjualanController extends Controller
 
         $total = $totalHarga - $totalDiskon;
         $totalPpn = $total * 10 / 100;
-
+        $room_charge = $total * 10 / 100;
+        if ($_POST['jenis_order'] == 'Room Order') {
+            $nomor_kamar = $_POST['nomor_kamar'];
+        }
+        else{
+            $nomor_kamar = NULL;
+        }
         Penjualan::where('kode_penjualan',$kodePenjualan)
         ->update([
             'nama_customer' => $_POST['nama_customer'],
@@ -302,6 +314,8 @@ class PenjualanController extends Controller
             'waktu' => date('Y-m-d H:i:s'),
             'jumlah_qty' => $totalQty,
             'total_diskon' => $totalDiskon,
+            'room_charge' => $room_charge,
+            'nomor_kamar' => $nomor_kamar,
         ]);
         
         if(count($param['dapur'])!=0 || count($param['bar'])!=0){

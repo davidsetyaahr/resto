@@ -21,7 +21,8 @@
           $subtotal+=$hasild->sub_total;
         }
         $ppn = 10*$subtotal/100;
-        $total = $subtotal + $ppn;
+        $room_charge = 10*$subtotal/100;
+        $total = $subtotal + $ppn + $room_charge;
         $tmpdir = sys_get_temp_dir();
         $file = tempnam($tmpdir, 'ctk');
         $handle = fopen($file, 'w');
@@ -42,7 +43,12 @@
         $Data .= "\n";
         $Data .= $kiri;
         $Data .= $text."\n";
-        $Data .= $penjualan->nama_meja."\n";
+        if ($penjualan->jenis_order == 'Room Order') {
+          $Data .= $penjualan->nama_meja. " " . $penjualan->nomor_kamar ."\n";
+        }
+        else{
+          $Data .= $penjualan->nama_meja."\n";
+        }
         $Data .= $penjualan->kode_penjualan."\n";
         $Data .= "------------------------------------------------\n";
         $Data .= $item;
@@ -50,6 +56,9 @@
         $Data .= "------------------------------------------------\n";
         $Data .= "Sub Total " . str_pad(number_format($subtotal, 0, ",", "."), 38, $spasi, STR_PAD_LEFT) . "\n";
         $Data .= "PPN" . str_pad(number_format($ppn, 0, ",", "."), 45, $spasi, STR_PAD_LEFT) . "\n";
+        if ($penjualan->jenis_order == 'Room Order') {
+          $Data .= "Room Charge" . str_pad(number_format($room_charge, 0, ",", "."), 45, $spasi, STR_PAD_LEFT) . "\n";
+        }
         $Data .= "------------------------------------------------\n";
         $Data .= "Total " . str_pad(number_format($total, 0, ",", "."), 42, $spasi, STR_PAD_LEFT) . "\n";
 
