@@ -414,7 +414,7 @@ $(document).ready(function() {
                     var namaMenu = $(selector + " .info h4").html();
                     var hargaIDR = $(selector + " .info h5").data("harga");
                     var diskon = formatRupiah(data);
-                    var subtotal = parseInt(hargaIDR) - parseInt(data);
+                    var subtotal = parseInt(hargaIDR);
                     var no = $(".keranjang .tbodyLoop").attr("data-no");
                     var newNo = parseInt(no) + 1;
                     $(".keranjang .tbodyLoop").attr("data-no", newNo);
@@ -482,6 +482,7 @@ $(document).ready(function() {
         var tipe = thisParam.data("tipe");
         var input = ".keranjang .tbodyLoop .tr[data-tr='" + no + "'] .inputQty";
         var qty = parseInt($(input).val());
+        var diskon = parseInt($(".keranjang .tbodyLoop .tr[data-tr='" + no + "'] .inputDiskon").val());
         var harga = parseInt(
             $(
                 ".keranjang .tbodyLoop .tr[data-tr='" + no + "'] .inputHarga"

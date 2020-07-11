@@ -42,10 +42,10 @@ class PenjualanController extends Controller
         return json_encode((array)$detail[0]);
     }
     
-    public function getDiskon()
+    public function getDiskon($paramKode='')
     {
         $current_date = date('Y-m-d H:i:s');
-        $kode = $_GET['kode'];
+        $kode = isset($_GET['kode']) ? $_GET['kode'] : $paramKode;
         $menu = Menu::select('harga_jual', 'id_kategori_menu')->where('kode_menu', $kode)->get();
         $harga_jual = $menu[0]->harga_jual;
         $id_kategori_menu = $menu[0]->id_kategori_menu;
@@ -346,7 +346,7 @@ class PenjualanController extends Controller
         $this->param['btnRight']['link'] = route('penjualan.index');
 
         $penjualan = \DB::table('penjualan as p')->select('p.*','m.nama_meja')->join('meja as m','p.id_meja','m.id_meja')->where('kode_penjualan',$kode)->get()[0];
-        $detail = DetailPenjualan::where('kode_penjualan', $kode)->get();
+        $detail = DetailPenjualan::select('detail_penjualan.*','menu.harga_jual')->join('menu','detail_penjualan.kode_menu','menu.kode_menu')->where('kode_penjualan', $kode)->get();
 
         return view('penjualan.pembayaran.form-pembayaran', ['penjualan' => $penjualan, 'detail' => $detail], $this->param);
     }
@@ -497,7 +497,7 @@ class PenjualanController extends Controller
     public function cetakBill($kode)
     {
         $penjualan = \DB::table('penjualan as p')->select('p.kode_penjualan', 'p.waktu','m.nama_meja','p.total_diskon','p.total_diskon_tambahan','p.bayar','p.kembalian')->join('meja as m','p.id_meja','m.id_meja')->where('p.kode_penjualan',$kode)->get()[0];
-        $detail = \DB::table('detail_penjualan as dp')->select('dp.qty','dp.sub_total','m.nama','m.harga_jual')->join('menu as m','dp.kode_menu','m.kode_menu')->where('dp.kode_penjualan', $kode)->get();
+        $detail = \DB::table('detail_penjualan as dp')->select('dp.diskon','dp.qty','dp.sub_total','m.nama','m.harga_jual','dp.kode_menu')->join('menu as m','dp.kode_menu','m.kode_menu')->where('dp.kode_penjualan', $kode)->get();
         $resto = \DB::table('perusahaan')->select('nama', 'alamat', 'kota', 'telepon', 'email')->where('id_perusahaan', 1)->get();
         return view('penjualan.cetak.cetak-bill', ['penjualan' => $penjualan, 'detail' => $detail, 'resto' => $resto[0]]);
     }

@@ -85,11 +85,20 @@
                         <td>{{$value->kode_menu}}</td>
                         <td>{{$menu->nama}}</td>
                         <td>{{$value->qty}}</td>
-                        <td>{{number_format($value->sub_total + $value->diskon,0,',','.')}}</td>
+                        <td>{{number_format($value->harga_jual,0,',','.')}}</td>
                         <td>{{number_format($value->diskon,0,',','.')}}</td>
                         <td>{{number_format($value->sub_total,0,',','.')}}</td>
                       </tr>
                     @endforeach
+                      <tr>
+                        <td colspan='6' class='text-center'></td>
+                        <td>{{number_format($penjualan->total_diskon,0,',','.')}}</td>
+                        <td>{{number_format($penjualan->total_harga,0,',','.')}}</td>
+                      </tr>
+                      <tr>
+                        <td colspan='7' class='text-center'></td>
+                        <td>{{number_format($penjualan->total_harga - $penjualan->total_diskon,0,',','.')}}</td>
+                      </tr>
                       <tr>
                         <td colspan='4' class='text-center'>PPN(10%)</td>
                         <td></td>
