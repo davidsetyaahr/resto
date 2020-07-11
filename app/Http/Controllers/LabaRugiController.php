@@ -21,7 +21,7 @@ class LabaRugiController extends Controller
         $bulan = $request->get('bulan');
         $tahun = $request->get('tahun');
 
-        $totalPenjualan = Penjualan::select(\DB::raw('SUM(total_harga) as ttlHarga'), \DB::raw('SUM(total_diskon) as ttlDiskon'), \DB::raw('SUM(total_diskon_tambahan) as ttlDiskonTambahan'))->whereMonth('waktu', $bulan)->whereYear('waktu', $tahun)->get()[0];
+        $penjualan = Penjualan::whereMonth('waktu', $bulan)->whereYear('waktu', $tahun)->where('status_bayar', 'Sudah Bayar')->get();
 
         $totalKasMasuk = Kas::select(\DB::raw('SUM(nominal) as ttlKasMasuk'))->whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun)->where('tipe', '=', 'Masuk')->get()[0];
         
@@ -32,7 +32,7 @@ class LabaRugiController extends Controller
         $this->param['pageInfo'] = 'Laba Rugi';
         $this->param['btnRight']['text'] = '';
         $this->param['btnRight']['link'] = '';
-        $this->param['totalPenjualan'] = $totalPenjualan;
+        $this->param['penjualan'] = $penjualan;
         $this->param['totalKasMasuk'] = $totalKasMasuk;
         $this->param['totalPemakaian'] = $totalPemakaian;
         $this->param['totalKasKeluar'] = $totalKasKeluar;

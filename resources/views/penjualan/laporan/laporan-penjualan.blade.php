@@ -12,7 +12,7 @@
                 <?php 
                     if(isset($_GET['tipe']) && isset($_GET['dari'])){
                 ?>
-                  <a href="<?= route('laporan-penjualan.print')."?tipe=$_GET[tipe]&dari=$_GET[dari]&sampai=$_GET[sampai]" ?>" class="btn btn-info btn-sm"><span class="fa fa-print"></span> Cetak Laporan</a>
+                  <a href="<?= route('laporan-penjualan.print')."?tipe=$_GET[tipe]&dari=$_GET[dari]&sampai=$_GET[sampai]&tipe_pembayaran=$_GET[tipe_pembayaran]" ?>" class="btn btn-info btn-sm"><span class="fa fa-print"></span> Cetak Laporan</a>
                 <?php } ?>
                 </div>
               </div>
@@ -27,23 +27,31 @@
             <form action="" method="get">
                 <input type="hidden" value="{{$_GET['tipe']}}" name='tipe'>
             <div class="row align-items-center">
-                <div class="col-4">
+                <div class="col-3">
                     <label for="" class="form-control-label">Dari Tanggal</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text"><span class="fa fa-calendar"></span></span>
                         </div>
-                        <input type="text" class="datepicker form-control" name="dari" value="{{isset($_GET['dari']) ? $_GET['dari'] : ''}}">
+                        <input type="text" class="datepicker form-control" name="dari" value="{{isset($_GET['dari']) ? $_GET['dari'] : ''}}" required>
                     </div>                
                 </div>
-                <div class="col-4">
+                <div class="col-3">
                     <label for="" class="form-control-label">Sampai Tanggal</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text"><span class="fa fa-calendar"></span></span>
                         </div>
-                        <input type="text" class="datepicker form-control" name="sampai" value="{{isset($_GET['sampai']) ? $_GET['sampai'] : ''}}">
+                        <input type="text" class="datepicker form-control" name="sampai" value="{{isset($_GET['sampai']) ? $_GET['sampai'] : ''}}" required>
                     </div>                
+                </div>
+                <div class="col-3">
+                    <label for="" class="form-control-label">Tipe Pembayaran</label>
+                    <select name="tipe_pembayaran" id="" class="select2 form-control">
+                        <option value="">Semua Tipe</option>
+                        <option value="Tunai" {{Request::get('tipe_pembayaran') == 'Tunai' ? 'selected' : ''}} >Tunai</option>
+                        <option value="Debit" {{Request::get('tipe_pembayaran') == 'Debit' ? 'selected' : ''}} >Debit</option>
+                    </select>
                 </div>
                 <div class="col mt-4">
                 <button type="submit" class="btn btn-primary"><span class="fa fa-save"></span> Simpan</button>

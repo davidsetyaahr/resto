@@ -411,8 +411,11 @@ class PenjualanController extends Controller
 
     public function laporanGeneral()
     {
-        $laporan = Penjualan::where('status_bayar','Sudah Bayar')->whereBetween('waktu',[$_GET['dari'] . ' 00:00:00',$_GET['sampai'] . ' 23:59:59'])->orderBy('waktu','asc')->get();
-        return $laporan;
+        $laporan = Penjualan::where('status_bayar','Sudah Bayar')->whereBetween('waktu',[$_GET['dari'] . ' 00:00:00',$_GET['sampai'] . ' 23:59:59'])->orderBy('waktu','asc');
+        if ($_GET['tipe_pembayaran']) {
+            $laporan->where('jenis_bayar', $_GET['tipe_pembayaran']);
+        }
+        return $laporan->get();
     }
     
     public function laporanMenuFavorit()

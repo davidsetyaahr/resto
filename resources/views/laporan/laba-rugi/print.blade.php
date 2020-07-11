@@ -1,15 +1,41 @@
-<!-- <center>
-    <img src="{{asset('assets/img/logobaratha.png')}}" width='50px' alt="">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="{{ asset('assets/css/argon.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}" type="text/css">
+    <title>Laporan Laba Rugi</title>
+</head>
+<body>
+<center>
+<h3>Laporan Laba Rugi</h3>
+<br>
 </center>
+@php
+    $total = 0;
+    $total_diskon = 0;
+    $total_ppn = 0;
+@endphp
+@foreach ($penjualan as $value)
+  @php
+    $total_diskon = $total_diskon + $value->total_diskon + $value->total_diskon_tambahan;
+    $total_ppn = $total_ppn + $value->total_ppn;
+    $subtotal = $value->total_harga - $value->total_diskon + $value->total_ppn - $value->total_diskon_tambahan + $value->room_charge;
+    if ($value->isTravel=='True') {
+        $biaya_travel = ($subtotal - $value->total_ppn - $value->room_charge) * 10/100;
+        $subtotal = $subtotal - $biaya_travel;
+    }
+    $total = $total + $subtotal;
+  @endphp
+@endforeach
 @php
   $bulan = Request::get('bulan');
   $tahun = Request::get('tahun');
-
-  $penjualan = $totalPenjualan->ttlHarga - $totalPenjualan->ttlDiskon - $totalPenjualan->ttlDiskonTambahan;
-
-  $labaRugi = $penjualan + $totalKasMasuk->ttlKasMasuk - $totalPemakaian->ttlPemakaian - $totalKasKeluar->ttlKasKeluar;
+  $labaRugi = $total + $totalKasMasuk->ttlKasMasuk - $totalPemakaian->ttlPemakaian - $totalKasKeluar->ttlKasKeluar;
 @endphp
- --><table border='1px' width='100%'>
+<table border='1px' width='100%'>
   <thead class="thead-light">
     <tr>
       <th style="text-align: center">Keterangan</th>
@@ -23,7 +49,7 @@
   <tr>
     <td style="text-align: center">Penjualan</td>
     <td style="text-align: center">
-      {{number_format($penjualan, 0, ',', '.')}}
+      {{number_format($total, 0, ',', '.')}}
     </td>
   </tr>
   <tr>
@@ -54,7 +80,10 @@
     <td class="text-center"><b>{{number_format($labaRugi, 0, ',', '.')}}</b></td>
   </tr>
 </tfoot>
-</table>
+</table>  
+</body>
+</html>
+
 <script>
-window.print()
+    window.print()
 </script>

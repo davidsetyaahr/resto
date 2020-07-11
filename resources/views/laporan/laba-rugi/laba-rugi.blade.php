@@ -52,14 +52,28 @@
                 </div>
               </div>
             </form>
-            @if ($totalPenjualan)
+            @if ($_GET['bulan'])
+              @php
+                  $total = 0;
+                  $total_diskon = 0;
+                  $total_ppn = 0;
+              @endphp
+              @foreach ($penjualan as $value)
+                @php
+                  $total_diskon = $total_diskon + $value->total_diskon + $value->total_diskon_tambahan;
+                  $total_ppn = $total_ppn + $value->total_ppn;
+                  $subtotal = $value->total_harga - $value->total_diskon + $value->total_ppn - $value->total_diskon_tambahan + $value->room_charge;
+                  if ($value->isTravel=='True') {
+                      $biaya_travel = ($subtotal - $value->total_ppn - $value->room_charge) * 10/100;
+                      $subtotal = $subtotal - $biaya_travel;
+                  }
+                  $total = $total + $subtotal;
+                @endphp
+              @endforeach
               @php
                 $bulan = Request::get('bulan');
                 $tahun = Request::get('tahun');
-
-                $penjualan = $totalPenjualan->ttlHarga - $totalPenjualan->ttlDiskon - $totalPenjualan->ttlDiskonTambahan;
-
-                $labaRugi = $penjualan + $totalKasMasuk->ttlKasMasuk - $totalPemakaian->ttlPemakaian - $totalKasKeluar->ttlKasKeluar;
+                $labaRugi = $total + $totalKasMasuk->ttlKasMasuk - $totalPemakaian->ttlPemakaian - $totalKasKeluar->ttlKasKeluar;
               @endphp
               <a href="{{ route('laba-rugi').'?bulan='.$bulan.'&tahun='.$tahun.'&print=true' }}" class="btn btn-sm btn-success float-right py-2 px-3"><span class="fa fa-print"></span> Print</a>
               <br>
@@ -78,7 +92,7 @@
                     <tr>
                       <td style="text-align: center">Penjualan</td>
                       <td style="text-align: center">
-                        {{number_format($penjualan, 0, ',', '.')}}
+                        {{number_format($total, 0, ',', '.')}}
                       </td>
                     </tr>
                     <tr>
