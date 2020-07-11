@@ -1,4 +1,3 @@
-
 <?php 
     if(isset($_GET['payment'])){
       $text = 'Payment Bill';
@@ -15,10 +14,10 @@
         $item = '';
         foreach ($detail as $key => $hasild) {
           $item .= $kiri;
-          $item .= number_format($hasild->qty, 0, ",", ".") . " " . $hasild->nama . " @ " . number_format($hasild->harga_jual, 0, ",", ".") . "\n";
+          $item .= number_format($hasild->qty, 0, ",", ".") . " " . $hasild->nama . " @ " . number_format($hasild->harga_jual-$hasild->diskon, 0, ",", ".") . "\n";
           $item .= $kanan;
-          $item .= number_format($hasild->sub_total, 0, ",", ".") . "\n";
-          $subtotal+=$hasild->sub_total;
+          $item .= number_format($hasild->sub_total-$hasild->diskon, 0, ",", ".") . "\n";
+          $subtotal+=$hasild->sub_total-$hasild->diskon;
         }
         $ppn = 10*$subtotal/100;
         $room_charge = 10*$subtotal/100;
@@ -63,9 +62,12 @@
         $Data .= "Total " . str_pad(number_format($total, 0, ",", "."), 42, $spasi, STR_PAD_LEFT) . "\n";
 
         if(isset($_GET['payment'])){
-          $ttlDiskon = $penjualan->total_diskon + $penjualan->total_diskon_tambahan;
+          $ttlDiskon = $penjualan->total_diskon_tambahan;
           if($ttlDiskon > 0){
-            $Data .= "Diskon" . str_pad(number_format($ttlDiskon, 0, ",", "."), 42, $spasi, STR_PAD_LEFT) . "\n";
+            $Data .= "Potongan" . str_pad(number_format($ttlDiskon, 0, ",", "."), 40, $spasi, STR_PAD_LEFT) . "\n";
+            $Data .= "------------------------------------------------\n";
+            $Data .= "Grand Total" . str_pad(number_format($total - $ttlDiskon, 0, ",", "."), 37, $spasi, STR_PAD_LEFT) . "\n";
+
           }
           $Data .= "------------------------------------------------\n";
           $Data .= "Bayar" . str_pad(number_format($penjualan->bayar, 0, ",", "."), 43, $spasi, STR_PAD_LEFT) . "\n";
@@ -89,7 +91,6 @@
         fclose($handle);
         copy($file,"//192.168.137.105/Kasir"); # Lakukan cetak
         unlink($file);
-
 ?>
 <script>
        window.location.href = 'http://192.168.137.105:3301/newresto/penjualan/penjualan'
