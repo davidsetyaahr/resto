@@ -38,7 +38,13 @@ if(count($dapur)!=0){
     $Data .= "\n";
     $Data .= "\n";
     $Data .= "ORDERAN DAPUR ".$updateText."\n";
-    $Data .=$penjualan->nama_meja."\n";
+    // $Data .=$penjualan->nama_meja."\n";
+    if ($penjualan->jenis_order == 'Room Order') {
+        $Data .= $penjualan->nama_meja. " " . $penjualan->nomor_kamar ."\n";
+    }
+    else{
+        $Data .= $penjualan->nama_meja."\n";
+    }
     $Data .=$penjualan->kode_penjualan."\n";
     $Data .=$penjualan->jenis_order."\n";
    $Data .="--------------------------------------------\n";
@@ -99,7 +105,13 @@ if(count($bar)!=0){
     $Data .= "\n";
     $Data .= "\n";
     $Data .= "ORDERAN BAR ".$updateText."\n";
-    $Data .=$penjualan->nama_meja."\n";
+    // $Data .=$penjualan->nama_meja."\n";
+    if ($penjualan->jenis_order == 'Room Order') {
+        $Data .= $penjualan->nama_meja. " " . $penjualan->nomor_kamar ."\n";
+    }
+    else{
+        $Data .= $penjualan->nama_meja."\n";
+    }
     $Data .=$penjualan->kode_penjualan."\n";
     $Data .=$penjualan->jenis_order."\n";
 
