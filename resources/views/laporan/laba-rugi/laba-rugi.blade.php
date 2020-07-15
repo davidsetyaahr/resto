@@ -52,7 +52,7 @@
                 </div>
               </div>
             </form>
-            @if ($_GET['bulan'])
+            @if (isset($_GET['bulan']))
               @php
                   $total = 0;
                   $total_diskon = 0;
