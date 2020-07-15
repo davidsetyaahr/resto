@@ -271,9 +271,21 @@ class PenjualanController extends Controller
                 }
             }
             else{
-                $getDetail = DetailPenjualan::select('qty','keterangan')->where('id_detail_penjualan',$_POST['id_detail'][$key])->get()[0];
+                $getDetail = \DB::table('detail_penjualan as d')->select('d.qty','d.keterangan','m.jenis_menu')->join('menu as m','d.kode_menu','m.kode_menu')->where('d.id_detail_penjualan',$_POST['id_detail'][$key])->get()[0];
                 if($getDetail->qty!=$_POST['qty'][$key] || $getDetail->keterangan!=$_POST['keterangan'][$key]){
                     //update   
+                    $arr = array(
+                        'qty' => $_POST['qty'][$key] - $getDetail->qty,
+                        'nama' => $_POST['nama_menu'][$key],
+                        'keterangan' => $_POST['keterangan'][$key]
+                    );
+
+                    if($getDetail->jenis_menu=='Dapur'){
+                        $param['dapur'][count($param['dapur'])] = $arr;
+                    }else{
+                        $param['bar'][count($param['bar'])] = $arr;
+                    }
+    
                     DetailPenjualan::where('id_detail_penjualan', $_POST['id_detail'][$key])
                     ->update([
                         'sub_total' => $_POST['subtotal'][$key],
