@@ -513,7 +513,7 @@ class PenjualanController extends Controller
 
     public function cetakBill($kode)
     {
-        $penjualan = \DB::table('penjualan as p')->select('p.kode_penjualan', 'p.waktu','m.nama_meja','p.total_diskon','p.total_diskon_tambahan','p.bayar','p.kembalian', 'p.jenis_order', 'p.nomor_kamar')->join('meja as m','p.id_meja','m.id_meja')->where('p.kode_penjualan',$kode)->get()[0];
+        $penjualan = \DB::table('penjualan as p')->select('p.nama_customer','p.kode_penjualan', 'p.waktu','m.nama_meja','p.total_diskon','p.total_diskon_tambahan','p.bayar','p.kembalian', 'p.jenis_order', 'p.nomor_kamar')->join('meja as m','p.id_meja','m.id_meja')->where('p.kode_penjualan',$kode)->get()[0];
         $detail = \DB::table('detail_penjualan as dp')->select('dp.diskon','dp.qty','dp.sub_total','m.nama','m.harga_jual','dp.kode_menu')->join('menu as m','dp.kode_menu','m.kode_menu')->where('dp.kode_penjualan', $kode)->get();
         $resto = \DB::table('perusahaan')->select('nama', 'alamat', 'kota', 'telepon', 'email')->where('id_perusahaan', 1)->get();
         return view('penjualan.cetak.cetak-bill', ['penjualan' => $penjualan, 'detail' => $detail, 'resto' => $resto[0]]);

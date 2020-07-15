@@ -41,7 +41,9 @@
         $Data .= "www.barathahotel.id\n";
         $Data .= "\n";
         $Data .= $kiri;
+        $Data .= date('d-m-Y H:i', strtotime($penjualan->waktu))."\n";
         $Data .= $text."\n";
+        $Data .= $penjualan->nama_customer."\n";
         if ($penjualan->jenis_order == 'Room Order') {
           $Data .= $penjualan->nama_meja. " " . $penjualan->nomor_kamar ."\n";
         }
