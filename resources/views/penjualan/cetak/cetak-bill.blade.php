@@ -13,10 +13,10 @@
         $subtotal = 0;
         $item = '';
         foreach ($detail as $key => $hasild) {
-          $item .= $kiri;
-          $item .= number_format($hasild->qty, 0, ",", ".") . " " . $hasild->nama . " @ " . number_format($hasild->harga_jual-$hasild->diskon, 0, ",", ".");
-          $item .= $kanan;
-          $item .= number_format($hasild->sub_total-$hasild->diskon, 0, ",", ".") . "\n";
+//          $item .= $kiri;
+          $item .= $kiri.number_format($hasild->qty, 0, ",", ".") . " " . $hasild->nama . " @ " . number_format($hasild->harga_jual-$hasild->diskon, 0, ",", ".");
+//          $item .= $kanan;
+          $item .= $kanan.number_format($hasild->sub_total-$hasild->diskon, 0, ",", ".") . "\n";
           $subtotal+=$hasild->sub_total-$hasild->diskon;
         }
         $ppn = 10*$subtotal/100;
@@ -89,12 +89,15 @@
         $Data .= "\n";
         $Data .= "\n";
         $Data .= Chr(29).Chr(86).Chr(49); #Auto Cutter
-        fwrite($handle, $Data);
+/*         fwrite($handle, $Data);
         fclose($handle);
         copy($file,"//192.168.137.105/Kasir"); # Lakukan cetak
         unlink($file);
 
+ */
+        echo "<pre>";
+        print_r($Data);
 ?>
 <script>
-       window.location.href = 'http://192.168.137.105:3301/newresto/penjualan/penjualan'
+//       window.location.href = 'http://192.168.137.105:3301/newresto/penjualan/penjualan'
 </script>
