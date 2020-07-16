@@ -81,7 +81,7 @@
             </span>
             @enderror
           </div>
-          <div class="col-md-6 mt-3">
+          <div class="col-md-4 mt-3">
             <input type="number" class="form-control form-line @error('no_hp') is-invalid @enderror" name='no_hp' value="{{old('no_hp', '0')}}" placeholder='Nomor Hp' autocomplete='off'>
               @error('no_hp')
               <span class="invalid-feedback" role="alert">
@@ -89,7 +89,7 @@
               </span>
               @enderror
             </div>
-            <div class="col-md-6 mt-3">
+            <div class="col-md-4 mt-3">
               <select name="jenis_order" class="form-control form-line @error('jenis_order') is-invalid @enderror " id="jenis_order">
               <option value="">Jenis Order</option>
               <option value="Dine In" {{old('jenis_order') == 'Dine In' ? 'selected' : ''}} >Dine In</option>
@@ -102,8 +102,8 @@
               </span>
             @enderror
           </div>
-          <div class="col-md-6 mt-3">
-            <input type="text" class="form-control form-line @error('nomor_kamar') is-invalid @enderror" name='nomor_kamar' value="{{old('nomor_kamar')}}" placeholder='Nomor Kamar' autocomplete='off' id="nomor_kamar">
+          <div class="col-md-4 mt-3">
+            <input type="text" class="form-control form-line @error('nomor_kamar') is-invalid @enderror" name='nomor_kamar' value="{{old('nomor_kamar')}}" placeholder='Nomor Kamar' autocomplete='off' id="nomor_kamar" disabled>
             @error('nomor_kamar')
             <span class="invalid-feedback" role="alert">
               <strong>{{ $message }}</strong>

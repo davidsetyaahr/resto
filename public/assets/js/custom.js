@@ -207,11 +207,17 @@ $(document).ready(function() {
             $("#no_kartu").prop('disabled',true);
         }
     });
-    if ($('#jenis_order').val() == 'Room Order') {
-        $("#nomor_kamar").prop('disabled',false);
-        $("#nomor_kamar").attr("required", true);
-    }
-    $("#nomor_kamar").prop('disabled',false);
+    $("#jenis_order").change(function(){
+        var thisVal = $(this).val()
+        if (thisVal == 'Room Order') {
+            $("#nomor_kamar").prop('disabled',false);
+            $("#nomor_kamar").attr("required", true);
+        }
+        else{
+            $("#nomor_kamar").prop('disabled',true);
+            $("#nomor_kamar").attr("required", false);
+        }
+    })
     $("#jenis_order").change(function() {
         var thisVal = $(this).val();
         if (thisVal == "Room Order") {
