@@ -13,10 +13,10 @@
         $subtotal = 0;
         $item = '';
         foreach ($detail as $key => $hasild) {
-//          $item .= $kiri;
-          $item .= $kiri.number_format($hasild->qty, 0, ",", ".") . " " . $hasild->nama . " @ " . number_format($hasild->harga_jual-$hasild->diskon, 0, ",", ".");
-//          $item .= $kanan;
-          $item .= $kanan.number_format($hasild->sub_total-$hasild->diskon, 0, ",", ".") . "\n";
+         $item .= $kiri;
+          $item .= number_format($hasild->qty, 0, ",", ".") . " " . $hasild->nama . " @ " . number_format($hasild->harga_jual-$hasild->diskon, 0, ",", ".")."\n";
+         $item .= $kanan;
+          $item .= number_format($hasild->sub_total-$hasild->diskon, 0, ",", ".") . "\n";
           $subtotal+=$hasild->sub_total-$hasild->diskon;
         }
         $ppn = 10*$subtotal/100;
