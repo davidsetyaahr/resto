@@ -18,9 +18,10 @@
           $item .= $kanan;
           $item .= number_format($hasild->sub_total-$hasild->diskon, 0, ",", ".") . "\n";
           $subtotal+=$hasild->sub_total-$hasild->diskon;
+          
         }
         $ppn = 10*$subtotal/100;
-        $room_charge = 10*$subtotal/100;
+        $room_charge = $penjualan->jenis_order == 'Room Order' ?  10*$subtotal/100 : 0;
         $total = $subtotal + $ppn + $room_charge;
         $tmpdir = sys_get_temp_dir();
         $file = tempnam($tmpdir, 'ctk');
@@ -58,7 +59,7 @@
         $Data .= "Sub Total " . str_pad(number_format($subtotal, 0, ",", "."), 38, $spasi, STR_PAD_LEFT) . "\n";
         $Data .= "PPN" . str_pad(number_format($ppn, 0, ",", "."), 45, $spasi, STR_PAD_LEFT) . "\n";
         if ($penjualan->jenis_order == 'Room Order') {
-          $Data .= "Room Charge" . str_pad(number_format($room_charge, 0, ",", "."), 45, $spasi, STR_PAD_LEFT) . "\n";
+          $Data .= "Room Charge" . str_pad(number_format($room_charge, 0, ",", "."), 37, $spasi, STR_PAD_LEFT) . "\n";
         }
         $Data .= "------------------------------------------------\n";
         $Data .= "Total " . str_pad(number_format($total, 0, ",", "."), 42, $spasi, STR_PAD_LEFT) . "\n";
@@ -89,6 +90,8 @@
         $Data .= "\n";
         $Data .= "\n";
         $Data .= Chr(29).Chr(86).Chr(49); #Auto Cutter
+        echo "<pre>";
+        print_r($Data);
         fwrite($handle, $Data);
         fclose($handle);
         copy($file,"//192.168.137.105/Kasir"); # Lakukan cetak
