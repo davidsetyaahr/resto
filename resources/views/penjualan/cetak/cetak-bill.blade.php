@@ -14,11 +14,10 @@
         $item = '';
         foreach ($detail as $key => $hasild) {
           $item .= $kiri;
-          $item .= number_format($hasild->qty, 0, ",", ".") . " " . $hasild->nama . " @ " . number_format($hasild->harga_jual-$hasild->diskon, 0, ",", ".") . "\n";
+          $item .= number_format($hasild->qty, 0, ",", ".") . " " . $hasild->nama . " @ " . number_format($hasild->harga_jual-$hasild->diskon, 0, ",", ".");
           $item .= $kanan;
           $item .= number_format($hasild->sub_total-$hasild->diskon, 0, ",", ".") . "\n";
           $subtotal+=$hasild->sub_total-$hasild->diskon;
-          
         }
         $ppn = 10*$subtotal/100;
         $room_charge = $penjualan->jenis_order == 'Room Order' ?  10*$subtotal/100 : 0;
@@ -94,6 +93,7 @@
         fclose($handle);
         copy($file,"//192.168.137.105/Kasir"); # Lakukan cetak
         unlink($file);
+
 ?>
 <script>
        window.location.href = 'http://192.168.137.105:3301/newresto/penjualan/penjualan'
