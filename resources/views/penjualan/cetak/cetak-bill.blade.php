@@ -90,8 +90,6 @@
         $Data .= "\n";
         $Data .= "\n";
         $Data .= Chr(29).Chr(86).Chr(49); #Auto Cutter
-        echo "<pre>";
-        print_r($Data);
         fwrite($handle, $Data);
         fclose($handle);
         copy($file,"//192.168.137.105/Kasir"); # Lakukan cetak
