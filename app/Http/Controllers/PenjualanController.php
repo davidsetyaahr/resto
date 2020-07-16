@@ -307,9 +307,10 @@ class PenjualanController extends Controller
 
         $total = $totalHarga - $totalDiskon;
         $totalPpn = $total * 10 / 100;
-        $room_charge = $total * 10 / 100;
+        $room_charge = 0;
         if ($_POST['jenis_order'] == 'Room Order') {
             $nomor_kamar = $_POST['nomor_kamar'];
+            $room_charge = $total * 10 / 100;
         }
         else{
             $nomor_kamar = NULL;
