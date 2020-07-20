@@ -198,15 +198,47 @@ $(document).ready(function() {
     });
 
     $("#no_kartu").prop('disabled',true);
-    $("#jenis_bayar").change(function() {
-        var thisVal = $(this).val();
-        if (thisVal == "Debit") {
+    $("#charge").prop('disabled',true);
+
+    temp_grand_total = parseInt($('#grand_total').val());
+    function getCharge(thisVal) {
+        var grand_total = temp_grand_total;
+        var charge = 0;
+        if (thisVal != 'Tunai') {
             $("#no_kartu").prop('disabled',false);
             $("#no_kartu").attr("required", true);
-        } else {
-            $("#no_kartu").prop('disabled',true);
+
+            $("#charge").prop('disabled',false);
+            $("#charge").attr("required", true);
         }
+        else {
+            $("#no_kartu").prop('disabled',true);
+            $("#charge").prop('disabled',true);
+            $('#charge').val(0);
+        }
+
+        if (thisVal == "Debit BCA") {
+            charge = grand_total * 1 / 100; 
+        }
+        else if(thisVal == 'Debit BRI'){
+            charge = grand_total * 0.15 / 100; 
+        }
+        else if(thisVal == 'Kredit BCA'){
+            charge = grand_total * 1.80 / 100; 
+        }
+        else if(thisVal == 'Kredit BRI'){
+            charge = grand_total * 1.50 / 100; 
+        }
+        $('#charge').val(Math.round(charge));
+        $('#grand_total').val(grand_total + Math.round(charge));
+        $('#idrGrandTotal').html(formatRupiah(grand_total + Math.round(charge)));
+    }
+
+    $("#jenis_bayar").change(function() {
+        var thisVal = $(this).val();
+        getCharge(thisVal);
     });
+    
     $("#jenis_order").change(function(){
         var thisVal = $(this).val()
         if (thisVal == 'Room Order') {

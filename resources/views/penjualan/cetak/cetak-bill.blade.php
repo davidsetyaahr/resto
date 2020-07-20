@@ -65,11 +65,16 @@
 
         if(isset($_GET['payment'])){
           $ttlDiskon = $penjualan->total_diskon_tambahan;
+          $charge = $penjualan->charge;
           if($ttlDiskon > 0){
             $Data .= "Potongan" . str_pad(number_format($ttlDiskon, 0, ",", "."), 40, $spasi, STR_PAD_LEFT) . "\n";
+          }
+          if ($charge > 0) {
+            $Data .= "Charge" . str_pad(number_format($charge, 0, ",", "."), 42, $spasi, STR_PAD_LEFT) . "\n";
+          }
+          if ($charge > 0 || $ttlDiskon > 0) {
             $Data .= "------------------------------------------------\n";
-            $Data .= "Grand Total" . str_pad(number_format($total - $ttlDiskon, 0, ",", "."), 37, $spasi, STR_PAD_LEFT) . "\n";
-
+            $Data .= "Grand Total" . str_pad(number_format($total - $ttlDiskon + $charge, 0, ",", "."), 37, $spasi, STR_PAD_LEFT) . "\n";
           }
           $Data .= "------------------------------------------------\n";
           $Data .= "Bayar" . str_pad(number_format($penjualan->bayar, 0, ",", "."), 43, $spasi, STR_PAD_LEFT) . "\n";
@@ -93,11 +98,8 @@
         fclose($handle);
         copy($file,"//192.168.137.105/Kasir"); # Lakukan cetak
         unlink($file);
-
-
-/*         echo "<pre>";
-        print_r($Data);
- */?>
+        
+?>
 <script>
        window.location.href = 'http://192.168.137.105:3301/newresto/penjualan/penjualan'
 </script>

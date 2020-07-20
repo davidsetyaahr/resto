@@ -138,6 +138,21 @@
                       <input type="number" name="diskon_tambahan" class="form-control diskon_tambahan" value="{{old('diskon_tambahan', 0)}}" data-tipe='rp'>
                     </div>
                     <div class="col-4 mb-2">
+                      <label for=""><strong>Metode Pembayaran</strong></label>
+                      <select name="jenis_bayar" class="form-control select2 @error('bayar') is-invalid @enderror" id="jenis_bayar">
+                        <option value="Tunai" {{old('jenis_bayar') == 'Tunai' ? 'selected' : ''}}>Tunai</option>
+                        <option value="Debit BCA" {{old('jenis_bayar') == 'Debit BCA' ? 'selected' : ''}}>Debit BCA</option>
+                        <option value="Debit BRI" {{old('jenis_bayar') == 'Debit BRI' ? 'selected' : ''}}>Debit BRI</option>
+                        <option value="Kredit BCA" {{old('jenis_bayar') == 'Kredit BCA' ? 'selected' : ''}}>Kredit BCA</option>
+                        <option value="Kredit BRI" {{old('jenis_bayar') == 'Kredit BRI' ? 'selected' : ''}}>Kredit BRI</option>
+                      </select>
+                      @error('jenis_bayar')
+                        <span class="invalid-feedback" role="alert">
+                          <strong>{{ $message }}</strong>
+                        </span>
+                      @enderror
+                    </div>
+                    <div class="col-4 mb-2">
                       <label for=""><strong>Terbayar</strong></label>
                       <input type="number" name="bayar" id="bayar" class="form-control @error('bayar') is-invalid @enderror" value="{{old('bayar')}}">
                       @error('bayar')
@@ -150,18 +165,7 @@
                       <label for=""><strong>Kembalian</strong></label>
                       <input type="number" name="kembalian" id="kembalian" class="form-control" value="" readonly>
                     </div>
-                    <div class="col-4 mb-2">
-                      <label for=""><strong>Metode Pembayaran</strong></label>
-                      <select name="jenis_bayar" class="form-control select2 @error('bayar') is-invalid @enderror" id="jenis_bayar">
-                        <option value="Tunai" {{old('jenis_bayar') == 'Tunai' ? 'selected' : ''}}>Tunai</option>
-                        <option value="Debit" {{old('jenis_bayar') == 'Debit' ? 'selected' : ''}}>Debit</option>
-                      </select>
-                      @error('jenis_bayar')
-                        <span class="invalid-feedback" role="alert">
-                          <strong>{{ $message }}</strong>
-                        </span>
-                      @enderror
-                    </div>
+                    
                     <div class="col-4 mb-2">
                       <div id="debit_only">
                         <label for=""><strong>Nomor Kartu</strong></label>
@@ -173,7 +177,18 @@
                         @enderror --}}
                       </div>
                     </div>
-                    <div class="col-md-8 mt-4">
+                    <div class="col-4 mb-2">
+                      <div id="">
+                        <label for=""><strong>Charge</strong></label>
+                        <input type="number" name="charge" id="charge" class="form-control" value="{{old('charge', 0)}}">
+                        {{-- @error('jenis_bayar')
+                          <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                          </span>
+                        @enderror --}}
+                      </div>
+                    </div>
+                    <div class="col-md-4 mt-4">
                       <div class="custom-control custom-checkbox">
                         <input type="checkbox" class="custom-control-input" id="isTravel" name="isTravel" value="True" {{old('isTravel') == 'True' ? 'checked' : ''}}>
                         <label class="custom-control-label" for="isTravel">Travel</label>
@@ -181,7 +196,7 @@
                         <h5 class="text-default">*Khusus Customer Travel</h5>
                       </div>
                     </div>
-                    <div class="col-md-4 mt-3">
+                    <div class="col-md-4 mt-4">
                       <h1 class='text-dark'>Grand Total : Rp. <span class="text-orange" id='idrGrandTotal'>{{number_format($penjualan->total_harga - $penjualan->total_diskon + $penjualan->total_ppn + $penjualan->room_charge,0,',','.')}}</span></h1>
                       <input type="hidden" name="grand_total" id="grand_total" class="form-control form-line text-lg text-orange font-weight-bold" value="{{($penjualan->total_harga - $penjualan->total_diskon) + $penjualan->total_ppn + $penjualan->room_charge }}">
                     </div>

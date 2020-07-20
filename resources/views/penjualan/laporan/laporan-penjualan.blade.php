@@ -12,7 +12,11 @@
                 <?php 
                     if(isset($_GET['tipe']) && isset($_GET['dari'])){
                 ?>
-                  <a href="<?= route('laporan-penjualan.print')."?tipe=$_GET[tipe]&dari=$_GET[dari]&sampai=$_GET[sampai]&tipe_pembayaran=$_GET[tipe_pembayaran]" ?>" class="btn btn-info btn-sm"><span class="fa fa-print"></span> Cetak Laporan</a>
+                @if ($_GET['tipe'] == 'general')
+                    <a href="<?= route('laporan-penjualan.print')."?tipe=$_GET[tipe]&dari=$_GET[dari]&sampai=$_GET[sampai]&tipe_pembayaran=$_GET[tipe_pembayaran]" ?>" class="btn btn-info btn-sm"><span class="fa fa-print"></span> Cetak Laporan</a>
+                @else
+                    <a href="<?= route('laporan-penjualan.print')."?tipe=$_GET[tipe]&dari=$_GET[dari]&sampai=$_GET[sampai]"?>" class="btn btn-info btn-sm"><span class="fa fa-print"></span> Cetak Laporan</a>
+                @endif
                 <?php } ?>
                 </div>
               </div>
@@ -45,14 +49,17 @@
                         <input type="text" class="datepicker form-control" name="sampai" value="{{isset($_GET['sampai']) ? $_GET['sampai'] : ''}}" required>
                     </div>                
                 </div>
+                @if ($_GET['tipe'] == 'general')
                 <div class="col-3">
                     <label for="" class="form-control-label">Tipe Pembayaran</label>
                     <select name="tipe_pembayaran" id="" class="select2 form-control">
                         <option value="">Semua Tipe</option>
                         <option value="Tunai" {{Request::get('tipe_pembayaran') == 'Tunai' ? 'selected' : ''}} >Tunai</option>
-                        <option value="Debit" {{Request::get('tipe_pembayaran') == 'Debit' ? 'selected' : ''}} >Debit</option>
+                        <option value="BCA" {{Request::get('tipe_pembayaran') == 'BCA' ? 'selected' : ''}} >BCA</option>
+                        <option value="BRI" {{Request::get('tipe_pembayaran') == 'BRI' ? 'selected' : ''}} >BRI</option>
                     </select>
                 </div>
+                @endif
                 <div class="col mt-4">
                 <button type="submit" class="btn btn-primary"><span class="fa fa-save"></span> Simpan</button>
                   <button type="reset" class="btn btn-secondary"><span class="fa fa-times"></span> Reset</button>

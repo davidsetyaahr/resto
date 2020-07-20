@@ -48,9 +48,9 @@
         $qty = $qty + $value->jumlah_qty;
         $total_diskon = $total_diskon + $value->total_diskon + $value->total_diskon_tambahan;
         $total_ppn = $total_ppn + $value->total_ppn;
-        $subtotal = $value->total_harga - $value->total_diskon + $value->total_ppn - $value->total_diskon_tambahan + $value->room_charge;
+        $subtotal = $value->total_harga - $value->total_diskon + $value->total_ppn - $value->total_diskon_tambahan + $value->room_charge + $value->charge;
         if ($value->isTravel=='True') {
-            $biaya_travel = ($subtotal - $value->total_ppn - $value->room_charge) * 10/100;
+            $biaya_travel = ($subtotal - $value->total_ppn - $value->room_charge - $value->charge) * 10/100;
             $subtotal = $subtotal - $biaya_travel;
         }
         $total = $total + $subtotal;
