@@ -34,7 +34,7 @@
         $Data = $initialized;
         $Data .= $condensed1;
         $Data .= $tengah;
-        $Data .= "Baratha Coffee\n";
+        $Data .= "Baratha Hotel & Resto\n";
         $Data .= "Jl. Saliwiryo Pranowo Gg.Taman No.11\n";
         $Data .= "Bondowoso\n";
         $Data .= "(0332) 424555\n";

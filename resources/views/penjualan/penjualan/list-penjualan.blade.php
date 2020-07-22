@@ -8,7 +8,7 @@
                 <div class="col">
                   <?php 
                     foreach ($meja as $key => $value) {
-                      $cek = \DB::table('penjualan as p')->select('p.id_meja')->join('meja as m','p.id_meja','m.id_meja')->where('p.id_meja',$value->id_meja)->where('m.nama_meja','!=','Room')->where('status_bayar','Belum Bayar')->count();
+                      $cek = \DB::table('penjualan as p')->select('p.id_meja')->join('meja as m','p.id_meja','m.id_meja')->where('p.id_meja',$value->id_meja)->where('m.nama_meja','!=','Hotel Room')->where('status_bayar','Belum Bayar')->count();
                       if($cek==0){
                         $class = 'success';
                         $url = url('penjualan/penjualan/create?id_meja='.$value->id_meja);
