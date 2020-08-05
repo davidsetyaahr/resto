@@ -37,7 +37,8 @@ if(count($dapur)!=0){
     $Data .= $condensed1;
     $Data .= "\n";
     $Data .= "\n";
-    $Data .= "ORDERAN DAPUR ".$updateText."\n";
+    $Data .= $bold1;
+    $Data .= "OORDERAN DAPUR ".$updateText."\n";
     // $Data .=$penjualan->nama_meja."\n";
     if ($penjualan->jenis_order == 'Room Order') {
         $Data .= $penjualan->nama_meja. " " . $penjualan->nomor_kamar ."\n";
@@ -69,6 +70,9 @@ if(count($dapur)!=0){
     fclose($handle);
     copy($file,"//192.168.137.105/Dapur"); # Lakukan cetak
     unlink($file);
+    // echo "<pre>";
+    // print_r($Data);
+    // echo "</pre>";
 }
 if(count($bar)!=0){
     $item = '';
@@ -101,10 +105,10 @@ if(count($bar)!=0){
     $condensed1 = chr(15);
     $condensed0 = chr(18);
     $Data = $initialized;
-    $Data .= $condensed1;
     $Data .= "\n";
     $Data .= "\n";
-    $Data .= "ORDERAN BAR ".$updateText."\n";
+    $Data .= $bold1;
+    $Data .= "OORDERAN BAR ".$updateText."\n";
     // $Data .=$penjualan->nama_meja."\n";
     if ($penjualan->jenis_order == 'Room Order') {
         $Data .= $penjualan->nama_meja. " " . $penjualan->nomor_kamar ."\n";
@@ -137,6 +141,9 @@ if(count($bar)!=0){
     fclose($handle);
     copy($file,"//192.168.137.105/Bar"); # Lakukan cetak
     unlink($file);
+    // echo "<pre>";
+    // print_r($Data);
+    // echo "</pre>";
 
 }
 if(isset($_GET['update'])){
