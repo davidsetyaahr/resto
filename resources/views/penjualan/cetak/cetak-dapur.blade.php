@@ -3,6 +3,7 @@
 $tengah = Chr(27) . Chr(97) . Chr(1);
 $kiri = Chr(27) . Chr(97) . Chr(0);
 $updateText = isset($_GET['update']) ? '(TAMBAHAN)' : '';
+
 if(count($dapur)!=0){
     $item = '';
     $keterangan = '';
@@ -35,17 +36,21 @@ if(count($dapur)!=0){
     $condensed0 = chr(18);
     $Data = $initialized;
     $Data .= $condensed1;
+    $Data .= $tengah;
     $Data .= "\n";
     $Data .= "\n";
-    $Data .= $bold1;
-    $Data .= "OORDERAN DAPUR ".$updateText."\n";
-    // $Data .=$penjualan->nama_meja."\n";
+
     if ($penjualan->jenis_order == 'Room Order') {
         $Data .= $penjualan->nama_meja. " " . $penjualan->nomor_kamar ."\n";
     }
     else{
         $Data .= $penjualan->nama_meja."\n";
     }
+
+    $Data .= $kiri;
+    $Data .= "\n";
+    $Data .= "ORDERAN DAPUR ".$updateText."\n";
+    // $Data .=$penjualan->nama_meja."\n";
     $Data .=$penjualan->kode_penjualan."\n";
     $Data .=$penjualan->jenis_order."\n";
    $Data .="--------------------------------------------\n";
@@ -105,17 +110,22 @@ if(count($bar)!=0){
     $condensed1 = chr(15);
     $condensed0 = chr(18);
     $Data = $initialized;
+    $Data .= $tengah;
     $Data .= "\n";
     $Data .= "\n";
-    $Data .= $bold1;
-    $Data .= "OORDERAN BAR ".$updateText."\n";
-    // $Data .=$penjualan->nama_meja."\n";
     if ($penjualan->jenis_order == 'Room Order') {
         $Data .= $penjualan->nama_meja. " " . $penjualan->nomor_kamar ."\n";
     }
     else{
         $Data .= $penjualan->nama_meja."\n";
     }
+
+    $Data .= $kiri;
+    $Data .= "\n";
+
+    $Data .= "ORDERAN BAR ".$updateText."\n";
+    // $Data .=$penjualan->nama_meja."\n";
+
     $Data .=$penjualan->kode_penjualan."\n";
     $Data .=$penjualan->jenis_order."\n";
 
