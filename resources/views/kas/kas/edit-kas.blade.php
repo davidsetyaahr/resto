@@ -58,6 +58,21 @@
                     </span>
                   @enderror
                   <br>
+
+                  <label for="" class="form-control-label">Jenis</label>
+                  <select name="jenis" id="jenis" class="form-control @error('jenis') is-invalid @enderror">
+                    <option value="">-- Pilih Jenis --</option>
+                    <option value="Cash" {{old('jenis', $kas->jenis) == 'Cash' ? 'selected' : ''}} >Cash</option>
+                    <option value="BCA" {{old('jenis', $kas->jenis) == 'BCA' ? 'selected' : ''}} >BCA</option>
+                    <option value="BRI" {{old('jenis', $kas->jenis) == 'BRI' ? 'selected' : ''}} >BRI</option>
+                  </select>
+                  @error('jenis')
+                    <span class="invalid-feedback" role="alert">
+                      <strong>{{ $message }}</strong>
+                    </span>
+                  @enderror
+                  <br>
+                  <br>
                   
                   <label for="" class="form-control-label ">Keterangan</label>
                   <textarea name="keterangan" class="form-control @error('keterangan') is-invalid @enderror">{{old('keterangan', $kas->keterangan)}}</textarea>
@@ -68,15 +83,6 @@
                   @enderror
                   <br>
 
-                  <label for="" class="form-control-label">Penanggung Jawab</label>
-                  <input type="text" name="penanggung_jawab" value="{{old('penanggung_jawab', $kas->penanggung_jawab)}}" class="form-control @error('penanggung_jawab') is-invalid @enderror" placeholder="ex : Lebron James">
-                  @error('penanggung_jawab')
-                    <span class="invalid-feedback" role="alert">
-                      <strong>{{ $message }}</strong>
-                    </span>
-                  @enderror
-                  <br>
-                  {{-- <br> --}}
                   <button type="submit" class="btn btn-primary"><span class="fa fa-save"></span> Simpan</button>
                   <button type="reset" class="btn btn-secondary"><span class="fa fa-times"></span> Reset</button>
               </div>

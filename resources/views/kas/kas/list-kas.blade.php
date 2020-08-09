@@ -44,7 +44,7 @@
                     <th scope="col" class="sort" data-sort="budget">Nominal Masuk</th>
                     <th scope="col" class="sort" data-sort="budget">Nominal Keluar</th>
                     <th scope="col" class="sort" data-sort="name">Keterangan</th>
-                    <th scope="col" class="sort" data-sort="name">Penanggung Jawab</th>
+                    <th scope="col" class="sort" data-sort="name">Jenis</th>
                     <th scope="col"></th>
                   </tr>
                 </thead>
@@ -66,7 +66,7 @@
                           <td>{{number_format($value->nominal,0,',','.')}}</td>
                         @endif
                         <td>{{$value->keterangan}}</td>
-                        <td>{{$value->penanggung_jawab}}</td>
+                        <td>{{$value->jenis}}</td>
                         <td class="text-right">
                           <div class="dropdown">
                             <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

@@ -13,7 +13,7 @@
             <div class="card-body">
             <form action="{{ route('kas.laporan') }}" method="get">
             <div class="row align-items-center">
-                <div class="col-4">
+                <div class="col-3">
                     <label for="" class="form-control-label">Dari Tanggal</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
@@ -22,7 +22,7 @@
                         <input type="text" class="datepicker form-control" name="dari" value="{{Request::get('dari')}}">
                     </div>                
                 </div>
-                <div class="col-4">
+                <div class="col-3">
                     <label for="" class="form-control-label">Sampai Tanggal</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
@@ -30,6 +30,15 @@
                         </div>
                         <input type="text" class="datepicker form-control" name="sampai" value="{{Request::get('sampai')}}">
                     </div>                
+                </div>
+                <div class="col-3">
+                  <label for="" class="form-control-label">Jenis</label>
+                  <select name="jenis" id="jenis" class="form-control">
+                    <option value="Semua">Semua</option>
+                    <option value="Cash" {{Request::get('jenis') == 'Cash' ? 'selected' : ''}} >Cash</option>
+                    <option value="BCA" {{Request::get('jenis') == 'BCA' ? 'selected' : ''}} >BCA</option>
+                    <option value="BRI" {{Request::get('jenis') == 'BRI' ? 'selected' : ''}} >BRI</option>
+                  </select>
                 </div>
                 <div class="col mt-4">
                 <button type="submit" class="btn btn-primary"><span class="fa fa-save"></span> Simpan</button>
@@ -41,8 +50,10 @@
               @php
                   $dari = Request::get('dari');
                   $sampai = Request::get('sampai');
+                  $jenis = Request::get('jenis');
               @endphp
-              <a href="{{ route('kas.laporan').'?dari='.$dari.'&sampai='.$sampai.'&print=true' }}" class="btn btn-sm btn-success float-right py-2 px-3"><span class="fa fa-print"></span> Print</a>
+              <br>
+              <a href="{{ route('kas.laporan').'?dari='.$dari.'&sampai='.$sampai.'&jenis='.$jenis.'&print=true' }}" target="_blank" class="btn btn-sm btn-success float-right py-2 px-3"><span class="fa fa-print"></span> Print</a>
               <br>
               <div class="table-responsive mt-4">
                 <table class="table align-items-center table-flush table-hover table-striped">
@@ -54,7 +65,7 @@
                       <th>Nominal Masuk</th>
                       <th>Nominal Keluar</th>
                       <th>Keterangan</th>
-                      <th>Penanggung Jawab</th>
+                      <th>Jenis</th>
                     </tr>
                   </thead>
                   <tbody class="list">
@@ -81,7 +92,7 @@
                       <td>{{number_format($value->nominal,0,',','.')}}</td>
                       @endif
                       <td>{{$value->keterangan}}</td>
-                      <td>{{$value->penanggung_jawab}}</td>
+                      <td>{{$value->jenis}}</td>
                     </tr>
                   @endforeach
                   </tbody>

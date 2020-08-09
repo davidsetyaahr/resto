@@ -82,7 +82,7 @@ class KasController extends Controller
             'tipe' => 'required',
             'nominal' => 'required|numeric',
             'tanggal' => 'required|date',
-            'penanggung_jawab' => 'required',
+            'jenis' => 'required',
         ]);
 
         $newKas = new Kas;
@@ -92,7 +92,7 @@ class KasController extends Controller
         $newKas->tanggal = $request->get('tanggal');
         $newKas->nominal = $request->get('nominal');
         $newKas->keterangan = $request->get('keterangan');
-        $newKas->penanggung_jawab = $request->get('penanggung_jawab');
+        $newKas->jenis = $request->get('jenis');
 
         $newKas->save();
 
@@ -129,7 +129,7 @@ class KasController extends Controller
             'tipe' => 'required',
             'nominal' => 'required|numeric',
             'tanggal' => 'required|date',
-            'penanggung_jawab' => 'required',
+            'jenis' => 'required',
         ]);
 
         $kas = Kas::findOrFail($kode);
@@ -137,7 +137,7 @@ class KasController extends Controller
         $kas->tanggal = $request->get('tanggal');
         $kas->nominal = $request->get('nominal');
         $kas->keterangan = $request->get('keterangan');
-        $kas->penanggung_jawab = $request->get('penanggung_jawab');
+        $kas->jenis = $request->get('jenis');
         $kas->tipe = $request->get('tipe');
 
         $kas->save();
@@ -167,13 +167,18 @@ class KasController extends Controller
 
         $dari = $request->get('dari');
         $sampai = $request->get('sampai');
+        $jenis = $request->get('jenis');
         $laporan = '';
+        $kas = Kas::orderBy('tanggal','asc');
         if($dari && $sampai){
-            $kas = Kas::orderBy('tanggal','asc');
-            $kas->whereBetween('tanggal',[$dari, $sampai]);
-
-            $laporan = $kas->get();
+            $kas->whereBetween('tanggal',[$dari, $sampai]);            
         }
+
+        if ($jenis != 'Semua') {
+            $kas->where('jenis', $jenis);
+        }
+
+        $laporan = $kas->get();
 
         if($request->get('print')){
             return view('kas.laporan.print-laporan-kas', $this->param, ['laporan' => $laporan]);

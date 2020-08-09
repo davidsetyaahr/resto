@@ -23,7 +23,7 @@
         <th>Nominal Masuk</th>
         <th>Nominal Keluar</th>
         <th>Keterangan</th>
-        <th>Penanggung Jawab</th>
+        <th>Jenis</th>
       </tr>
     </thead>
     <tbody>
@@ -50,7 +50,7 @@
           <td>{{number_format($value->nominal,0,',','.')}}</td>
           @endif
           <td>{{$value->keterangan}}</td>
-          <td>{{$value->penanggung_jawab}}</td>
+          <td>{{$value->jenis}}</td>
         </tr>
       @endforeach
     </tbody>
