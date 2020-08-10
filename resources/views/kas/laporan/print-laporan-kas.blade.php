@@ -18,7 +18,7 @@
     <thead>
       <tr>
         <th>#</th>
-        <th>Kode Kas Keluar</th>
+        <th>Kode Kas</th>
         <th>Tanggal</th>
         <th>Nominal Masuk</th>
         <th>Nominal Keluar</th>
