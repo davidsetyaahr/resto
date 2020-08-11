@@ -24,3 +24,6 @@
     </div>
     </div>
 @endforeach
+<div class="paging-menu">
+    {!! $menu->render() !!}
+</div>

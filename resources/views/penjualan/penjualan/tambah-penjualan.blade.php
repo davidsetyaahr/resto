@@ -31,7 +31,7 @@
                   </div>                
                 </div>
               </form>
-              <div class="row row-menu" data-urlDiskon="{{route('get-diskon')}}">
+              <div class="row row-menu" id="tag_container" data-urlDiskon="{{route('get-diskon')}}">
                 @include('penjualan.penjualan.loop-menu')
               </div>
             </div>

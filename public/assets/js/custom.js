@@ -639,4 +639,46 @@ $(document).ready(function() {
         $(".box-penjualan").toggleClass('show')
         $(".body-click").toggleClass('show')
     })
+    
+    $(document).on('click', '.paging-menu a',function(event)
+    {
+        event.preventDefault();
+        $(".loading").addClass("show");
+
+        $('li').removeClass('active');
+        $(this).parent('li').addClass('active');
+
+        var myurl = $(this).attr('href');
+        var page=$(this).attr('href').split('page=')[1];
+        
+        const kodeMenu = [];
+        $(".tbodyLoop .inputKodeMenu").each(function(){
+            kodeMenu.push($(this).val())
+        })
+        console.log(kodeMenu)
+
+
+        $.ajax(
+            {
+                url: '?page=' + page,
+                type: "get",
+                datatype: "html",
+                success : function(data){
+                    $("#tag_container").empty().html(data);
+                    $(".tbodyLoop .inputKodeMenu").each(function(){
+                        $(".menu[data-menu='"+$(this).val()+"']").attr('data-pick','true')
+                    })
+            
+                    $(".menu").click(function() {
+                        pickMenu($(this));
+                    });
+                                
+                    $(".loading").removeClass("show");
+    
+                }
+            }).fail(function(jqXHR, ajaxOptions, thrownError){
+                  alert('No response from server');
+            });
+        });
+  
 });

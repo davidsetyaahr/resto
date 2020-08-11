@@ -107,14 +107,19 @@ class PenjualanController extends Controller
         return view('penjualan.penjualan.tambah-detail-penjualan',['hapus' => true, 'no' => $next, 'menu' => $menu]);
     }
 
-    public function create()
+    public function create(Request $request)
     {
+        $this->param['menu'] = Menu::where('status', '=', 'Ready')->select('kode_menu','nama','foto','harga_jual')->paginate(28);
+
+        if($request->ajax()){
+            return view('penjualan.penjualan.loop-menu',['menu' => $this->param['menu']]);
+        }
+
         $this->param['pageInfo'] = 'Daftar Menu';
         $this->param['btnRight']['text'] = 'Lihat Penjualan';
         $this->param['btnRight']['link'] = route('penjualan.index');
         $this->param['kode_penjualan'] = $this->getKode();
         $this->param['kategori'] = KategoriMenu::select('id_kategori_menu','kategori_menu')->get();
-        $this->param['menu'] = Menu::where('status', '=', 'Ready')->select('kode_menu','nama','foto','harga_jual')->get();
         $this->param['meja'] = \DB::table('meja')->where('nama_meja', 'Hotel Room')->orWhereNotIn('id_meja', function($query){
             $query->select('id_meja')->from('penjualan')->where('status_bayar','Belum Bayar');
         })->orderBy('nama_meja','asc')->get();
