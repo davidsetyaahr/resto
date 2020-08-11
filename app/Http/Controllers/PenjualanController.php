@@ -195,13 +195,17 @@ class PenjualanController extends Controller
         //
     }
 
-    public function edit($kodePenjualan)
+    public function edit(Request $request,$kodePenjualan)
     {
+        $this->param['menu'] = Menu::where('status', '=', 'Ready')->select('kode_menu','nama','foto','harga_jual')->paginate(28);
+
+        if($request->ajax()){
+            return view('penjualan.penjualan.loop-menu',['menu' => $this->param['menu']]);
+        }
         $this->param['pageInfo'] = 'Daftar Menu';
         $this->param['btnRight']['text'] = 'Lihat Penjualan';
         $this->param['btnRight']['link'] = route('penjualan.index');
         $this->param['kategori'] = KategoriMenu::select('id_kategori_menu','kategori_menu')->get();
-        $this->param['menu'] = Menu::where('status', '=', 'Ready')->select('kode_menu','nama','foto','harga_jual')->get();
         $this->param['penjualan'] = Penjualan::findOrFail($kodePenjualan);
         $this->param['mejaSelected'] = Meja::where('id_meja',$this->param['penjualan']->id_meja)->get()[0];
         $this->param['meja'] = \DB::table('meja')->whereNotIn('id_meja', function($query){
@@ -423,7 +427,7 @@ class PenjualanController extends Controller
             }
         }
         $menu->select('kode_menu','nama','foto','harga_jual');
-        $filter = $menu->get();
+        $filter = $menu->paginate(28)->appends(array('idKategori' => $_GET['idKategori'],'key' => $_GET['key']));
 
         return view('penjualan.penjualan.loop-menu', ['menu' => $filter]);
     }

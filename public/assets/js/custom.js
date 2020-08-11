@@ -417,6 +417,7 @@ $(document).ready(function() {
             success: function(data) {
                 $(".loading").removeClass("show");
                 $(".row-menu .col-md-3").remove();
+                $(".row-menu .paging-menu").remove();
                 $(".row-menu").append(data);
                 $(".keranjang .tbodyLoop .tr").each(function() {
                     var no = $(this).attr("data-tr");
@@ -647,20 +648,11 @@ $(document).ready(function() {
 
         $('li').removeClass('active');
         $(this).parent('li').addClass('active');
-
-        var myurl = $(this).attr('href');
-        var page=$(this).attr('href').split('page=')[1];
+        var page = $(this).attr('href');
         
-        const kodeMenu = [];
-        $(".tbodyLoop .inputKodeMenu").each(function(){
-            kodeMenu.push($(this).val())
-        })
-        console.log(kodeMenu)
-
-
         $.ajax(
             {
-                url: '?page=' + page,
+                url: page,
                 type: "get",
                 datatype: "html",
                 success : function(data){

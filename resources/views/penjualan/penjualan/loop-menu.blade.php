@@ -25,5 +25,5 @@
     </div>
 @endforeach
 <div class="paging-menu">
-    {!! $menu->render() !!}
+    {{ $menu->render() }}
 </div>
