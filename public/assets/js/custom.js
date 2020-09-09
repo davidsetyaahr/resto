@@ -197,85 +197,89 @@ $(document).ready(function() {
         barang($(this));
     });
 
-    $("#no_kartu").prop('disabled',true);
-    $("#charge").prop('disabled',true);
+    $("#no_kartu").prop("disabled", true);
+    $("#charge").prop("disabled", true);
 
-    temp_grand_total = parseInt($('#grand_total').val());
+    temp_grand_total = parseInt($("#grand_total").val());
     function getCharge(thisVal) {
         var grand_total = temp_grand_total;
         var charge = 0;
-        if (thisVal != 'Tunai') {
-            $("#no_kartu").prop('disabled',false);
+        if (thisVal != "Tunai") {
+            $("#no_kartu").prop("disabled", false);
             $("#no_kartu").attr("required", true);
 
-            $("#charge").prop('disabled',false);
+            $("#charge").prop("disabled", false);
             $("#charge").attr("required", true);
-        }
-        else {
-            $("#no_kartu").prop('disabled',true);
-            $("#charge").prop('disabled',true);
-            $('#charge').val(0);
+        } else {
+            $("#no_kartu").prop("disabled", true);
+            $("#charge").prop("disabled", true);
+            $("#charge").val(0);
         }
 
         if (thisVal == "Debit BCA") {
-            charge = grand_total * 1 / 100; 
+            charge = (grand_total * 1) / 100;
+        } else if (thisVal == "Debit BRI") {
+            charge = (grand_total * 0.15) / 100;
+        } else if (thisVal == "Kredit BCA") {
+            charge = (grand_total * 1.8) / 100;
+        } else if (thisVal == "Kredit BRI") {
+            charge = (grand_total * 1.5) / 100;
+        } else if (thisVal == "Debit Bank Lain") {
+            charge = (grand_total * 0.15) / 100;
+        } else if (thisVal == "Kredit Bank Lain") {
+            charge = (grand_total * 1.5) / 100;
         }
-        else if(thisVal == 'Debit BRI'){
-            charge = grand_total * 0.15 / 100; 
-        }
-        else if(thisVal == 'Kredit BCA'){
-            charge = grand_total * 1.80 / 100; 
-        }
-        else if(thisVal == 'Kredit BRI'){
-            charge = grand_total * 1.50 / 100; 
-        }
-        $('#charge').val(Math.round(charge));
-        $('#grand_total').val(grand_total + Math.round(charge));
-        $('#idrGrandTotal').html(formatRupiah(grand_total + Math.round(charge)));
+        $("#charge").val(Math.round(charge));
+        $("#grand_total").val(grand_total + Math.round(charge));
+        $("#idrGrandTotal").html(
+            formatRupiah(grand_total + Math.round(charge))
+        );
     }
 
     $("#jenis_bayar").change(function() {
         var thisVal = $(this).val();
         getCharge(thisVal);
     });
-    
-    $("#jenis_order").change(function(){
-        var thisVal = $(this).val()
-        if (thisVal == 'Room Order') {
-            $("#nomor_kamar").prop('disabled',false);
-            $("#nomor_kamar").attr("required", true);
-        }
-        else{
-            $("#nomor_kamar").prop('disabled',true);
-            $("#nomor_kamar").attr("required", false);
-        }
-    })
+
     $("#jenis_order").change(function() {
         var thisVal = $(this).val();
         if (thisVal == "Room Order") {
-            $("#nomor_kamar").prop('disabled',false);
+            $("#nomor_kamar").prop("disabled", false);
             $("#nomor_kamar").attr("required", true);
         } else {
-            $("#nomor_kamar").prop('disabled',true);
+            $("#nomor_kamar").prop("disabled", true);
+            $("#nomor_kamar").attr("required", false);
+        }
+    });
+    $("#jenis_order").change(function() {
+        var thisVal = $(this).val();
+        if (thisVal == "Room Order") {
+            $("#nomor_kamar").prop("disabled", false);
+            $("#nomor_kamar").attr("required", true);
+        } else {
+            $("#nomor_kamar").prop("disabled", true);
         }
     });
 
     $(".diskon_tambahan").keyup(function() {
         var diskon_tambahan = parseInt($(this).val());
-        var tipe = $(this).data('tipe')
+        var tipe = $(this).data("tipe");
         var total = parseInt($("#total").val());
         var diskon = 0;
-        if(tipe=='persen'){
-            var otherDisc = parseInt($(".diskon_tambahan[data-tipe='rp']").val())
-            diskon = (diskon_tambahan * total / 100) + otherDisc;
-        }
-        else{
-            var getOtherDisc = parseInt($(".diskon_tambahan[data-tipe='persen']").val())
+        if (tipe == "persen") {
+            var otherDisc = parseInt(
+                $(".diskon_tambahan[data-tipe='rp']").val()
+            );
+            diskon = (diskon_tambahan * total) / 100 + otherDisc;
+        } else {
+            var getOtherDisc = parseInt(
+                $(".diskon_tambahan[data-tipe='persen']").val()
+            );
             var otherDisc = 0;
-            if(getOtherDisc>0){
-                otherDisc = getOtherDisc * total / 100;
+            if (getOtherDisc > 0) {
+                otherDisc = (getOtherDisc * total) / 100;
             }
-            diskon = diskon_tambahan + otherDisc
+            diskon = diskon_tambahan + otherDisc;
         }
         var grand_total = total - diskon;
         $("#grand_total").val(grand_total);
@@ -405,7 +409,7 @@ $(document).ready(function() {
         e.preventDefault();
         var idKategori = $("#idKategori").val();
         var key = $("#key").val();
-        var url = $(this).attr('data-url')
+        var url = $(this).attr("data-url");
 
         $.ajax({
             type: "get",
@@ -524,7 +528,11 @@ $(document).ready(function() {
         var tipe = thisParam.data("tipe");
         var input = ".keranjang .tbodyLoop .tr[data-tr='" + no + "'] .inputQty";
         var qty = parseInt($(input).val());
-        var diskon = parseInt($(".keranjang .tbodyLoop .tr[data-tr='" + no + "'] .inputDiskon").val());
+        var diskon = parseInt(
+            $(
+                ".keranjang .tbodyLoop .tr[data-tr='" + no + "'] .inputDiskon"
+            ).val()
+        );
         var harga = parseInt(
             $(
                 ".keranjang .tbodyLoop .tr[data-tr='" + no + "'] .inputHarga"
@@ -637,40 +645,43 @@ $(document).ready(function() {
         $("#total").html(formatRupiah(total));
     }
     $(".toggle-cart,.body-click").click(function() {
-        $(".box-penjualan").toggleClass('show')
-        $(".body-click").toggleClass('show')
-    })
-    
-    $(document).on('click', '.paging-menu a',function(event)
-    {
+        $(".box-penjualan").toggleClass("show");
+        $(".body-click").toggleClass("show");
+    });
+
+    $(document).on("click", ".paging-menu a", function(event) {
         event.preventDefault();
         $(".loading").addClass("show");
 
-        $('li').removeClass('active');
-        $(this).parent('li').addClass('active');
-        var page = $(this).attr('href');
-        
-        $.ajax(
-            {
-                url: page,
-                type: "get",
-                datatype: "html",
-                success : function(data){
-                    $("#tag_container").empty().html(data);
-                    $(".tbodyLoop .inputKodeMenu").each(function(){
-                        $(".menu[data-menu='"+$(this).val()+"']").attr('data-pick','true')
-                    })
-            
-                    $(".menu").click(function() {
-                        pickMenu($(this));
-                    });
-                                
-                    $(".loading").removeClass("show");
-    
-                }
-            }).fail(function(jqXHR, ajaxOptions, thrownError){
-                  alert('No response from server');
-            });
+        $("li").removeClass("active");
+        $(this)
+            .parent("li")
+            .addClass("active");
+        var page = $(this).attr("href");
+
+        $.ajax({
+            url: page,
+            type: "get",
+            datatype: "html",
+            success: function(data) {
+                $("#tag_container")
+                    .empty()
+                    .html(data);
+                $(".tbodyLoop .inputKodeMenu").each(function() {
+                    $(".menu[data-menu='" + $(this).val() + "']").attr(
+                        "data-pick",
+                        "true"
+                    );
+                });
+
+                $(".menu").click(function() {
+                    pickMenu($(this));
+                });
+
+                $(".loading").removeClass("show");
+            }
+        }).fail(function(jqXHR, ajaxOptions, thrownError) {
+            alert("No response from server");
         });
-  
+    });
 });

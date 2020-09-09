@@ -38,6 +38,7 @@
                     <option value="Cash" {{Request::get('jenis') == 'Cash' ? 'selected' : ''}} >Cash</option>
                     <option value="BCA" {{Request::get('jenis') == 'BCA' ? 'selected' : ''}} >BCA</option>
                     <option value="BRI" {{Request::get('jenis') == 'BRI' ? 'selected' : ''}} >BRI</option>
+                    <option value="Bank Lain" {{Request::get('jenis') == 'Bank Lain' ? 'selected' : ''}} >Bank Lain</option>
                   </select>
                 </div>
                 <div class="col mt-4">

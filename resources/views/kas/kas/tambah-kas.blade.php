@@ -64,6 +64,7 @@
                     <option value="Cash" {{old('jenis') == 'Cash' ? 'selected' : ''}} >Cash</option>
                     <option value="BCA" {{old('jenis') == 'BCA' ? 'selected' : ''}} >BCA</option>
                     <option value="BRI" {{old('jenis') == 'BRI' ? 'selected' : ''}} >BRI</option>
+                    <option value="Bank Lain" {{old('jenis') == 'Bank Lain' ? 'selected' : ''}} >Bank Lain</option>
                   </select>
                   @error('jenis')
                     <span class="invalid-feedback" role="alert">

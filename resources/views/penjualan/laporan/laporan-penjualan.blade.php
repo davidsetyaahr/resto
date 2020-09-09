@@ -57,6 +57,7 @@
                         <option value="Tunai" {{Request::get('tipe_pembayaran') == 'Tunai' ? 'selected' : ''}} >Tunai</option>
                         <option value="BCA" {{Request::get('tipe_pembayaran') == 'BCA' ? 'selected' : ''}} >BCA</option>
                         <option value="BRI" {{Request::get('tipe_pembayaran') == 'BRI' ? 'selected' : ''}} >BRI</option>
+                        <option value="Bank Lain" {{Request::get('tipe_pembayaran') == 'Bank Lain' ? 'selected' : ''}} >Bank Lain</option>
                     </select>
                 </div>
                 @endif

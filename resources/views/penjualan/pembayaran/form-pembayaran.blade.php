@@ -143,8 +143,10 @@
                         <option value="Tunai" {{old('jenis_bayar') == 'Tunai' ? 'selected' : ''}}>Tunai</option>
                         <option value="Debit BCA" {{old('jenis_bayar') == 'Debit BCA' ? 'selected' : ''}}>Debit BCA</option>
                         <option value="Debit BRI" {{old('jenis_bayar') == 'Debit BRI' ? 'selected' : ''}}>Debit BRI</option>
+                        <option value="Debit Bank Lain" {{old('jenis_bayar') == 'Debit Bank Lain' ? 'selected' : ''}}>Debit Bank Lain</option>
                         <option value="Kredit BCA" {{old('jenis_bayar') == 'Kredit BCA' ? 'selected' : ''}}>Kredit BCA</option>
                         <option value="Kredit BRI" {{old('jenis_bayar') == 'Kredit BRI' ? 'selected' : ''}}>Kredit BRI</option>
+                        <option value="Kredit Bank Lain" {{old('jenis_bayar') == 'Kredit Bank Lain' ? 'selected' : ''}}>Kredit Bank Lain</option>
                       </select>
                       @error('jenis_bayar')
                         <span class="invalid-feedback" role="alert">

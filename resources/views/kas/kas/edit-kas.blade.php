@@ -65,6 +65,7 @@
                     <option value="Cash" {{old('jenis', $kas->jenis) == 'Cash' ? 'selected' : ''}} >Cash</option>
                     <option value="BCA" {{old('jenis', $kas->jenis) == 'BCA' ? 'selected' : ''}} >BCA</option>
                     <option value="BRI" {{old('jenis', $kas->jenis) == 'BRI' ? 'selected' : ''}} >BRI</option>
+                    <option value="Bank Lain" {{old('jenis', $kas->jenis) == 'Bank Lain' ? 'selected' : ''}} >Bank Lain</option>
                   </select>
                   @error('jenis')
                     <span class="invalid-feedback" role="alert">
