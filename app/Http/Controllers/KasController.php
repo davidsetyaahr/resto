@@ -40,29 +40,27 @@ class KasController extends Controller
         $tipe = $_GET['tipe'];
         $lastKode = \DB::table('kas')
         ->select('kode_kas')
+        ->where(\DB::raw('length(kode_kas)'), 13)
         ->whereMonth('tanggal', $m)
         ->whereYear('tanggal', $y)
         ->where('tipe', $tipe)
         ->orderBy('kode_kas','desc')
         ->skip(0)->take(1)
         ->get();
+        $dateCreate = date_create($_GET['tanggal']);
+        $date = date_format($dateCreate, 'my');
         if(count($lastKode)==0 && $tipe == 'Masuk'){
-            $dateCreate = date_create($_GET['tanggal']);
-            $date = date_format($dateCreate, 'my');
             $kode = "BBM-".$date."-0001";
         }
         elseif(count($lastKode)==0 && $tipe == 'Keluar'){
-            $dateCreate = date_create($_GET['tanggal']);
-            $date = date_format($dateCreate, 'my');
             $kode = "BBK-".$date."-0001";
         }
         else{
             $ex = explode('-', $lastKode[0]->kode_kas);
-            $no = (int)$ex[1] + 1;
+            $no = (int)$ex[2] + 1;
             $newNo = sprintf("%04s", $no);
-            $kode = $ex[0].'-'.$newNo;
+            $kode = $ex[0].'-'.$date.'-'.$newNo;
         }
-
         return $kode;
     }
 

@@ -167,15 +167,16 @@ $(document).ready(function() {
         var tanggal = $("#tanggal").val();
         var tipe = $("#tipe").val();
         var url = $(this).data("url");
-
-        $.ajax({
-            type: "get",
-            url: url,
-            data: { tanggal: tanggal, tipe: tipe },
-            success: function(data) {
-                $("#kode").val(data);
-            }
-        });
+        if(tipe!=='' && tanggal!==''){
+            $.ajax({
+                type: "get",
+                url: url,
+                data: { tanggal: tanggal, tipe: tipe },
+                success: function(data) {
+                    $("#kode").val(data);
+                }
+            });
+        }
     });
 
     function barang(thisParam) {
