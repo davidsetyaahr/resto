@@ -1,4 +1,5 @@
 $(document).ready(function() {
+    $(".datepicker").prop('autocomplete','off')
     $(".datepicker").datepicker({
         format: "yyyy-mm-dd"
     });
