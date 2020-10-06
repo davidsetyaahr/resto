@@ -341,7 +341,12 @@ class PenjualanController extends Controller
         ]);
         
         if(count($param['dapur'])!=0 || count($param['bar'])!=0){
-            return redirect()->route('cetak-dapur', ['kode' => $kodePenjualan.'?update=up'])->with('data',$param);
+            if (isset($_POST['print'])) {
+                return redirect()->route('cetak-dapur', ['kode' => $kodePenjualan.'?update=up'])->with('data',$param);
+            }
+            else{
+                return redirect()->route('edit-penjualan', ['kode' => $kodePenjualan]);
+            }
         }
         else{
             return redirect()->route('edit-penjualan', ['kode' => $kodePenjualan]);

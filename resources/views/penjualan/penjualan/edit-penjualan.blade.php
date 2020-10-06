@@ -209,10 +209,14 @@
   </div>
   <div class="sticky-bottom">
     <div class="row">
-      <div class="col-md-6 pl-5">
+      <div class="col-md-5 pl-5">
         <h2 class='mt-2'>Total : <span id='total' class="text-primary"> {{number_format($total,0,',','.')}}</span></h2>
       </div>
-      <div class="col-md-6 pr-0">
+      <div class="col-2 mt-2">
+        <input type="checkbox" value="true" id="print" name="print" class="custom-control-input" {{old('print') == 'true' ? 'checked' : ''}}>
+        <label class="custom-control-label" for="print">Cetak</label>
+      </div>
+      <div class="col-md-5 pr-0">
         <button class='btn py-3 btn-primary btn-block'>CHECKOUT</button>
       </div>
     </div>

@@ -10,12 +10,13 @@
                     foreach ($meja as $key => $value) {
                       $cek = \DB::table('penjualan as p')->select('p.id_meja')->join('meja as m','p.id_meja','m.id_meja')->where('p.id_meja',$value->id_meja)->where('m.nama_meja','!=','Hotel Room')->where('status_bayar','Belum Bayar')->count();
                       if($cek==0){
-                        $class = 'success';
                         $url = url('penjualan/penjualan/create?id_meja='.$value->id_meja);
+                        $class = 'success';
                       }
                       else{
-                        $class = 'danger cursor-disabled';
-                        $url = '';
+                        $getKodePenjualan = \DB::table('penjualan')->select('kode_penjualan')->where('id_meja', '=', $value->id_meja)->where('status_bayar','Belum Bayar')->get()[0];
+                        $url = url('penjualan/'.$getKodePenjualan->kode_penjualan.'/edit');
+                        $class = 'danger';
                       }
                   ?>
                     <a href="{{$url}}" class='my-1 btn btn-{{$class}}'>{{$value->nama_meja}}</a>
