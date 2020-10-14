@@ -99,6 +99,11 @@
         copy($file,"//192.168.137.105/Kasir"); # Lakukan cetak
         unlink($file);
         
+        // echo "<pre>";
+        // print_r ($Data);
+        // echo "</pre>";
+        
+        
 ?>
 <script>
        window.location.href = 'http://192.168.137.105:3301/newresto/penjualan/penjualan'
