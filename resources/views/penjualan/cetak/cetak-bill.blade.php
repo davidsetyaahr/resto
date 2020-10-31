@@ -1,5 +1,5 @@
 <?php 
-    if(isset($_GET['payment'])){
+    if(isset($_GET['payment']) || $payment!=''){
       $text = 'Payment Bill';
     }
     else{
@@ -69,7 +69,7 @@
           $Data .= "------------------------------------------------\n";
           $Data .= "Total " . str_pad(number_format($total, 0, ",", "."), 42, $spasi, STR_PAD_LEFT) . "\n";
         }
-        if(isset($_GET['payment'])){
+        if(isset($_GET['payment']) || $payment!=''){
           $ttlDiskon = $penjualan->total_diskon_tambahan;
           $charge = $penjualan->charge;
           if($ttlDiskon > 0){
