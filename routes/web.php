@@ -19,7 +19,8 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::put('user/update-password/{id}', 'UserController@updatePassword')->name('user.update-password');
 
-    Route::get('/','Pages@dashboard');
+    Route::get('home','Pages@dashboard')->name('dashboard');
+
     Route::prefix('pages/')->group(function() {
         Route::get('list-data','Pages@list');
         Route::get('form','Pages@form');
