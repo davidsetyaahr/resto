@@ -19,9 +19,19 @@
         $item = '';
         foreach ($detail as $key => $hasild) {
          $item .= $kiri;
-          $item .= number_format($hasild->qty, 0, ",", ".") . " " . $hasild->nama . " @ " . number_format($hasild->harga_jual-$hasild->diskon, 0, ",", ".")."\n";
+          if (isset($_GET['tableCheck'])) {
+            $item .= number_format($hasild->qty, 0, ",", ".") . " " . $hasild->nama."\n";
+          }
+          else{
+            $item .= number_format($hasild->qty, 0, ",", ".") . " " . $hasild->nama . " @ " . number_format($hasild->harga_jual-$hasild->diskon, 0, ",", ".")."\n";
+          }
          $item .= $kanan;
-          $item .= number_format($hasild->sub_total-$hasild->diskon, 0, ",", ".") . "\n";
+         if (isset($_GET['tableCheck'])) {
+          $item .= "\n";
+         }
+         else{
+           $item .= number_format($hasild->sub_total-$hasild->diskon, 0, ",", ".") . "\n";
+         }
           $subtotal+=$hasild->sub_total-$hasild->diskon;
         }
         $ppn = 10*$subtotal/100;
@@ -100,14 +110,14 @@
         $Data .= "\n";
         $Data .= "\n";
         $Data .= Chr(29).Chr(86).Chr(49); #Auto Cutter
-        fwrite($handle, $Data);
-        fclose($handle);
-        copy($file,"//192.168.137.105/Kasir"); # Lakukan cetak
-        unlink($file);
+        // fwrite($handle, $Data);
+        // fclose($handle);
+        // copy($file,"//192.168.137.105/Kasir"); # Lakukan cetak
+        // unlink($file);
         
-        // echo "<pre>";
-        // print_r ($Data);
-        // echo "</pre>";
+        echo "<pre>";
+        print_r ($Data);
+        echo "</pre>";
         
         
 ?>
