@@ -31,6 +31,18 @@ class PenjualanController extends Controller
         return view('penjualan.penjualan.list-penjualan', $this->param);
     }
 
+    public function menuBill()
+    {
+        $kodeMenu = $_GET['kode_menu'];
+        $kodePenjualan = $_GET['kode_penjualan'];
+
+        $data = \DB::table('detail_penjualan as dp')->join('menu as m','dp.kode_menu','m.kode_menu')->select('dp.kode_menu','m.harga_jual','m.nama',\DB::raw('sum(qty) as qty, sum(sub_total) as subtotal'), \DB::raw('dp.diskon/dp.qty as diskon_satuan'))->where('dp.kode_menu',$kodeMenu)->where('kode_penjualan',$kodePenjualan)->get()[0];
+        $data = (array)$data;
+        $diskon = (int)$data['diskon_satuan']; //$this->getDiskon($kodeMenu);
+        $data['diskon_satuan'] = $diskon;
+        $data['diskon'] = $data['qty']*$diskon;
+        return json_encode($data);
+    }
     public function getDetailMenu()
     {
         $kode = $_GET['kode'];
@@ -420,30 +432,98 @@ class PenjualanController extends Controller
 
     public function savePembayaran(Request $request, $kode)
     {
-        $penjualan = Penjualan::findOrFail($kode);
-        $validatedData = $request->validate([
-            'bayar' => 'required|numeric|gte:grand_total',
-            'jenis_bayar' => 'required'
-        ]);
-
-        $penjualan->jenis_bayar = $request->get('jenis_bayar');
-        $penjualan->no_kartu = $request->get('no_kartu');
-        $penjualan->status_bayar = 'Sudah Bayar';
-        $diskon = $request->get('diskon') > 0 ? $request->get('diskon') * $request->get('total') / 100 : 0;
-        $penjualan->total_diskon_tambahan = $request->get('diskon_tambahan') + $diskon;
-        $penjualan->bayar = $request->get('bayar');
-        $penjualan->kembalian = $request->get('kembalian');
-        $penjualan->charge = $request->get('charge');
-        if($request->get('isTravel')){
-            $penjualan->isTravel = $request->get('isTravel');
+        if($_POST['tipeBill']=='normal'){
+            $penjualan = Penjualan::findOrFail($kode);
+            $validatedData = $request->validate([
+                'bayar' => 'required|numeric|gte:grand_total',
+                'jenis_bayar' => 'required'
+            ]);
+    
+            $penjualan->jenis_bayar = $request->get('jenis_bayar');
+            $penjualan->no_kartu = $request->get('no_kartu');
+            $penjualan->status_bayar = 'Sudah Bayar';
+            $diskon = $request->get('diskon') > 0 ? $request->get('diskon') * $request->get('total') / 100 : 0;
+            $penjualan->total_diskon_tambahan = $request->get('diskon_tambahan') + $diskon;
+            $penjualan->bayar = $request->get('bayar');
+            $penjualan->kembalian = $request->get('kembalian');
+            $penjualan->charge = $request->get('charge');
+            if($request->get('isTravel')){
+                $penjualan->isTravel = $request->get('isTravel');
+            }
+            else{
+                $penjualan->isTravel = 'False';
+            }
+    
+            $penjualan->save();
+    
+            return redirect()->route('cetak-bill',$kode.'?payment=pay');    
         }
         else{
-            $penjualan->isTravel = 'False';
+            $keys = array_keys($_POST['guestQty']);
+            $arrKode = [];
+            foreach ($keys as $key => $index) {
+                $totalHarga = array_sum($_POST['guestSubtotal'][$index]); //total sbelum ppn dan diskon;
+                $diskonMenu = array_sum($_POST['guestDiskon'][$index]); //diskon menu per-guest;
+                $sumQty = array_sum($_POST['guestQty'][$index]); //diskon menu per-guest;
+                $totalAfterDiskon = $totalHarga - $diskonMenu;
+                $ppn = 10 * $totalAfterDiskon / 100;
+                $total = $totalAfterDiskon + $ppn;
+
+                $diskonPersen = $_POST['diskon'][$index] * $total / 100;
+                
+                if($index==1){
+                    $kode = $_POST['kode_penjualan'];
+                }
+                else{
+                    $kode = $this->getKode();
+                }
+                array_push($arrKode, $kode);
+                $update = array(
+                    'kode_penjualan' => $kode,
+                    'nama_customer' => 'Guest '.$index,
+                    'jumlah_item' => count($_POST['guestQty'][$index]),
+                    'jenis_bayar' => $_POST['jenis_bayar'][$index],
+                    'no_kartu' => $_POST['no_kartu'][$index],
+                    'status_bayar' => 'Sudah Bayar',
+                    'total_harga' => $totalHarga,
+                    'total_ppn' => $ppn,
+                    'jumlah_qty' => $sumQty,
+                    'total_diskon' => $diskonMenu,
+                    'total_diskon_tambahan' => $diskonPersen + $_POST['diskon_tambahan'][$index],
+                    'bayar' => $_POST['bayar'][$index],
+                    'kembalian' => $_POST['kembalian'][$index],
+                    'charge' => $_POST['charge'][$index]
+                );
+                if($index==1){
+                    Penjualan::where('kode_penjualan', $kode)->update($update);
+                    DetailPenjualan::where('kode_penjualan', $kode)->delete();
+              }
+                else{
+                    Penjualan::insert($update);
+                }
+
+                foreach ($_POST['guestMenu'][$index] as $i => $value) {
+                    $detail = array(
+                        "kode_penjualan" => $kode,
+                        "kode_menu" => $value,
+                        'status' => 'Belum',
+                        'sub_total' => $_POST['guestSubtotal'][$index][$i],
+                        'sub_total_ppn' => 10 * $_POST['guestSubtotal'][$index][$i] / 100,
+                        'keterangan' => '',
+                        'qty' => $_POST['guestQty'][$index][$i],
+                        'diskon' => $_POST['guestDiskon'][$index][$i],
+                        'diskon_tambahan' => 0
+                    );
+
+                    DetailPenjualan::insert($detail);
+                }
+            }
+        
+            foreach ($arrKode as $key => $value) {
+                return redirect()->route('cetak-bill',$value.'?payment=pay');    
+            }
+
         }
-
-        $penjualan->save();
-
-        return redirect()->route('cetak-bill',$kode.'?payment=pay');    
     }
     public function filter()
     {

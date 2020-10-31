@@ -179,7 +179,7 @@
                                   <button class='btnqty' data-tipe='plus'>+</button>
                               </div>
                           </td>
-                          <td width='15%' class='tdDiskon'><input type='hidden' class='inputDiskon' name='diskon[]' value="{{$value['diskon']}}"> {{number_format($value['diskon'],0,',','.')}}</td>
+                          <td width='15%' class='tdDiskon'><input type='hidden' class='inputDiskon' name='diskon[]' value="{{$value['diskon']}}" data-diskon="{{$value['diskon']}}"><span> {{number_format($value['diskon'],0,',','.')}}</span></td>
                           <td width='15%' class='tdSubtotal'><input type='hidden' name='subtotal[]' value="{{$value['subtotal']}}" class='inputSubtotal'> <span> {{number_format($value['subtotal'],0,',','.')}}</span></td>
                           <td width='10%'><a href='' title="Hapus" class='deleteCart'><span class='fa fa-trash fa-lg'></span></a></td>
                         </tr>

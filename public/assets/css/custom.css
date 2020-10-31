@@ -353,3 +353,59 @@ select.form-line, input.form-line,textarea.form-line, .form-line .select2-contai
 .cursor-disabled{
     cursor: no-drop;
 }
+.user-bill{
+    border : 2px solid #dddddd;
+    cursor: pointer;
+    position: relative;
+}
+.user-bill.active{
+    border-color  : #f2404c;
+}
+.user-bill h4{
+    cursor: auto;
+}
+.tabs-bill-option li{
+    padding : 0px;
+    margin : 0px;
+}
+.tabs-bill-option li .active{
+    background: #f1404c !important;
+    color : white !important;
+}
+.select2-container--default .select2-selection--multiple .select2-selection__choice{
+    background: #ffc107;
+    color : #525f7f;
+}
+.removeUserBill{
+    position: absolute;
+    top : 0px;
+    right : 0px;
+    font-weight: bold;
+    font-size : 18px;
+    border-left : 2px solid #f1404c;
+    border-bottom : 2px solid #f1404c;
+    padding : 3px 6px;
+}
+#user-bill-menu{
+    min-height: 50px;
+    height: auto;
+}
+#user-bill-menu .custom-checkbox{
+    display: inline-block;
+    margin-right : 20px;
+    margin-bottom: 10px;
+}
+#user-bill-menu .badge{
+    top :-3px;
+}
+#user-bill-menu .custom-checkbox.disabled label{
+    text-decoration: line-through;
+    cursor : no-drop;
+}
+#modalPembayaran{
+    background: rgb(23, 43, 77,0.9)
+}
+#modalPembayaran .modal-header{
+    background: #ffc107;
+    color : #525f7f;
+}

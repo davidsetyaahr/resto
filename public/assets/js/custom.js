@@ -1,5 +1,7 @@
 $(document).ready(function() {
-    $(".datepicker").prop('autocomplete','off')
+    var setValueOption = false;
+
+    $(".datepicker").prop("autocomplete", "off");
     $(".datepicker").datepicker({
         format: "yyyy-mm-dd"
     });
@@ -168,7 +170,7 @@ $(document).ready(function() {
         var tanggal = $("#tanggal").val();
         var tipe = $("#tipe").val();
         var url = $(this).data("url");
-        if(tipe!=='' && tanggal!==''){
+        if (tipe !== "" && tanggal !== "") {
             $.ajax({
                 type: "get",
                 url: url,
@@ -201,10 +203,79 @@ $(document).ready(function() {
 
     $("#no_kartu").prop("disabled", true);
     $("#charge").prop("disabled", true);
+    $("#no_kartu").keyup(function(){
+        if($(this).closest('.split-bill').length==1){
+            var thisVal = $(this).val()
+           var activeKey = $(".user-bill.active").attr('data-key')
+           $(".guest-pembayaran[data-key='"+activeKey+"'] .pembNoKartu").val(thisVal)
+        }
+    })
 
-    temp_grand_total = parseInt($("#grand_total").val());
+    $("#jenis_bayar").change(function() {
+        var thisVal = $(this).val();
+        getCharge(thisVal);
+    });
+
+    $("#jenis_order").change(function() {
+        var thisVal = $(this).val();
+        if (thisVal == "Room Order") {
+            $("#nomor_kamar").prop("disabled", false);
+            $("#nomor_kamar").attr("required", true);
+        } else {
+            $("#nomor_kamar").prop("disabled", true);
+            $("#nomor_kamar").attr("required", false);
+        }
+    });
+    $("#jenis_order").change(function() {
+        var thisVal = $(this).val();
+        if (thisVal == "Room Order") {
+            $("#nomor_kamar").prop("disabled", false);
+            $("#nomor_kamar").attr("required", true);
+        } else {
+            $("#nomor_kamar").prop("disabled", true);
+        }
+    });
+    var diskonPersen = 0
+    $(".diskon_tambahan").keyup(function() {
+        var diskon_tambahan = parseInt($(this).val());
+        var tipe = $(this).data("tipe");
+        var total = parseInt($("#total").val());
+        var diskon = 0;
+        if (tipe == "persen") {
+            var otherDisc = parseInt(
+                $(".diskon_tambahan[data-tipe='rp']").val()
+            );
+            diskon = (diskon_tambahan * total) / 100 + otherDisc;
+            diskonPersen = diskon
+        } else {
+            var getOtherDisc = parseInt(
+                $(".diskon_tambahan[data-tipe='persen']").val()
+            );
+            var otherDisc = 0;
+            if (getOtherDisc > 0) {
+                otherDisc = (getOtherDisc * total) / 100;
+            }
+            diskon = diskon_tambahan + otherDisc;
+        }
+        var grand_total = total - diskon;
+        $("#grand_total").val(grand_total);
+        $("#idrGrandTotal").html(formatRupiah(grand_total));
+
+        if($(this).closest('.split-bill').length==1){
+           var activeKey = $(".user-bill.active").attr('data-key')
+           var toInput
+           if(tipe=='persen'){
+               toInput = '.pembDiskon'
+           }
+           else{
+               toInput = '.pembDiskonTambahan'
+           }
+           $(".guest-pembayaran[data-key='"+activeKey+"'] "+toInput).val(diskon_tambahan)
+           $(".guest-pembayaran[data-key='"+activeKey+"'] .pembTotal").val(grand_total)
+        }
+    }); 
     function getCharge(thisVal) {
-        var grand_total = temp_grand_total;
+        var grand_total = parseInt($("#total").val()) - parseInt(diskonPersen) - parseInt($(".diskon_tambahan[data-tipe='rp']").val());
         var charge = 0;
         if (thisVal != "Tunai") {
             $("#no_kartu").prop("disabled", false);
@@ -236,63 +307,27 @@ $(document).ready(function() {
         $("#idrGrandTotal").html(
             formatRupiah(grand_total + Math.round(charge))
         );
+        if($(".split-bill").length==1){
+           var activeKey = $(".user-bill.active").attr('data-key')
+           $(".guest-pembayaran[data-key='"+activeKey+"'] .pembJenisBayar").val(thisVal)
+           $(".guest-pembayaran[data-key='"+activeKey+"'] .pembCharge").val(Math.round(charge))
+           $(".guest-pembayaran[data-key='"+activeKey+"'] .pembTotal").val(grand_total + Math.round(charge))
+        }
+
     }
-
-    $("#jenis_bayar").change(function() {
-        var thisVal = $(this).val();
-        getCharge(thisVal);
-    });
-
-    $("#jenis_order").change(function() {
-        var thisVal = $(this).val();
-        if (thisVal == "Room Order") {
-            $("#nomor_kamar").prop("disabled", false);
-            $("#nomor_kamar").attr("required", true);
-        } else {
-            $("#nomor_kamar").prop("disabled", true);
-            $("#nomor_kamar").attr("required", false);
-        }
-    });
-    $("#jenis_order").change(function() {
-        var thisVal = $(this).val();
-        if (thisVal == "Room Order") {
-            $("#nomor_kamar").prop("disabled", false);
-            $("#nomor_kamar").attr("required", true);
-        } else {
-            $("#nomor_kamar").prop("disabled", true);
-        }
-    });
-
-    $(".diskon_tambahan").keyup(function() {
-        var diskon_tambahan = parseInt($(this).val());
-        var tipe = $(this).data("tipe");
-        var total = parseInt($("#total").val());
-        var diskon = 0;
-        if (tipe == "persen") {
-            var otherDisc = parseInt(
-                $(".diskon_tambahan[data-tipe='rp']").val()
-            );
-            diskon = (diskon_tambahan * total) / 100 + otherDisc;
-        } else {
-            var getOtherDisc = parseInt(
-                $(".diskon_tambahan[data-tipe='persen']").val()
-            );
-            var otherDisc = 0;
-            if (getOtherDisc > 0) {
-                otherDisc = (getOtherDisc * total) / 100;
-            }
-            diskon = diskon_tambahan + otherDisc;
-        }
-        var grand_total = total - diskon;
-        $("#grand_total").val(grand_total);
-        $("#idrGrandTotal").html(formatRupiah(grand_total));
-    });
 
     $("#bayar").keyup(function() {
         var terbayar = parseInt($(this).val());
         var grand_total = parseInt($("#grand_total").val());
         var kembalian = terbayar - grand_total;
+
         $("#kembalian").val(kembalian);
+        if($(this).closest('.split-bill').length==1){
+           var activeKey = $(".user-bill.active").attr('data-key')
+           $(".guest-pembayaran[data-key='"+activeKey+"'] .pembBayar").val(terbayar)
+           $(".guest-pembayaran[data-key='"+activeKey+"'] .pembKembalian").val(kembalian)
+        }
+
     });
 
     function pjGetDetailMenu(thisParam) {
@@ -484,7 +519,7 @@ $(document).ready(function() {
                                             <button class='btnqty' data-tipe='plus'>+</button>
                                         </div>
                                     </td>
-                                    <td width='15%' class='tdDiskon'><input type='hidden' class='inputDiskon' name='diskon[]' value='${data}'> ${diskon}</td>
+                                    <td width='15%' class='tdDiskon'><input type='hidden' class='inputDiskon' name='diskon[]' data-diskon='${data}' value='${data}'> <span>${diskon}</span></td>
                                     <td width='15%' class='tdSubtotal'><input type='hidden' name='subtotal[]' value='${subtotal}' class='inputSubtotal'> <span> ${formatRupiah(
                         subtotal
                     )}</span></td>
@@ -553,6 +588,24 @@ $(document).ready(function() {
             $(input).val(newQty);
         }
         if (update) {
+            var diskonPerQty = parseInt(
+                $(
+                    ".keranjang .tbodyLoop .tr[data-tr='" +
+                        no +
+                        "'] .inputDiskon"
+                ).data("diskon")
+            );
+
+            var newDiskon = diskonPerQty * newQty;
+            $(
+                ".keranjang .tbodyLoop .tr[data-tr='" + no + "'] .tdDiskon span"
+            ).html(formatRupiah(newDiskon));
+            $(
+                ".keranjang .tbodyLoop .tr[data-tr='" +
+                    no +
+                    "'] .tdDiskon .inputDiskon"
+            ).val(newDiskon);
+
             var subtotal = harga * newQty;
             $(
                 ".keranjang .tbodyLoop .tr[data-tr='" +
@@ -686,4 +739,361 @@ $(document).ready(function() {
             alert("No response from server");
         });
     });
+    $("#add-new-user-bill").click(function(e) {
+        e.preventDefault();
+        var countNow = parseInt($(".list-user-bill").attr("data-count"));
+        if ($(".guestHidden[data-key='" + countNow + "'] .guestMenu").length > 0) {
+            var newCount = countNow + 1;
+            $(".list-user-bill").attr("data-count", newCount);
+            var img = $(".user-bill[data-key='1'] img").attr("src");
+            $(".user-bill").removeClass("active");
+            $("#table-menu-bill tbody").attr("data-key", newCount);
+            $(".new-user-bill").append(`<div class="mt-2 user-bill active py-4" data-key='${newCount}'>
+                                <a href='' class='removeUserBill'>X</a>
+                                <img src="${img}" width="60%">
+                                <h4  contenteditable='true' class='mt-3'>Guest ${newCount}</h4>
+                              </div>`);
+            $(".removeUserBill").click(function(e) {
+                e.preventDefault();
+                var guestKey = $(this).closest(".user-bill").attr("data-key");
+                renewTableBill();
+                $(".guestHidden[data-key='" + guestKey + "']").remove();
+                tfootUserBill();
+                var newCountKey = parseInt($(".list-user-bill").attr("data-count")) - 1;
+                $(".list-user-bill").attr("data-count", newCountKey);
+                $("#table-menu-bill tbody").attr("data-key", newCountKey);
+                $(this).closest(".user-bill").remove();
+                $(".data-pembayaran .guest-pembayaran[data-key='"+guestKey+"']").remove()
+            });
+
+            checkOptionMenu();
+
+            $(".user-bill[data-key='" + newCount + "']").click(function() {
+                clickUserBill($(this));
+            });
+
+            renewTableBill();
+
+            $(".data-pembayaran").append(`
+                <div class='guest-pembayaran' data-key='${newCount}'>
+                    <input type='hidden' class='pembDiskon' name='diskon[${newCount}]' value='0'>
+                    <input type='hidden' class='pembDiskonTambahan' name='diskon_tambahan[${newCount}]' value='0'>
+                    <input type='hidden' class='pembJenisBayar' name='jenis_bayar[${newCount}]' value='Tunai'>
+                    <input type='hidden' class='pembBayar' name='bayar[${newCount}]' value='0'>
+                    <input type='hidden' class='pembKembalian' name='kembalian[${newCount}]' value='0'>
+                    <input type='hidden' class='pembNoKartu' name='no_kartu[${newCount}]' value=''>
+                    <input type='hidden' class='pembCharge' name='charge[${newCount}]' value='0'>
+                    <input type='hidden' class='pembTotal' name='total[${newCount}]' value='0'>
+                </div>
+            `)
+        } else {
+            alert("Pilih menu pada guest");
+        }
+    });
+    function checkOptionMenu() {
+        var activeKey = $("#table-menu-bill tbody").attr("data-key");
+        $("#user-bill-menu .menuCheck").prop('checked',false)
+        $("#user-bill-menu .menuCheck").prop('disabled',false)
+        $("#user-bill-menu .custom-checkbox").removeClass('disabled')
+        $("#user-bill-menu .menuCheck").each(function() {
+            var kodeMenu = $(this).val();
+            var qty = parseInt($(this).data("qty"));
+
+            var sumQty = 0;
+            $(".guestHidden .guestQty[data-menu='" + kodeMenu + "']").each(
+                function() {
+                    sumQty += parseInt($(this).val());
+                }
+            );
+
+            $(".custom-control-label .badge[for='"+kodeMenu+"']").html(qty-sumQty)
+
+            if($(".guestHidden[data-key='"+activeKey+"'] .guestMenu[data-menu='"+kodeMenu+"']").length==1){
+                $(this).prop('checked',true)
+            }
+            else{
+                if (qty == sumQty) {
+                    $(this).closest('.custom-checkbox').addClass('disabled')
+                    $(this).prop("disabled", true);
+                }
+            }
+        });
+    }
+    function clickUserBill(thisParam) {
+        $(".user-bill").removeClass("active");
+        $(thisParam).addClass("active");
+        var key = $(thisParam).attr("data-key");
+        $("#table-menu-bill tbody").attr("data-key", key);
+        checkOptionMenu();
+        renewTableBill();
+        if ($(".data-bill .guestHidden[data-key='" + key + "'] .guestMenu").length != 0) {
+            var selector = ".data-bill .guestHidden[data-key='" + key + "']";
+            $(selector + " .guestMenu").each(function(i) {
+                var nama = $(selector + " .guestNama")[i].value;
+                var qty = $(selector + " .guestQty")[i].value;
+                var harga = $(selector + " .guestHarga")[i].value;
+                var diskon = $(selector + " .guestDiskon")[i].value;
+                var subtotal = $(selector + " .guestSubtotal")[i].value;
+                var diskon_satuan = parseInt(diskon) / parseInt(qty)
+                $("#table-menu-bill tbody").append(`
+                <tr data-menu='${$(this).val()}'>
+                    <td>${$(this).val()}</td>
+                    <td>${nama}</td>
+                    <td>
+                        <div class="change-qty">
+                            <button class='btnqty' data-tipe='min'>-</button>
+                            <input type='text' name='qty[]' value='${qty}' class='form-control text-center inputQty' readonly>
+                            <button class='btnqty' data-tipe='plus'>+</button>
+                        </div>
+                    </td>
+                    <td class='harga' data-harga='${harga}'>${formatRupiah(harga)}</td>
+                    <td class='diskon' data-diskon='${diskon_satuan}'>${formatRupiah(diskon)}</td>
+                    <td class='subtotal'>${formatRupiah(subtotal)}</td>
+                </tr>
+                `);
+            });
+            $("tbody[data-key='" + key + "'] tr .change-qty .btnqty").click(function(e){
+                e.preventDefault()
+                var sumQty = 0;
+                var menu = $(this).closest("tr").data("menu");
+                var count = parseInt($("tr[data-menu='" + menu + "'] .change-qty input").val());
+                $(".guestHidden .guestQty[data-menu='" + menu + "']").each(
+                    function() {
+                        sumQty += parseInt($(this).val());
+                    }
+                );
+                var maxQty = count + (parseInt($("#user-bill-menu .menuCheck[value='" + menu + "']").data("qty")) - sumQty);
+
+                billMenuQty($(this),maxQty)
+            })
+
+            tfootUserBill();
+           $(".diskon_tambahan[data-tipe='persen']").val($(".guest-pembayaran[data-key='"+key+"'] .pembDiskon").val())
+           $(".diskon_tambahan[data-tipe='rp']").val($(".guest-pembayaran[data-key='"+key+"'] .pembDiskonTambahan").val())
+           $("#jenis_bayar").val($(".guest-pembayaran[data-key='"+key+"'] .pembJenisBayar").val())
+           $("#bayar").val($(".guest-pembayaran[data-key='"+key+"'] .pembBayar").val())
+           $("#kembalian").val($(".guest-pembayaran[data-key='"+key+"'] .pembKembalian").val())
+           $("#no_kartu").val($(".guest-pembayaran[data-key='"+key+"'] .pembNoKartu").val())
+           $("#charge").val($(".guest-pembayaran[data-key='"+key+"'] .pembCharge ").val())
+
+           if($(".guest-pembayaran[data-key='"+key+"'] .pembJenisBayar").val()!='Tunai'){
+               $("#no_kartu").prop('disabled',false)
+               $("#charge").prop('readonly',false)
+           }
+        }
+    }
+    function renewTableBill() {
+        $("#table-menu-bill tbody tr").remove();
+        $("#tfootDiskon").html("");
+        $("#tfootSubtotal").html("");
+        $("#tfootDiskonSubtotal").html("");
+        $("#tfootPpn").html("");
+        $("#tfootTotal").html("");
+        $("#grand_total").val(0)
+        $("#idrGrandTotal").html(0)
+        
+        $(".diskon_tambahan").val(0)
+        $(".jenis_bayar").val('Tunai')
+        $("#bayar, #kembalian, #no_kartu, #charge").val('')
+        $("#kembalian").prop('readonly',true)
+        $("#no_kartu, #charge").prop('disabled',true)
+    }   
+    $(".user-bill").click(function() {
+        clickUserBill($(this));
+    });
+    function tfootUserBill() {
+        var activeKey = $("#table-menu-bill tbody").attr("data-key");
+        if ($(".data-bill .guestHidden[data-key='" + activeKey + "']").length ==1) {
+            var selector = ".data-bill .guestHidden[data-key='" + activeKey + "']";
+            var sumDiskon = 0;
+            var sumSubtotal = 0;
+            $(selector + " .guestDiskon").each(function() {
+                sumDiskon += parseInt($(this).val());
+            });
+            $(selector + " .guestSubtotal").each(function() {
+                sumSubtotal += parseInt($(this).val());
+            });
+            var sumDiskonSubtotal = sumSubtotal - sumDiskon;
+            var ppn = (10 * sumDiskonSubtotal) / 100;
+            var total = sumDiskonSubtotal + ppn;
+            $("#table-menu-bill tfoot #tfootDiskon").html(
+                formatRupiah(sumDiskon)
+            );
+            $("#table-menu-bill tfoot #tfootSubtotal").html(
+                formatRupiah(sumSubtotal)
+            );
+            $("#table-menu-bill tfoot #tfootDiskonSubtotal").html(
+                formatRupiah(sumDiskonSubtotal)
+            );
+            $("#table-menu-bill tfoot #tfootPpn").html(formatRupiah(ppn));
+            $("#table-menu-bill tfoot #tfootTotal").html(formatRupiah(total));
+            $("#total").val(total)
+
+            var diskon_persen = parseInt($(".guest-pembayaran[data-key='"+activeKey+"'] .pembDiskon").val()) * parseInt($("#total").val()) / 100;
+            var pembDiskon = diskon_persen +  parseInt($(".guest-pembayaran[data-key='"+activeKey+"'] .pembDiskonTambahan").val())
+            var grand_total = parseInt($("#total").val()) - pembDiskon + parseInt($(".guest-pembayaran[data-key='"+activeKey+"'] .pembCharge").val())
+
+            $(".guest-pembayaran[data-key='"+activeKey+"'] .pembTotal").val(grand_total)
+            $("#grand_total").val(grand_total)
+            $("#idrGrandTotal").html(formatRupiah(grand_total))
+        }
+    }
+    $("#user-bill-menu .menuCheck").change(function() {
+        var thisMenu = $(this).val();
+        var kodePenjualan = $("#user-bill-menu").data("kodepenjualan");
+        var url = $("#user-bill-menu").data("url");
+        var guestKey = $(".user-bill.active").attr("data-key");
+        if ($(this).is(":checked")) {
+            $.ajax({
+                type: "get",
+                data: { kode_menu: thisMenu, kode_penjualan: kodePenjualan },
+                url: url,
+                beforeSend: function() {
+                    $(".loading").addClass("show");
+                },
+                success: function(data) {
+                    $(".loading").removeClass("show");
+                    data = $.parseJSON(data);
+                    var qtyVal = 0;
+                    var maxQty = data.qty;
+                    if ($(".guestHidden .guestMenu[data-menu='" + data.kode_menu + "']").length == 0) {
+                        qtyVal = data.qty;
+                    } else {
+                        var sumQty = 0;
+                        $(".guestHidden .guestQty[data-menu='" + data.kode_menu + "']").each(function() {
+                            sumQty += parseInt($(this).val());
+                        });
+                        maxQty = data.qty - sumQty;
+
+                        if ($(".guestHidden[data-key='" + guestKey + "'] .guestMenu[data-menu='" + data.kode_menu + "']").length == 0) {
+                            qtyVal = maxQty;
+                        } else {
+                            qtyVal = $(".guestHidden[data-key='" + guestKey + "'] .guestQty[data-menu='" + data.kode_menu + "']").val();
+                        }
+                    }
+                    var diskon = parseInt(data.diskon_satuan) * qtyVal
+                    var subtotal = parseInt(data.harga_jual) * qtyVal
+                    var append = `<input type='hidden' data-menu='${data.kode_menu}' class='guestMenu' name='guestMenu[${guestKey}][]' value='${data.kode_menu}'>
+                    <input type='hidden' data-menu='${data.kode_menu}' class='guestQty' name='guestQty[${guestKey}][]' value='${qtyVal}'>
+                    <input type='hidden' data-menu='${data.kode_menu}' class='guestNama' name='guestNama[${guestKey}][]' value='${data.nama}'>
+                    <input type='hidden' data-menu='${data.kode_menu}' class='guestHarga' name='guestHarga[${guestKey}][]' value='${data.harga_jual}'>
+                    <input type='hidden' data-menu='${data.kode_menu}' class='guestDiskon' name='guestDiskon[${guestKey}][]' value='${diskon}'>
+                    <input type='hidden' data-menu='${data.kode_menu}' class='guestSubtotal' name='guestSubtotal[${guestKey}][]' value='${subtotal}'>
+                    `;
+
+                    if($(".data-bill .guestHidden[data-key='" + guestKey + "']").length == 1) {
+                        $(".data-bill .guestHidden[data-key='" + guestKey + "']").append(append);
+                    } else {
+                        $(".data-bill").append(
+                            `
+                        <div class='guestHidden' data-key='${guestKey}'>
+                            ${append}                            
+                        </div>
+                        `
+                        );
+                    }
+                    $("#table-menu-bill tbody").append(`<tr data-menu='${
+                        data.kode_menu
+                    }'>
+                    <td>${data.kode_menu}</td>
+                    <td>${data.nama}</td>
+                    <td>
+                        <div class="change-qty">
+                            <button class='btnqty' data-tipe='min'>-</button>
+                            <input type='text' name='qty[]' value='${qtyVal}' class='form-control text-center inputQty' readonly>
+                            <button class='btnqty' data-tipe='plus'>+</button>
+                        </div>
+                    </td>
+                    <td class='harga' data-harga='${data.harga_jual}'>${formatRupiah(data.harga_jual)}</td>
+                    <td class='diskon' data-diskon='${data.diskon_satuan}'>${formatRupiah(diskon)}</td>
+                    <td class='subtotal'>${formatRupiah(subtotal)}</td>
+                </tr>`);
+                checkOptionMenu()
+                tfootUserBill();
+
+                $("tr[data-menu='" + data.kode_menu + "'] .change-qty .btnqty").click(function(e) {
+                    e.preventDefault();
+                    billMenuQty($(this),maxQty)
+                });
+
+                }
+            });
+        } else {
+            $("#table-menu-bill tbody tr[data-menu='" + thisMenu + "']").remove();
+            $(".guestHidden[data-key='" + guestKey + "'] .guestMenu[data-menu='" + thisMenu + "']").remove();
+            $(".guestHidden[data-key='" + guestKey + "'] .guestQty[data-menu='" + thisMenu + "']").remove();
+            $(".guestHidden[data-key='" + guestKey + "'] .guestNama[data-menu='" + thisMenu + "']").remove();
+            $(".guestHidden[data-key='" + guestKey + "'] .guestHarga[data-menu='" + thisMenu + "']").remove();
+            $(".guestHidden[data-key='" + guestKey + "'] .guestDiskon[data-menu='" + thisMenu + "']").remove();
+            $(".guestHidden[data-key='" + guestKey + "'] .guestSubtotal[data-menu='" + thisMenu + "']").remove();
+            checkOptionMenu()
+            tfootUserBill();
+        }
+    });
+
+    function billMenuQty(thisParam,maxQty){
+        var guestKey = $(".user-bill.active").attr("data-key");
+        var tipe = thisParam.data("tipe");
+        var menu = thisParam.closest("tr").data("menu");
+        var selector = "tr[data-menu='" + menu + "']";
+        var count = parseInt($(selector+" .change-qty input").val());
+        if (tipe == "min") {
+            if (count != 1) {
+                count--;
+            }
+        } else {
+            if (count != maxQty) {
+                count++;
+            }
+        }
+        var newDiskon = parseInt($(selector+" .diskon").attr('data-diskon')) * count;
+        var newSubtotal = parseInt($(selector+" .harga").attr('data-harga')) * count;
+        $("tr[data-menu='" + menu + "'] .change-qty input").val(count);
+        $(".guestHidden[data-key='" + guestKey + "'] .guestQty[data-menu='" + menu +"']").val(count);
+        $(".guestHidden[data-key='" + guestKey + "'] .guestDiskon[data-menu='" + menu +"']").val(newDiskon);
+        $(".guestHidden[data-key='" + guestKey + "'] .guestSubtotal[data-menu='" + menu + "'").val(newSubtotal);
+
+        checkOptionMenu()
+        tfootUserBill();
+        
+        $("tr[data-menu='" + menu + "'] .diskon").html(
+            formatRupiah(newDiskon)
+        );
+        $("tr[data-menu='" + menu + "'] .subtotal").html(
+            formatRupiah(newSubtotal)
+        );
+
+    }
+
+
+	$("#split-bill-form").submit(function(e) {
+		var id = $(this).attr("id");
+		e.preventDefault();
+        if(confirm('Apakah anda yakin?')){
+            var error = 0;
+            var errorBayar = 0;
+            $(".custom-control-label .badge").each(function(){
+                if($(this).html()!=0){
+                    error++
+                }
+            })
+            $(".guest-pembayaran .pembBayar").each(function(){
+                if($(this).val()==0){
+                    errorBayar++
+                }
+            })
+
+            if(error!=0){
+                alert('Masih ada menu yang belum dipilih')
+            }
+            else if(errorBayar!=0){
+                alert('Masih ada user bill yang belum dibayar')
+            }
+            else{
+                $("#" + id).unbind("submit").submit();
+            }
+        }
+        $(".loading").removeClass("show");
+	});
+
 });

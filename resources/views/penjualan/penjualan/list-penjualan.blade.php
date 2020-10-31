@@ -103,7 +103,8 @@
                               if(\Auth::user()->level!='Waiters'){
                             ?>
                               <a class="dropdown-item" href="{{ route('cetak-bill', $value->kode_penjualan) }}">Cetak Bill</a>
-                              <a class="dropdown-item" href="{{ route('penjualan.bayar', $value->kode_penjualan) }}">Pembayaran</a>
+                              <a class="dropdown-item" href="{{ route('cetak-bill', $value->kode_penjualan) }}?tableCheck=check">Table Check</a>
+                              <a class="dropdown-item" href="{{ route('penjualan.bayar', $value->kode_penjualan) }}?tab=normal">Pembayaran</a>
                               <?php } ?>
                               <a class="dropdown-item" href="{{ url('penjualan/'.$value->kode_penjualan.'/edit') }}">Edit</a>
                               <form action="{{ route('penjualan.destroy', $value->kode_penjualan) }}" method="post">
