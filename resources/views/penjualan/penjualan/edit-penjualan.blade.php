@@ -179,7 +179,7 @@
                                   <button class='btnqty' data-tipe='plus'>+</button>
                               </div>
                           </td>
-                          <td width='15%' class='tdDiskon'><input type='hidden' class='inputDiskon' name='diskon[]' value="{{$value['diskon']}}"> {{number_format($value['diskon'],0,',','.')}}</td>
+                          <td width='15%' class='tdDiskon'><input type='hidden' class='inputDiskon' name='diskon[]' value="{{$value['diskon']}}" data-diskon="{{$value['diskon']}}"><span> {{number_format($value['diskon'],0,',','.')}}</span></td>
                           <td width='15%' class='tdSubtotal'><input type='hidden' name='subtotal[]' value="{{$value['subtotal']}}" class='inputSubtotal'> <span> {{number_format($value['subtotal'],0,',','.')}}</span></td>
                           <td width='10%'><a href='' title="Hapus" class='deleteCart'><span class='fa fa-trash fa-lg'></span></a></td>
                         </tr>
@@ -209,10 +209,14 @@
   </div>
   <div class="sticky-bottom">
     <div class="row">
-      <div class="col-md-6 pl-5">
+      <div class="col-md-5 pl-5">
         <h2 class='mt-2'>Total : <span id='total' class="text-primary"> {{number_format($total,0,',','.')}}</span></h2>
       </div>
-      <div class="col-md-6 pr-0">
+      <div class="col-2 mt-2">
+        <input type="checkbox" value="true" id="print" name="print" class="custom-control-input" {{old('print') == 'true' ? 'checked' : ''}}>
+        <label class="custom-control-label" for="print">Cetak</label>
+      </div>
+      <div class="col-md-5 pr-0">
         <button class='btn py-3 btn-primary btn-block'>CHECKOUT</button>
       </div>
     </div>

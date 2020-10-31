@@ -3,7 +3,12 @@
       $text = 'Payment Bill';
     }
     else{
-      $text = 'Guest Bill';
+      if(isset($_GET['tableCheck'])){
+        $text = 'Table Check';
+      }
+      else{
+        $text = 'Guest Bill';
+      }
     }
     //justification
     $tengah = Chr(27) . Chr(97) . Chr(1);
@@ -54,15 +59,16 @@
         $Data .= "------------------------------------------------\n";
         $Data .= $item;
         $Data .= $kiri;
-        $Data .= "------------------------------------------------\n";
-        $Data .= "Sub Total " . str_pad(number_format($subtotal, 0, ",", "."), 38, $spasi, STR_PAD_LEFT) . "\n";
-        $Data .= "PPN" . str_pad(number_format($ppn, 0, ",", "."), 45, $spasi, STR_PAD_LEFT) . "\n";
-        if ($penjualan->jenis_order == 'Room Order') {
-          $Data .= "Room Charge" . str_pad(number_format($room_charge, 0, ",", "."), 37, $spasi, STR_PAD_LEFT) . "\n";
+        if(empty($_GET['tableCheck'])){
+          $Data .= "------------------------------------------------\n";
+          $Data .= "Sub Total " . str_pad(number_format($subtotal, 0, ",", "."), 38, $spasi, STR_PAD_LEFT) . "\n";
+          $Data .= "PPN" . str_pad(number_format($ppn, 0, ",", "."), 45, $spasi, STR_PAD_LEFT) . "\n";
+          if ($penjualan->jenis_order == 'Room Order') {
+            $Data .= "Room Charge" . str_pad(number_format($room_charge, 0, ",", "."), 37, $spasi, STR_PAD_LEFT) . "\n";
+          }
+          $Data .= "------------------------------------------------\n";
+          $Data .= "Total " . str_pad(number_format($total, 0, ",", "."), 42, $spasi, STR_PAD_LEFT) . "\n";
         }
-        $Data .= "------------------------------------------------\n";
-        $Data .= "Total " . str_pad(number_format($total, 0, ",", "."), 42, $spasi, STR_PAD_LEFT) . "\n";
-
         if(isset($_GET['payment'])){
           $ttlDiskon = $penjualan->total_diskon_tambahan;
           $charge = $penjualan->charge;
@@ -98,6 +104,11 @@
         fclose($handle);
         copy($file,"//192.168.137.105/Kasir"); # Lakukan cetak
         unlink($file);
+        
+        // echo "<pre>";
+        // print_r ($Data);
+        // echo "</pre>";
+        
         
 ?>
 <script>
