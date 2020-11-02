@@ -62,7 +62,7 @@
           <!-- Nav items -->
           <ul class="navbar-nav">
             <li class="nav-item">
-              <a class="nav-link {{Request::segment(1) == '' ? 'active' : ''}}" href="{{url('/')}}">
+              <a class="nav-link {{Request::segment(1) == 'home' ? 'active' : ''}}" href="{{url('/home')}}">
                 <i class="ni ni-tv-2 text-primary"></i>
                 <span class="nav-link-text">Dashboard</span>
               </a>
@@ -531,7 +531,7 @@
   <!-- Argon JS -->
   <script src="{{ asset('assets/js/argon.js?v=1.2.0') }}"></script>
   <script src="{{ asset('assets/js/custom.js') }}"></script>
-  @if (Request::segment(1) == '')
+  @if (Request::segment(1) == 'home')
       
   {!! $penjualanChart->script() !!}
   @endif

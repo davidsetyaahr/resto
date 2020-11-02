@@ -10,6 +10,14 @@
         $text = 'Guest Bill';
       }
     }
+
+
+    $arrKode = explode(",",$kode);
+    foreach ($arrKode as $key => $value) {
+        $penjualan = \DB::table('penjualan as p')->select('p.room_charge','p.nama_customer','p.kode_penjualan', 'p.waktu','m.nama_meja','p.total_diskon','p.total_diskon_tambahan','p.bayar','p.kembalian', 'p.jenis_order', 'p.nomor_kamar', 'p.jenis_bayar', 'p.charge')->join('meja as m','p.id_meja','m.id_meja')->where('p.kode_penjualan',$value)->get()[0];
+        $detail = \DB::table('detail_penjualan as dp')->select('dp.diskon','dp.qty','dp.sub_total','m.nama','m.harga_jual','dp.kode_menu')->join('menu as m','dp.kode_menu','m.kode_menu')->where('dp.kode_penjualan', $value)->get();
+
+
     //justification
     $tengah = Chr(27) . Chr(97) . Chr(1);
     $kiri = Chr(27) . Chr(97) . Chr(0);
@@ -110,17 +118,13 @@
         $Data .= "\n";
         $Data .= "\n";
         $Data .= Chr(29).Chr(86).Chr(49); #Auto Cutter
-        // fwrite($handle, $Data);
-        // fclose($handle);
-        // copy($file,"//192.168.137.105/Kasir"); # Lakukan cetak
-        // unlink($file);
-        
-        echo "<pre>";
-        print_r ($Data);
-        echo "</pre>";
-        
+        fwrite($handle, $Data);
+        fclose($handle);
+        copy($file,"//192.168.137.105/Kasir"); # Lakukan cetak
+        unlink($file);
+      }
         
 ?>
 <script>
-       window.location.href = 'http://192.168.137.105:3301/newresto/penjualan/penjualan'
+        window.location.href = 'http://192.168.137.105:3301/newresto/penjualan/penjualan'
 </script>
