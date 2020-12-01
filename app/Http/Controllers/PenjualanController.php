@@ -371,7 +371,7 @@ class PenjualanController extends Controller
             'jumlah_item' => count($_POST['kode_menu']),
             'total_harga' => $totalHarga,
             'total_ppn' => $totalPpn,
-            'waktu' => date('Y-m-d H:i:s'),
+            // 'waktu' => date('Y-m-d H:i:s'),
             'jumlah_qty' => $totalQty,
             'total_diskon' => $totalDiskon,
             'room_charge' => $room_charge,
