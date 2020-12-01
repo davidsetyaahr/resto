@@ -498,7 +498,7 @@ class PenjualanController extends Controller
                 if($index==1){
                     Penjualan::where('kode_penjualan', $kode)->update($update);
                     DetailPenjualan::where('kode_penjualan', $kode)->delete();
-              }
+                }
                 else{
                     Penjualan::insert($update);
                 }
