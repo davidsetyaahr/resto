@@ -132,7 +132,7 @@ class PenjualanController extends Controller
         $this->param['btnRight']['link'] = route('penjualan.index');
         $this->param['kode_penjualan'] = $this->getKode();
         $this->param['kategori'] = KategoriMenu::select('id_kategori_menu','kategori_menu')->get();
-        $this->param['meja'] = \DB::table('meja')->where('nama_meja', 'Hotel Room')->orWhereNotIn('id_meja', function($query){
+        $this->param['meja'] = \DB::table('meja')->where('nama_meja', '!=' ,'Hotel Room')->orWhereNotIn('id_meja', function($query){
             $query->select('id_meja')->from('penjualan')->where('status_bayar','Belum Bayar');
         })->orderBy('nama_meja','asc')->get();
 
@@ -498,7 +498,7 @@ class PenjualanController extends Controller
                 if($index==1){
                     Penjualan::where('kode_penjualan', $kode)->update($update);
                     DetailPenjualan::where('kode_penjualan', $kode)->delete();
-                }
+              }
                 else{
                     Penjualan::insert($update);
                 }
