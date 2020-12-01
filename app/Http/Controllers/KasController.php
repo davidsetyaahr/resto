@@ -126,13 +126,13 @@ class KasController extends Controller
             'kode_kas' => 'required',
             'tipe' => 'required',
             'nominal' => 'required|numeric',
-            'tanggal' => 'required|date',
+            // 'tanggal' => 'required|date',
             'jenis' => 'required',
         ]);
 
         $kas = Kas::findOrFail($kode);
 
-        $kas->tanggal = $request->get('tanggal');
+        // $kas->tanggal = $request->get('tanggal');
         $kas->nominal = $request->get('nominal');
         $kas->keterangan = $request->get('keterangan');
         $kas->jenis = $request->get('jenis');
