@@ -83,7 +83,14 @@
 </table>  
 </body>
 </html>
-
-<script>
-    window.print()
-</script>
+@if (isset($_GET['xls']))
+    @php
+        $name = 'Laba Rugi ' . $_GET['bulan'] . ' - ' . $_GET['tahun'] .'.xls';
+        header("Content-Type: application/xls");
+        header("Content-Disposition: attachment; filename=$name");
+    @endphp
+@else
+    <script>
+        window.print()
+    </script>
+@endif

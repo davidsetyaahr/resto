@@ -76,6 +76,7 @@
                 $labaRugi = $total + $totalKasMasuk->ttlKasMasuk - $totalPemakaian->ttlPemakaian - $totalKasKeluar->ttlKasKeluar;
               @endphp
               <a href="{{ route('laba-rugi').'?bulan='.$bulan.'&tahun='.$tahun.'&print=true' }}" class="btn btn-sm btn-success float-right py-2 px-3"><span class="fa fa-print"></span> Print</a>
+              <a href="{{ route('laba-rugi').'?bulan='.$bulan.'&tahun='.$tahun.'&print=true&xls=true' }}" class="btn btn-sm btn-success float-right py-2 px-3"><span class="fa fa-file-excel"></span> Export XLS </a>
               <br>
               <div class="table-responsive mt-4">
                 <table class="table align-items-center table-flush table-hover table-striped">

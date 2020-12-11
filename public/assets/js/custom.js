@@ -290,11 +290,13 @@ $(document).ready(function() {
         }
 
         if (thisVal == "Debit BCA") {
-            charge = (grand_total * 1) / 100;
+            // charge = (grand_total * 1) / 100;
+            charge = 0;
         } else if (thisVal == "Debit BRI") {
             charge = (grand_total * 0.15) / 100;
         } else if (thisVal == "Kredit BCA") {
-            charge = (grand_total * 1.8) / 100;
+            // charge = (grand_total * 1.8) / 100;
+            charge = 0;
         } else if (thisVal == "Kredit BRI") {
             charge = (grand_total * 1.5) / 100;
         } else if (thisVal == "Debit Bank Lain") {

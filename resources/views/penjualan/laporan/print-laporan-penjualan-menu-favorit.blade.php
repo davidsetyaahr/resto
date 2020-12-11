@@ -53,7 +53,14 @@
 </table>    
 </body>
 </html>
-
-<script>
-    window.print()
-</script>
+@if (isset($_GET['xls']))
+    @php
+        $name = 'Laporan Menu Favorit ' . date('d-m-Y', strtotime($_GET['dari'])).' s/d '.date('d-m-Y', strtotime($_GET['sampai'])).'.xls';
+        header("Content-Type: application/xls");
+        header("Content-Disposition: attachment; filename=$name");
+    @endphp
+@else
+    <script>
+        window.print()
+    </script>
+@endif

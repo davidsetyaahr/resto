@@ -14,8 +14,10 @@
                 ?>
                 @if ($_GET['tipe'] == 'general')
                     <a href="<?= route('laporan-penjualan.print')."?tipe=$_GET[tipe]&dari=$_GET[dari]&sampai=$_GET[sampai]&tipe_pembayaran=$_GET[tipe_pembayaran]" ?>" class="btn btn-info btn-sm"><span class="fa fa-print"></span> Cetak Laporan</a>
+                    <a href="<?= route('laporan-penjualan.print')."?tipe=$_GET[tipe]&dari=$_GET[dari]&sampai=$_GET[sampai]&tipe_pembayaran=$_GET[tipe_pembayaran]&xls=true" ?>" class="btn btn-info btn-sm"><span class="fa fa-file-excel"></span> Export XLS</a>
                 @else
                     <a href="<?= route('laporan-penjualan.print')."?tipe=$_GET[tipe]&dari=$_GET[dari]&sampai=$_GET[sampai]"?>" class="btn btn-info btn-sm"><span class="fa fa-print"></span> Cetak Laporan</a>
+                    <a href="<?= route('laporan-penjualan.print')."?tipe=$_GET[tipe]&dari=$_GET[dari]&sampai=$_GET[sampai]&xls=true"?>" class="btn btn-info btn-sm"><span class="fa fa-file-excel"></span> Export XLS</a>
                 @endif
                 <?php } ?>
                 </div>
