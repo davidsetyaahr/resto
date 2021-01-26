@@ -23,10 +23,10 @@ class KasController extends Controller
         $keyword = $request->get('keyword');
         
         if ($keyword) {
-            $kas = Kas::where('kode_kas', 'LIKE', "%$keyword%")->paginate(10);
+            $kas = Kas::where('kode_kas', 'LIKE', "%$keyword%")->orderBy('tanggal', 'desc')->paginate(10);
         }
         else{
-            $kas = Kas::paginate(10);
+            $kas = Kas::orderBy('tanggal', 'desc')->paginate(10);
         }
 
         return \view('kas.kas.list-kas', ['kas' => $kas], $this->param);
