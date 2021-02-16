@@ -668,6 +668,24 @@ class PenjualanController extends Controller
         return view('penjualan.cetak.cetak-dapur', $param);
     }
 
+    public function changeToPiutang($kode)
+    {
+        try{
+            Penjualan::where('kode_penjualan', $kode)
+            ->update([
+                'status_bayar' => 'Piutang'
+            ]);
+
+            return redirect()->route('penjualan.index')->withStatus('Berhasil menjadikan piutang.');
+        }
+        catch(Exception $e){
+            error_log($e->getMessage());
+        }
+        catch(\Illuminate\Database\QueryException $e){
+            error_log($e->getMessage());
+        }
+    }
+
     // public function cetakStruk($kode)
     // {
     //     $penjualan = Penjualan::findOrFail($kode);

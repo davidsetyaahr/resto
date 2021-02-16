@@ -71,7 +71,11 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('cetak-bill/{kode}', 'PenjualanController@cetakBill')->name('cetak-bill');
         Route::get('cetak-dapur/{kode}', 'PenjualanController@cetakDapur')->name('cetak-dapur');
         Route::put('pembayaran/save/{kode}', 'PenjualanController@savePembayaran')->name('pembayaran.save');
+        Route::get('piutang/change/{kode}', 'PenjualanController@changeToPiutang')->name('piutang.change-to-piutang');
         Route::resource('penjualan', 'PenjualanController');
+    });
+    Route::prefix('piutang/')->group(function() {
+        Route::resource('piutang', 'PiutangController');
     });
     Route::prefix('master-menu/')->group(function(){
         Route::get('diskon/addEditDetailDiskon', 'DiskonController@addEditDetailDiskon');

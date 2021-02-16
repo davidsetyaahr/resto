@@ -19,3 +19,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::get('rekap-resto/{date}', 'API\MainController@getTotalByDate');
+
+Route::get('piutang-resto/{kode_invoice}', 'API\MainController@getPiutang');
