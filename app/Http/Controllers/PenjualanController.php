@@ -618,6 +618,30 @@ class PenjualanController extends Controller
 
         return view('laporan.laporan-menu.menu-terlaris', ['laporan' => $laporan], $this->param);
     }
+    
+    public function printMenuTerlaris(Request $request)
+    {
+        $dari = $request->get('dari');
+        $sampai = $request->get('sampai');
+        $laporan = '';
+        if($dari && $sampai){
+            $laporan = \DB::table('penjualan')
+                            ->whereBetween('waktu', [$dari, $sampai])
+                            ->join('detail_penjualan AS dt', \DB::raw('dt.kode_penjualan'), '=', 'penjualan.kode_penjualan')
+                            ->join('menu AS m', \DB::raw('dt.kode_menu'), '=', \DB::raw('m.kode_menu'))
+                            ->select(\DB::raw('SUM(dt.qty) as jml'), 'dt.kode_menu', 'm.nama')
+                            ->groupBy(\DB::raw('dt.kode_menu'))
+                            ->orderBy(\DB::raw('jml'), 'DESC')
+                            ->get();
+        }
+
+        // $this->param['pageInfo'] = 'Menu Terlaris';
+        // $this->param['btnRight']['text'] = '';
+        // $this->param['btnRight']['link'] = '';
+        $this->param['laporan'] = $laporan;
+
+        return view('laporan.laporan-menu.print-menu-terlaris', ['laporan' => $laporan], $this->param);
+    }
 
     public function menuPalingMenghasilkan(Request $request)
     {

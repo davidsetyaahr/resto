@@ -65,6 +65,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('laporan-penjualan', 'PenjualanController@laporanPenjualan')->name('laporan-penjualan');
         Route::get('laporan-penjualan/print', 'PenjualanController@printLaporanPenjualan')->name('laporan-penjualan.print');
         Route::get('menu-terlaris', 'PenjualanController@menuTerlaris')->name('menu-terlaris');
+        Route::get('menu-terlaris/print', 'PenjualanController@printMenuTerlaris')->name('print-menu-terlaris');
         Route::get('menu-paling-menghasilkan', 'PenjualanController@menuPalingMenghasilkan')->name('menu-paling-menghasilkan');
         Route::get('pembayaran', 'PenjualanController@listPembayaran')->name('pembayaran');
         Route::get('pembayaran/{kode}', 'PenjualanController@pembayaran')->name('penjualan.bayar');

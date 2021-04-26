@@ -42,7 +42,9 @@
                   $dari = Request::get('dari');
                   $sampai = Request::get('sampai');
               @endphp
-              
+              <hr class="my-4">
+              <a href="{{ route('print-menu-terlaris').'?dari='.$dari.'&sampai='.$sampai.'&print=true' }}" target="_blank" class="btn btn-sm btn-success float-right py-2 px-3"><span class="fa fa-print"></span> Print</a>
+              <a href="{{ route('print-menu-terlaris').'?dari='.$dari.'&sampai='.$sampai.'&print=true&xls=true' }}" target="_blank" class="btn btn-sm btn-success float-right py-2 px-3"><span class="fa fa-file-excel"></span> Export XLS </a>
               <br>
               <div class="table-responsive mt-4">
                 <table class="table align-items-center table-flush table-hover table-striped">
