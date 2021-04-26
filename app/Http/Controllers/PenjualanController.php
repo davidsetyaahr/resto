@@ -666,6 +666,30 @@ class PenjualanController extends Controller
 
         return view('laporan.laporan-menu.menu-paling-menghasilkan', ['laporan' => $laporan], $this->param);
     }
+    
+    public function printMenuPalingMenghasilkan(Request $request)
+    {
+        $dari = $request->get('dari');
+        $sampai = $request->get('sampai');
+        $laporan = '';
+        if($dari && $sampai){
+            $laporan = \DB::table('penjualan')
+                            ->whereBetween('waktu', [$dari, $sampai])
+                            ->join('detail_penjualan AS dt', \DB::raw('dt.kode_penjualan'), '=', 'penjualan.kode_penjualan')
+                            ->join('menu AS m', \DB::raw('dt.kode_menu'), '=', \DB::raw('m.kode_menu'))
+                            ->select(\DB::raw('SUM(dt.sub_total) - SUM(dt.diskon) as jml'), 'dt.kode_menu', 'm.nama')
+                            ->groupBy(\DB::raw('dt.kode_menu'))
+                            ->orderBy(\DB::raw('jml'), 'DESC')
+                            ->get();
+        }
+
+        // $this->param['pageInfo'] = 'Menu Paling Menghasilkan';
+        // $this->param['btnRight']['text'] = '';
+        // $this->param['btnRight']['link'] = '';
+        $this->param['laporan'] = $laporan;
+
+        return view('laporan.laporan-menu.print-menu-paling-menghasilkan', ['laporan' => $laporan], $this->param);
+    }
 
     public function cetakBill($kode,$payment='')
     {
