@@ -84,6 +84,12 @@
                 <span class="nav-link-text">Penjualan</span>
               </a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link {{Request::segment(1) == 'piutang' ? 'active' : ''}}" href="{{ route('piutang.index') }}">
+                <i class="ni ni-paper-diploma text-blue"></i>
+                <span class="nav-link-text">Piutang</span>
+              </a>
+            </li>
             @if(\Auth::user()->level == 'Owner')
             <li class="nav-item">
               <a class="nav-link collapsed {{Request::segment(1) == 'master-barang' ? 'active' : ''}}" href="" data-toggle="collapse" data-target="#master-barang" aria-expanded='false'>
