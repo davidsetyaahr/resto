@@ -20,4 +20,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::get('rekap-resto/{date}', 'API\MainController@getTotalByDate');
 
-Route::get('piutang-resto/{kode_invoice}', 'API\MainController@getPiutang');
+Route::get('piutang-resto/{kodePenjualan}', 'API\MainController@getPiutang');
+
+Route::get('list-piutang-resto', 'API\MainController@getListPiutang');
+
+Route::post('/bayar-piutang', 'App\Http\Controllers\MainController@bayarPiutang');
