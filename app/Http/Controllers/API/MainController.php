@@ -49,7 +49,7 @@ class MainController extends Controller
                 'message' => $msg,
                 'data' => $penjualan
             ];
-            return json_encode($response);
+            return $response;
         }
     }
 
