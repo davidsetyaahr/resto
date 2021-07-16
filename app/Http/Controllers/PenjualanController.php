@@ -438,11 +438,12 @@ class PenjualanController extends Controller
                 'bayar' => 'required|numeric|gte:grand_total',
                 'jenis_bayar' => 'required'
             ]);
-    
+            
             $penjualan->jenis_bayar = $request->get('jenis_bayar');
             $penjualan->no_kartu = $request->get('no_kartu');
             $penjualan->status_bayar = 'Sudah Bayar';
-            $diskon = $request->get('diskon') > 0 ? $request->get('diskon') * $request->get('total') / 100 : 0;
+            $penjualan->total_ppn = $request->get('new_ppn');
+            $diskon = $request->get('diskon') > 0 ? $request->get('diskon') * $penjualan->total_harga / 100 : 0;
             $penjualan->total_diskon_tambahan = $request->get('diskon_tambahan') + $diskon;
             $penjualan->bayar = $request->get('bayar');
             $penjualan->kembalian = $request->get('kembalian');

@@ -135,6 +135,8 @@
                       </ul>
                     </div>
                   </div>
+                  <input type="text" name="temp_ppn" id="temp_ppn" value="{{$penjualan->total_ppn}}">
+                  <input type="text" name="new_ppn" id="new_ppn" value="{{$penjualan->total_ppn}}">
                   <?php 
                     if($_GET['tab']=='normal'){
                   ?>

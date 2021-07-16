@@ -239,7 +239,9 @@ $(document).ready(function() {
     $(".diskon_tambahan").keyup(function() {
         var diskon_tambahan = parseInt($(this).val());
         var tipe = $(this).data("tipe");
-        var total = parseInt($("#total").val());
+        var ppnTemp = parseInt($("#temp_ppn").val());
+        // console.log(ppnTemp);
+        var total = parseInt($("#total").val()) - ppnTemp;
         var diskon = 0;
         if (tipe == "persen") {
             var otherDisc = parseInt(
@@ -257,7 +259,9 @@ $(document).ready(function() {
             }
             diskon = diskon_tambahan + otherDisc;
         }
-        var grand_total = total - diskon;
+        var newPpn = parseInt((total - diskon) * 10 / 100);
+        var grand_total = total - diskon + newPpn;
+        $("#new_ppn").val(newPpn);
         $("#grand_total").val(grand_total);
         $("#idrGrandTotal").html(formatRupiah(grand_total));
 
