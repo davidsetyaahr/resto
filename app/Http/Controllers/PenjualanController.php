@@ -447,6 +447,7 @@ class PenjualanController extends Controller
             $penjualan->bayar = $request->get('bayar');
             $penjualan->kembalian = $request->get('kembalian');
             $penjualan->charge = $request->get('charge');
+            $penjualan->waktu_bayar = date('Y-m-d H:i:s');
             if($request->get('isTravel')){
                 $penjualan->isTravel = $request->get('isTravel');
             }
@@ -543,7 +544,7 @@ class PenjualanController extends Controller
 
     public function laporanGeneral()
     {
-        $laporan = Penjualan::where('status_bayar','Sudah Bayar')->whereBetween('waktu',[$_GET['dari'] . ' 00:00:00',$_GET['sampai'] . ' 23:59:59'])->orderBy('waktu','asc');
+        $laporan = Penjualan::where('status_bayar','Sudah Bayar')->whereBetween('waktu_bayar',[$_GET['dari'] . ' 00:00:00',$_GET['sampai'] . ' 23:59:59'])->orderBy('waktu_bayar','asc');
         if ($_GET['tipe_pembayaran']) {
             $laporan->where('jenis_bayar', 'LIKE', "%$_GET[tipe_pembayaran]");
         }
@@ -552,13 +553,13 @@ class PenjualanController extends Controller
     
     public function laporanMenuFavorit()
     {
-        $laporan = \DB::table('menu as m')->select(\DB::raw('m.kode_menu,m.nama, SUM(dp.qty) as qty, sum(sub_total) as total'))->leftJoin('detail_penjualan as dp','m.kode_menu','dp.kode_menu')->join('penjualan as p', 'dp.kode_penjualan','p.kode_penjualan')->where('p.status_bayar','Sudah Bayar')->whereBetween('p.waktu',[$_GET['dari'] . ' 00:00:00',$_GET['sampai'] . ' 23:59:59'])->groupBy('m.kode_menu')->orderBy('qty','desc')->orderBy('total','desc')->get();
+        $laporan = \DB::table('menu as m')->select(\DB::raw('m.kode_menu,m.nama, SUM(dp.qty) as qty, sum(sub_total) as total'))->leftJoin('detail_penjualan as dp','m.kode_menu','dp.kode_menu')->join('penjualan as p', 'dp.kode_penjualan','p.kode_penjualan')->where('p.status_bayar','Sudah Bayar')->whereBetween('p.waktu_bayar',[$_GET['dari'] . ' 00:00:00',$_GET['sampai'] . ' 23:59:59'])->groupBy('m.kode_menu')->orderBy('qty','desc')->orderBy('total','desc')->get();
         return $laporan;
     }
     public function laporanTidakTerjual()
     {
         $laporan = \DB::table('menu as m')->select('m.kode_menu','m.nama','m.hpp','m.harga_jual','m.status')->whereNotIn('m.kode_menu', function($query){
-            $query->select('dp.kode_menu')->from('detail_penjualan as dp')->join('penjualan as p','dp.kode_penjualan','p.kode_penjualan')->where('p.status_bayar','Sudah Bayar')->whereBetween('p.waktu',[$_GET['dari'] . ' 00:00:00',$_GET['sampai']. ' 23:59:59']);
+            $query->select('dp.kode_menu')->from('detail_penjualan as dp')->join('penjualan as p','dp.kode_penjualan','p.kode_penjualan')->where('p.status_bayar','Sudah Bayar')->whereBetween('p.waktu_bayar',[$_GET['dari'] . ' 00:00:00',$_GET['sampai']. ' 23:59:59']);
         })->orderBy('m.kode_menu','asc')->get();
         return $laporan;
     }

@@ -44,7 +44,7 @@
 
   <form action="{{ route('penjualan.store') }}" method="post">
     @csrf
-    <div class="container py-4">
+    <div class="container py-5">
       <div class="col-md-12">
       @if (session('status'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">

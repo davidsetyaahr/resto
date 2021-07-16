@@ -1,4 +1,4 @@
-<div class="table-responsive mt-3">
+`<div class="table-responsive mt-3">
     <table class="table align-items-center table-flush">
     <thead class="thead-light">
         <tr>

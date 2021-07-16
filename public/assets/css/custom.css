@@ -202,6 +202,7 @@
 }
 .box-penjualan .relative {
     position: relative;
+    overflow-y: auto;
     height: 100%;
     width: 100%;
 }
@@ -300,9 +301,9 @@ select.form-line, input.form-line,textarea.form-line, .form-line .select2-contai
     border-bottom-right-radius: 0;
 }
 .sticky-bottom {
-    position: absolute;
+    position:fixed;
     bottom: 0;
-    width: 100%;
+    width: 40%;
     right: 0;
     background: white;
     box-shadow: 0 0 2rem 0 rgba(136, 152, 170, 0.15);
@@ -311,10 +312,10 @@ select.form-line, input.form-line,textarea.form-line, .form-line .select2-contai
 .sticky-bottom .btn {
     border-top-left-radius: 30px;
 }
-.box-penjualan form {
+/* .box-penjualan form {
     max-height: 900px;
     overflow: auto;
-}
+} */
 .change-qty{
     position: relative;
 }
