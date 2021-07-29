@@ -25,12 +25,14 @@ class MainController extends Controller
             }         
             else{
                 $penjualan = Penjualan::select(
-                    \DB::raw('SUM(penjualan.total_harga - penjualan.total_diskon) AS total'),
-                    \DB::raw('SUM(penjualan.total_ppn) AS total_ppn')
+                    \DB::raw('SUM(penjualan.total_harga - penjualan.total_diskon - penjualan.total_diskon_tambahan) AS total'),
+                    \DB::raw('SUM(penjualan.total_ppn) AS total_ppn'),
+                    'jenis_bayar'
                 )
                 ->whereBetween('penjualan.waktu', [$date.' 00:00:00', $date.' 23:59:59'])  
                 ->where('penjualan.status_bayar', 'Sudah Bayar')
-                ->first();
+                ->groupBy('jenis_bayar')
+                ->get();
                 $status = 'Success';
                 $msg = 'Successfully';
             }
