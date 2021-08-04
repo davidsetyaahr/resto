@@ -291,7 +291,7 @@ $(document).ready(function () {
         }
     });
     function getCharge(thisVal) {
-        var grand_total = parseInt($("#total").val()) - parseInt(diskonPersen) - parseInt($(".diskon_tambahan[data-tipe='rp']").val());
+        var grand_total = parseInt($("#total").val()) - parseInt(diskonPersen) - parseInt($(".potongan[data-tipe='rp']").val());
         var charge = 0;
         if (thisVal != "Tunai") {
             $("#no_kartu").prop("disabled", false);
