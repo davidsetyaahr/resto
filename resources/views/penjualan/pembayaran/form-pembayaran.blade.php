@@ -135,8 +135,9 @@
                       </ul>
                     </div>
                   </div>
-                  <input type="text" name="temp_ppn" id="temp_ppn" value="{{$penjualan->total_ppn}}">
-                  <input type="text" name="new_ppn" id="new_ppn" value="{{$penjualan->total_ppn}}">
+                  <input type="hidden" name="temp_ppn" id="temp_ppn" value="{{$penjualan->total_ppn}}">
+                  <input type="hidden" name="new_ppn" id="new_ppn" value="{{$penjualan->total_ppn}}">
+                  <input type="hidden" name="" id="temp_grand_total" value="{{$penjualan->total_harga - $penjualan->total_diskon + $penjualan->total_ppn + $penjualan->room_charge}}" readonly>
                   <?php 
                     if($_GET['tab']=='normal'){
                   ?>
@@ -149,7 +150,7 @@
                       </div>
                       <div class="col-4 mb-2">
                         <label for=""><strong>Potongan</strong></label>
-                        <input type="number" name="diskon_tambahan" class="form-control diskon_tambahan" value="{{old('diskon_tambahan', 0)}}" data-tipe='rp'>
+                        <input type="number" name="diskon_tambahan" class="form-control potongan" value="{{old('diskon_tambahan', 0)}}" data-tipe='rp'>
                       </div>
                       <div class="col-4 mb-2">
                         <label for=""><strong>Metode Pembayaran</strong></label>
@@ -295,7 +296,7 @@
                             </div>
                             <div class="col-4 mb-2">
                               <label for=""><strong>Potongan</strong></label>
-                              <input type="number" name="diskon_tambahan" class="form-control diskon_tambahan" value="{{old('diskon_tambahan', 0)}}" data-tipe='rp'>
+                              <input type="number" name="diskon_tambahan" class="form-control potongan" value="{{old('diskon_tambahan', 0)}}" data-tipe='rp'>
                             </div>
                             <div class="col-4 mb-2">
                               <label for=""><strong>Metode Pembayaran</strong></label>
