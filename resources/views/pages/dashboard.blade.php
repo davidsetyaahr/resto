@@ -63,7 +63,13 @@
                       $month = date('m');
                       $year = date('Y');
                   @endphp
-                  <span class="h2 font-weight-bold mb-1"> {{\App\Penjualan::whereMonth('waktu', $month)->whereYear('waktu', $year)->count()}} </span>
+                  <span class="h2 font-weight-bold mb-1">
+                    @if (auth()->user()->level == 'Kasir')
+                      {{\App\Penjualan::whereMonth('waktu', $month)->whereYear('waktu', $year)->whereNull('deleted_at')->count()}}
+                    @else
+                      {{\App\Penjualan::whereMonth('waktu', $month)->whereYear('waktu', $year)->count()}}
+                    @endif
+                  </span>
                 </div>
                 <div class="col-auto mt-1">
                   <div class="icon icon-shape bg-gradient-green text-white rounded-circle shadow">

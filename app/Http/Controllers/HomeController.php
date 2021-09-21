@@ -35,8 +35,11 @@ class HomeController extends Controller
             $pjPerBulan = [];
 
             foreach ($bulan as $key => $val) {
-                $pj = \App\Penjualan::where('status_bayar','Sudah Bayar')->whereYear('waktu', $tahun)->whereMonth('waktu', $val)->count();
-                array_push($pjPerBulan, $pj);
+                $pj = \App\Penjualan::where('status_bayar','Sudah Bayar')->whereYear('waktu', $tahun)->whereMonth('waktu', $val);
+                if (auth()->user()->level == 'Kasir') {
+                    $pj->whereNull('deleted_at');
+                }
+                array_push($pjPerBulan, $pj->count());
             }
 
             $penjualanChart = new PenjualanChart;
