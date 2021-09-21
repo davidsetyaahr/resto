@@ -196,6 +196,7 @@ class PenjualanController extends Controller
         $newPenjualan->id_meja = $request->get('id_meja');
         $newPenjualan->jenis_order = $request->get('jenis_order');
         $newPenjualan->jumlah_item = count($_POST['kode_menu']);
+        $newPenjualan->status_bayar = 'Belum Bayar';
         $newPenjualan->jumlah_qty = $ttlQty;
         $newPenjualan->total_harga = $totalHarga; // harga sebelum diskon dan ppn
         $newPenjualan->total_ppn = $totalPpn;
