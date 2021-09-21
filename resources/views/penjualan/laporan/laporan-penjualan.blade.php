@@ -12,12 +12,12 @@
                 <?php 
                     if(isset($_GET['tipe']) && isset($_GET['dari'])){
                 ?>
-                @if ($_GET['tipe'] == 'general')
-                    <a href="<?= route('laporan-penjualan.print')."?tipe=$_GET[tipe]&dari=$_GET[dari]&sampai=$_GET[sampai]&tipe_pembayaran=$_GET[tipe_pembayaran]" ?>" class="btn btn-info btn-sm"><span class="fa fa-print"></span> Cetak Laporan</a>
-                    <a href="<?= route('laporan-penjualan.print')."?tipe=$_GET[tipe]&dari=$_GET[dari]&sampai=$_GET[sampai]&tipe_pembayaran=$_GET[tipe_pembayaran]&xls=true" ?>" class="btn btn-info btn-sm"><span class="fa fa-file-excel"></span> Export XLS</a>
+                @if ($_GET['tipe'] == 'general' || $_GET['tipe'] == 'khusus')
+                    <a target="_blank" href="<?= route('laporan-penjualan.print')."?tipe=$_GET[tipe]&dari=$_GET[dari]&sampai=$_GET[sampai]&tipe_pembayaran=$_GET[tipe_pembayaran]" ?>" class="btn btn-info btn-sm"><span class="fa fa-print"></span> Cetak Laporan</a>
+                    <a target="_blank" href="<?= route('laporan-penjualan.print')."?tipe=$_GET[tipe]&dari=$_GET[dari]&sampai=$_GET[sampai]&tipe_pembayaran=$_GET[tipe_pembayaran]&xls=true" ?>" class="btn btn-info btn-sm"><span class="fa fa-file-excel"></span> Export XLS</a>
                 @else
-                    <a href="<?= route('laporan-penjualan.print')."?tipe=$_GET[tipe]&dari=$_GET[dari]&sampai=$_GET[sampai]"?>" class="btn btn-info btn-sm"><span class="fa fa-print"></span> Cetak Laporan</a>
-                    <a href="<?= route('laporan-penjualan.print')."?tipe=$_GET[tipe]&dari=$_GET[dari]&sampai=$_GET[sampai]&xls=true"?>" class="btn btn-info btn-sm"><span class="fa fa-file-excel"></span> Export XLS</a>
+                    <a target="_blank" href="<?= route('laporan-penjualan.print')."?tipe=$_GET[tipe]&dari=$_GET[dari]&sampai=$_GET[sampai]"?>" class="btn btn-info btn-sm"><span class="fa fa-print"></span> Cetak Laporan</a>
+                    <a target="_blank" href="<?= route('laporan-penjualan.print')."?tipe=$_GET[tipe]&dari=$_GET[dari]&sampai=$_GET[sampai]&xls=true"?>" class="btn btn-info btn-sm"><span class="fa fa-file-excel"></span> Export XLS</a>
                 @endif
                 <?php } ?>
                 </div>
@@ -26,6 +26,9 @@
             <div class="card-body">
             <ul class="nav nav-tabs mb-4">
                 <li <?= $_GET['tipe']=='general' ? 'class="active"' : '' ?>><a href="?tipe=general">Laporan General</a></li>
+                @if (auth()->user()->level == 'Owner' || auth()->user()->level == 'Accounting')
+                <li <?= $_GET['tipe']=='khusus' ? 'class="active"' : '' ?>><a href="?tipe=khusus">Laporan Khusus</a></li>
+                @endif
                 <li <?= $_GET['tipe']=='menu-favorit' ? 'class="active"' : '' ?>><a href="?tipe=menu-favorit">Menu Terfavorit</a></li>
                 <li <?= $_GET['tipe']=='tidak-terjual' ? 'class="active"' : '' ?>><a href="?tipe=tidak-terjual">Menu Tidak Terjual</a></li>
             </ul>
@@ -51,7 +54,7 @@
                         <input type="text" class="datepicker form-control" name="sampai" value="{{isset($_GET['sampai']) ? $_GET['sampai'] : ''}}" required>
                     </div>                
                 </div>
-                @if ($_GET['tipe'] == 'general')
+                @if ($_GET['tipe'] == 'general' || $_GET['tipe'] == 'khusus')
                 <div class="col-3">
                     <label for="" class="form-control-label">Tipe Pembayaran</label>
                     <select name="tipe_pembayaran" id="" class="select2 form-control">
@@ -72,6 +75,8 @@
             @if(isset($_GET['dari']) && isset($_GET['sampai']))
                 @if($_GET['tipe']=='general')
                     @include('penjualan.laporan.laporan-penjualan-general')
+                @elseif($_GET['tipe']=='khusus')
+                    @include('penjualan.laporan.laporan-penjualan-khusus')
                 @elseif($_GET['tipe']=='menu-favorit')
                     @include('penjualan.laporan.laporan-penjualan-menu-favorit')
                 @elseif($_GET['tipe']=='tidak-terjual')

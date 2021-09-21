@@ -84,6 +84,14 @@
                 <span class="nav-link-text">Penjualan</span>
               </a>
             </li>
+              @if (\Auth::user()->level == 'Owner')
+              <li class="nav-item">
+                <a class="nav-link" href="{{ route('penjualan.all') }}">
+                  <i class="ni ni-cart text-blue"></i>
+                  <span class="nav-link-text">List Penjualan</span>
+                </a>
+              </li>
+              @endif
             <li class="nav-item">
               <a class="nav-link {{Request::segment(1) == 'piutang' ? 'active' : ''}}" href="{{ route('piutang.index') }}">
                 <i class="ni ni-paper-diploma text-blue"></i>
@@ -229,6 +237,7 @@
                       <span class="nav-link-text">Laporan Penjualan</span>
                     </a>
                   </li>
+                  @if (\Auth::user()->level == 'Owner' || \Auth::user()->level == 'Accounting')
                   <li class="nav-item">
                     <a class="nav-link" href="{{ route('menu-terlaris') }}">
                       <span class="nav-link-text">Menu Terlaris</span>
@@ -239,7 +248,6 @@
                       <span class="nav-link-text">Menu Paling Menghasilkan</span>
                     </a>
                   </li>
-                  @if (\Auth::user()->level == 'Owner' || \Auth::user()->level == 'Accounting')
                   <li class="nav-item">
                     <a class="nav-link" href="{{ route('laba-rugi') }}">
                       <span class="nav-link-text">Laba Rugi</span>

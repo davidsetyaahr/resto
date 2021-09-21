@@ -10,6 +10,7 @@ use App\KategoriMenu;
 use \App\Menu;
 use \App\Meja;
 use \App\DetailDiskon;
+use Illuminate\Support\Facades\DB;
 use Session;
 class PenjualanController extends Controller
 {
@@ -29,6 +30,30 @@ class PenjualanController extends Controller
         $this->param['meja'] = Meja::orderBy('nama_meja','asc')->get();
 
         return view('penjualan.penjualan.list-penjualan', $this->param);
+    }
+    
+    public function allPenjualan(Request $request)
+    {
+        $this->param['pageInfo'] = 'List Penjualan';
+        $getAllPenjualan = \DB::table('penjualan as p')->select('p.kode_penjualan','p.nama_customer','p.jenis_order','p.waktu','p.total_harga','p.total_diskon','m.nama_meja','p.total_diskon_tambahan','p.status_bayar','p.deleted_at')->join('meja as m','p.id_meja','m.id_meja')->orderBy('p.waktu', 'desc');
+
+        if ($request->get('date')) {
+            $getAllPenjualan->whereBetween('p.waktu', [$request->get('date').' 00:00:00', $request->get('date').' 23:59:59']);
+        }
+
+        $this->param['penjualan'] = $getAllPenjualan->paginate(10);
+
+        return view('penjualan.penjualan.all-penjualan', $this->param);
+    }
+
+    public function softDelete($kode)
+    {
+        Penjualan::where('kode_penjualan',$kode)
+        ->update([
+            'deleted_at' => date('Y-m-d H:i:s'),
+        ]);
+
+        return redirect()->route('penjualan.all')->withStatus('Data berhasil dihapus.');
     }
 
     public function menuBill()
@@ -549,13 +574,26 @@ class PenjualanController extends Controller
         if ($_GET['tipe_pembayaran']) {
             $laporan->where('jenis_bayar', 'LIKE', "%$_GET[tipe_pembayaran]");
         }
+        $laporan->whereNull('deleted_at');
+        return $laporan->get();
+    }
+    
+    public function laporanKhusus()
+    {
+        $laporan = Penjualan::where('status_bayar','Sudah Bayar')->whereBetween('waktu_bayar',[$_GET['dari'] . ' 00:00:00',$_GET['sampai'] . ' 23:59:59'])->orderBy('waktu_bayar','asc');
+        if ($_GET['tipe_pembayaran']) {
+            $laporan->where('jenis_bayar', 'LIKE', "%$_GET[tipe_pembayaran]");
+        }
         return $laporan->get();
     }
     
     public function laporanMenuFavorit()
     {
-        $laporan = \DB::table('menu as m')->select(\DB::raw('m.kode_menu,m.nama, SUM(dp.qty) as qty, sum(sub_total) as total'))->leftJoin('detail_penjualan as dp','m.kode_menu','dp.kode_menu')->join('penjualan as p', 'dp.kode_penjualan','p.kode_penjualan')->where('p.status_bayar','Sudah Bayar')->whereBetween('p.waktu_bayar',[$_GET['dari'] . ' 00:00:00',$_GET['sampai'] . ' 23:59:59'])->groupBy('m.kode_menu')->orderBy('qty','desc')->orderBy('total','desc')->get();
-        return $laporan;
+        $laporan = \DB::table('menu as m')->select(\DB::raw('m.kode_menu,m.nama, SUM(dp.qty) as qty, sum(sub_total) as total'))->leftJoin('detail_penjualan as dp','m.kode_menu','dp.kode_menu')->join('penjualan as p', 'dp.kode_penjualan','p.kode_penjualan')->where('p.status_bayar','Sudah Bayar')->whereBetween('p.waktu_bayar',[$_GET['dari'] . ' 00:00:00',$_GET['sampai'] . ' 23:59:59'])->groupBy('m.kode_menu')->orderBy('qty','desc')->orderBy('total','desc');
+        if (auth()->user()->level == 'Kasir') {
+            $laporan->whereNull('p.deleted_at');
+        }
+        return $laporan->get();
     }
     public function laporanTidakTerjual()
     {
@@ -574,6 +612,9 @@ class PenjualanController extends Controller
             if($_GET['tipe']=='general'){
                 $this->param['penjualan'] = $this->laporanGeneral();
             }
+            else if($_GET['tipe']=='khusus'){
+                $this->param['penjualan'] = $this->laporanKhusus();
+            }
             else if($_GET['tipe']=='menu-favorit'){
                 $this->param['penjualan'] = $this->laporanMenuFavorit();
             }
@@ -587,6 +628,9 @@ class PenjualanController extends Controller
     public function printLaporanPenjualan(){
         if($_GET['tipe']=='general'){
             $data['penjualan'] = $this->laporanGeneral();
+        }
+        else if($_GET['tipe']=='khusus'){
+            $data['penjualan'] =  $this->laporanKhusus();
         }
         else if($_GET['tipe']=='menu-favorit'){
             $data['penjualan'] =  $this->laporanMenuFavorit();
