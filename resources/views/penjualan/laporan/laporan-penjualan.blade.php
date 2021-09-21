@@ -27,7 +27,7 @@
             <ul class="nav nav-tabs mb-4">
                 <li <?= $_GET['tipe']=='general' ? 'class="active"' : '' ?>><a href="?tipe=general">Laporan General</a></li>
                 @if (auth()->user()->level == 'Owner' || auth()->user()->level == 'Accounting')
-                <li <?= $_GET['tipe']=='khusus' ? 'class="active"' : '' ?>><a href="?tipe=khusus">Laporan Khusus</a></li>
+                <li <?= $_GET['tipe']=='khusus' ? 'class="active"' : '' ?>><a href="?tipe=khusus">Laporan</a></li>
                 @endif
                 <li <?= $_GET['tipe']=='menu-favorit' ? 'class="active"' : '' ?>><a href="?tipe=menu-favorit">Menu Terfavorit</a></li>
                 <li <?= $_GET['tipe']=='tidak-terjual' ? 'class="active"' : '' ?>><a href="?tipe=tidak-terjual">Menu Tidak Terjual</a></li>
