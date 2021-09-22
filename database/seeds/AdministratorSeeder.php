@@ -13,7 +13,7 @@ class AdministratorSeeder extends Seeder
         $administrator->email = 'administrator@baratha.com';
         $administrator->no_hp = '-';
         $administrator->alamat = '-';
-        $administrator->password = \Hash::make('administrator');
+        $administrator->password = \Hash::make('barathahotel.com');
         $administrator->level = 'Owner';
         $administrator->save();
     }
