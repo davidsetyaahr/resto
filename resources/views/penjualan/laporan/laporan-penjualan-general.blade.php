@@ -39,10 +39,11 @@
         }
         $total = $total + $subtotal;
         $total_room_charge = $total_room_charge + $value->room_charge;
+        $tanggal = date('ymd', strtotime($value->waktu));
     ?>
             <tr>
             <td>{{$loop->iteration}}</td>
-            <td>{{$value->kode_penjualan}}</td>
+            <td>{{'INV'.$tanggal.'-'.sprintf('%04d', $loop->iteration)}}</td>
             <td>{{date('d-m-Y H:i', strtotime($value->waktu))}}</td>
             <td>{{$value->nama_customer}}</td>
             <td>{{$value->jenis_order}}</td>

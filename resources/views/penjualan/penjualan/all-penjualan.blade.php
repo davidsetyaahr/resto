@@ -55,8 +55,12 @@
                 @php
                   $page = Request::get('page');
                   $no = !$page || $page == 1 ? 1 : ($page - 1) * 10 + 1;
+                  $total = 0;
                 @endphp
                 @foreach ($penjualan as $value)
+                      @php
+                          $total += $value->deleted_at == null ? $value->total_harga : 0;
+                      @endphp
                       <tr>
                         <td>{{$no}}</td>
                         <td>{{$value->nama_meja}}</td>
@@ -91,7 +95,15 @@
 
                   @endforeach
                 </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="6">Total</th>
+                        <th>{{number_format($total,0,',','.')}}</th>
+                        <th colspan="4"></th>
+                    </tr>
+                </tfoot>
               </table>
+              {{-- <br> --}}
               {{$penjualan->appends(Request::all())->links()}}
             </div>
          </div>

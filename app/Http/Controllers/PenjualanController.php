@@ -53,7 +53,7 @@ class PenjualanController extends Controller
             'deleted_at' => date('Y-m-d H:i:s'),
         ]);
 
-        return redirect()->route('penjualan.all')->withStatus('Data berhasil dihapus.');
+        return back();
     }
 
     public function menuBill()
