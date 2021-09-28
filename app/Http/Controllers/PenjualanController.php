@@ -37,8 +37,8 @@ class PenjualanController extends Controller
         $this->param['pageInfo'] = 'List Penjualan';
         $getAllPenjualan = \DB::table('penjualan as p')->select('p.kode_penjualan','p.nama_customer','p.jenis_order','p.waktu','p.total_harga','p.total_diskon','m.nama_meja','p.total_diskon_tambahan','p.status_bayar','p.deleted_at')->join('meja as m','p.id_meja','m.id_meja')->orderBy('p.waktu', 'desc');
 
-        if ($request->get('date')) {
-            $getAllPenjualan->whereBetween('p.waktu', [$request->get('date').' 00:00:00', $request->get('date').' 23:59:59']);
+        if ($request->get('dari') && $request->get('sampai')) {
+            $getAllPenjualan->whereBetween('p.waktu', [$request->get('dari').' 00:00:00', $request->get('sampai').' 23:59:59']);
         }
 
         $this->param['penjualan'] = $getAllPenjualan->paginate(10);

@@ -43,9 +43,9 @@
         $total_diskon = 0;
         $total_ppn = 0;
         $total_room_charge  = 0;
-
+        $no = 1;
     ?>
-    @foreach ($penjualan as $value)
+    @foreach ($penjualan as $key => $value)
     <?php
         $item = $item + $value->jumlah_item;
         $qty = $qty + $value->jumlah_qty;
@@ -58,11 +58,15 @@
         }
         $total = $total + $subtotal;
         $total_room_charge = $total_room_charge + $value->room_charge;
-        $tanggal = date('ymd', strtotime($value->waktu));
+        $currentDate = date('ymd', strtotime($value->waktu));
+        $checkDate = $key > 1 ? date('ymd', strtotime($penjualan[$key - 1]->waktu)) : $currentDate; //untuk check tanggal dari indeks sebelumnya
+        if ($currentDate != $checkDate) { //jika tanggal indeks sekarang tidak sama dengan tanggal indeks sebelumnya (ganti hari); maka no kembali ke 1 lagi
+            $no = 1;
+        }
     ?>
             <tr>
                 <td>{{$loop->iteration}}</td>
-                <td>{{'INV'.$tanggal.'-'.sprintf('%04d', $loop->iteration)}}</td>
+                <td>{{'INV'.$currentDate.'-'.sprintf('%04d', $no)}}</td>
                 <td>{{date('d-m-Y H:i', strtotime($value->waktu))}}</td>
                 <td>{{$value->nama_customer}}</td>
                 <td>{{$value->jenis_order}}</td>
@@ -80,6 +84,9 @@
                     <td>Umum</td>
                 @endif
                 </tr>
+                @php
+                    $no++;
+                @endphp
         @endforeach
     </tbody>
     <tfoot>
