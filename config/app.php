@@ -52,10 +52,14 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
 
-    'asset_url' => env('ASSET_URL', 'http://localhost/resto/public'),
+    // 'url' => env('APP_URL', 'http://192.168.1.35:3301'),
 
+    // 'asset_url' => env('ASSET_URL', 'http://192.168.1.35:3301/newresto/public/'),
+
+    'url' => env('APP_URL', 'http://192.168.18.36:666'),
+
+    'asset_url' => env('ASSET_URL', 'http://192.168.18.36:666'),
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

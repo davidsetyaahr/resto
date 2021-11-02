@@ -74,7 +74,7 @@ if ($cetakDapur == 'true') {
         $Data .= Chr(29).Chr(86).Chr(49); #Auto Cutter
         fwrite($handle, $Data);
         fclose($handle);
-        copy($file,"//192.168.137.105/Dapur"); # Lakukan cetak
+        copy($file,"//192.168.18.36/Dapur"); # Lakukan cetak
         unlink($file);
         // echo "<pre>";
         // print_r($Data);
@@ -150,18 +150,18 @@ if ($cetakDapur == 'true') {
         $Data .= Chr(29).Chr(86).Chr(49); #Auto Cutter
         fwrite($handle, $Data);
         fclose($handle);
-        copy($file,"//192.168.137.105/Bar"); # Lakukan cetak
+        copy($file,"//192.168.18.36/Bar"); # Lakukan cetak
         unlink($file);
         // echo "<pre>";
         // print_r($Data);
         // echo "</pre>";
     
     }
-    $url = 'http://192.168.137.105:3301/newresto/penjualan/'.$penjualan->kode_penjualan.'/edit';
+    $url = 'http://192.168.18.36:666/penjualan/'.$penjualan->kode_penjualan.'/edit';
 }
 else{
     $updateText = '';
-    $url = 'http://192.168.137.105:3301/newresto/penjualan/penjualan/create';
+    $url = 'http://192.168.18.36:666/penjualan/penjualan/create';
 }
 
 ?>

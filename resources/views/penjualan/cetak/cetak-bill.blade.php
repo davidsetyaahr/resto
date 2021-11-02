@@ -120,11 +120,11 @@
         $Data .= Chr(29).Chr(86).Chr(49); #Auto Cutter
         fwrite($handle, $Data);
         fclose($handle);
-        copy($file,"//192.168.137.105/Kasir"); # Lakukan cetak
+        copy($file,"//192.168.18.36/Kasir"); # Lakukan cetak
         unlink($file);
       }
         
 ?>
 <script>
-        window.location.href = 'http://192.168.137.105:3301/newresto/penjualan/penjualan'
+        window.location.href = 'http://192.168.18.36:666/penjualan/penjualan'
 </script>
