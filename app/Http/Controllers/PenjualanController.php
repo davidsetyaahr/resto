@@ -56,6 +56,24 @@ class PenjualanController extends Controller
         return back();
     }
 
+    public function restoreData($kode)
+    {
+        try{
+            Penjualan::where('kode_penjualan',$kode)
+            ->update([
+                'deleted_at' => NULL,
+            ]);
+            
+            return back()->withStatus('Data berhasil dikembalikan.');
+        }
+        catch(\Exception $e) {
+            return back()->withError($e->getMessage());
+        }
+        catch(\Illuminate\Database\QueryException $e) {
+            return back()->withError($e->getMessage());
+        }
+    }
+
     public function menuBill()
     {
         $kodeMenu = $_GET['kode_menu'];
