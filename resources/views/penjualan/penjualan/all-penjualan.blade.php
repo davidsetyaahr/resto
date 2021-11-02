@@ -106,9 +106,14 @@
                                                     <i class="fas fa-ellipsis-v"></i>
                                                 </a>
                                                 <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                                                    @if (isset($value->deleted_at))
                                                     <a class="dropdown-item"
-                                                        href="{{ route('penjualan.soft-delete', $value->kode_penjualan) }}">Hapus
-                                                        Transaksi</a>
+                                                    href="{{ route('penjualan.restore', $value->kode_penjualan) }}">Kembalikan</a>
+                                                    @else
+                                                    <a class="dropdown-item"
+                                                    href="{{ route('penjualan.soft-delete', $value->kode_penjualan) }}">Hapus
+                                                    Transaksi</a>
+                                                    @endif
                                                 </div>
                                             </div>
                                         </td>

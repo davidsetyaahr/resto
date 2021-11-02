@@ -64,6 +64,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('penjualan/filter', 'PenjualanController@filter');
         Route::get('penjualan/all', 'PenjualanController@allPenjualan')->name('penjualan.all');
         Route::get('penjualan/soft-delete/{kode}', 'PenjualanController@softDelete')->name('penjualan.soft-delete');
+        Route::get('penjualan/restore/{kode}', 'PenjualanController@restoreData')->name('penjualan.restore');
         Route::get('laporan-penjualan', 'PenjualanController@laporanPenjualan')->name('laporan-penjualan');
         Route::get('laporan-penjualan/print', 'PenjualanController@printLaporanPenjualan')->name('laporan-penjualan.print');
         Route::get('menu-terlaris', 'PenjualanController@menuTerlaris')->name('menu-terlaris');
