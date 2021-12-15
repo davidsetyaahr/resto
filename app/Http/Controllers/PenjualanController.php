@@ -223,6 +223,7 @@ class PenjualanController extends Controller
         $newPenjualan->jenis_bayar = '';
         $newPenjualan->total_diskon = $totalDiskon;
         $newPenjualan->isTravel = 'False';
+        $newPenjualan->id_user = \Auth::user()->id;
         if ($request->get('jenis_order') == 'Room Order') {
             $newPenjualan->nomor_kamar = $request->get('nomor_kamar');
             $room_charge = $total * 10 /100;
