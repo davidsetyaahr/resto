@@ -25,7 +25,7 @@ class PenjualanController extends Controller
         $this->param['pageInfo'] = 'Daftar Penjualan';
         $this->param['btnRight']['text'] = 'Tambah Penjualan';
         $this->param['btnRight']['link'] = route('penjualan.create');
-        $this->param['penjualan'] = \DB::table('penjualan as p')->select('p.kode_penjualan','p.nama_customer','p.jenis_order','p.waktu','p.total_harga','p.total_diskon','m.nama_meja','p.total_diskon_tambahan','p.status_bayar')->join('meja as m','p.id_meja','m.id_meja')->where('status_bayar','Belum Bayar')->paginate(10);
+        $this->param['penjualan'] = \DB::table('penjualan as p')->select('p.kode_penjualan','p.nama_customer','p.jenis_order','p.waktu','p.total_harga','p.total_diskon','m.nama_meja','p.total_diskon_tambahan','p.status_bayar','u.nama as kasir')->join('meja as m','p.id_meja','m.id_meja')->leftJoin('users as u','p.id_user','u.id')->where('status_bayar','Belum Bayar')->paginate(10);
 
         $this->param['meja'] = Meja::orderBy('nama_meja','asc')->get();
 
@@ -421,6 +421,7 @@ class PenjualanController extends Controller
             'total_diskon' => $totalDiskon,
             'room_charge' => $room_charge,
             'nomor_kamar' => $nomor_kamar,
+            'id_user' => \Auth::user()->id,
         ]);
 
         if(count($param['dapur'])!=0 || count($param['bar'])!=0){
@@ -494,6 +495,7 @@ class PenjualanController extends Controller
             $penjualan->kembalian = $request->get('kembalian');
             $penjualan->charge = $request->get('charge');
             $penjualan->waktu_bayar = date('Y-m-d H:i:s');
+            $penjualan->id_user = \Auth::user()->id;
             if($request->get('isTravel')){
                 $penjualan->isTravel = $request->get('isTravel');
             }
@@ -590,7 +592,7 @@ class PenjualanController extends Controller
 
     public function laporanGeneral()
     {
-        $laporan = Penjualan::where('status_bayar','Sudah Bayar')->whereBetween('waktu_bayar',[$_GET['dari'] . ' 00:00:00',$_GET['sampai'] . ' 23:59:59'])->orderBy('waktu_bayar','asc');
+        $laporan = Penjualan::leftJoin('users as u','penjualan.id_user','u.id')->where('status_bayar','Sudah Bayar')->whereBetween('waktu_bayar',[$_GET['dari'] . ' 00:00:00',$_GET['sampai'] . ' 23:59:59'])->orderBy('waktu_bayar','asc');
         if ($_GET['tipe_pembayaran']) {
             $laporan->where('jenis_bayar', 'LIKE', "%$_GET[tipe_pembayaran]");
         }
@@ -600,7 +602,7 @@ class PenjualanController extends Controller
     
     public function laporanKhusus()
     {
-        $laporan = Penjualan::where('status_bayar','Sudah Bayar')->whereBetween('waktu_bayar',[$_GET['dari'] . ' 00:00:00',$_GET['sampai'] . ' 23:59:59'])->orderBy('waktu_bayar','asc');
+        $laporan = Penjualan::leftJoin('users as u','penjualan.id_user','u.id')->where('status_bayar','Sudah Bayar')->whereBetween('waktu_bayar',[$_GET['dari'] . ' 00:00:00',$_GET['sampai'] . ' 23:59:59'])->orderBy('waktu_bayar','asc');
         if ($_GET['tipe_pembayaran']) {
             $laporan->where('jenis_bayar', 'LIKE', "%$_GET[tipe_pembayaran]");
         }

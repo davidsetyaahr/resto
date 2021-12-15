@@ -67,6 +67,7 @@
                     <th>Jenis Order</th>
                     <th>Total Harga</th>
                     <th>Diskon</th>
+                    <th>Kasir</th>
                     <th>Status</th>
                     <th></th>
                   </tr>
@@ -86,6 +87,7 @@
                         <td>{{$value->jenis_order}}</td>
                         <td>{{number_format($value->total_harga,0,',','.')}}</td>
                         <td>{{number_format($value->total_diskon + $value->total_diskon_tambahan,0,',','.')}}</td>
+                        <td>{{$value->kasir}}</td>
                         <td>
                           @if ($value->status_bayar == 'Belum Bayar')
                           <span class="badge badge-pill badge-danger">{{$value->status_bayar}}</span>

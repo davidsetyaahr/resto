@@ -114,6 +114,12 @@
                       <input type="radio" value="Waiters" id="level4" name="level" class="custom-control-input" @error('level') is-invalid @enderror" {{old('level', $user->level) == 'Waiters' ? 'checked' : ''}}>
                       <label class="custom-control-label" for="level4">Waiters</label>
                     </div>
+
+                    <div class="custom-control custom-radio custom-control-inline mr-5">
+                      <input type="radio" value="Resepsionis" id="level5" name="level" class="custom-control-input" @error('level') is-invalid @enderror" {{old('level', $user->level) == 'Resepsionis' ? 'checked' : ''}}>
+                      <label class="custom-control-label" for="level5">Resepsionis</label>
+                    </div>
+
                     @error('level')
                       <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>

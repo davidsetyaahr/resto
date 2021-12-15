@@ -14,6 +14,7 @@
       <th>PPN</th>
       <th>Total</th>
       <th>Tipe</th>
+      <th>Kasir</th>
       <th>Keterangan</th>
       </tr>
   </thead>
@@ -53,6 +54,7 @@
           <td>{{number_format($value->total_ppn)}}</td>
           <td>{{number_format($subtotal,0,',','.')}}</td>
           <td>{{$value->jenis_bayar}}</td>
+          <td>{{$value->nama}}</td>
           @if ($value->isTravel=='True')
               <td>Travel</td>
           @else
@@ -70,6 +72,7 @@
       <td>{{number_format($total_room_charge,0,',','.')}}</td>
       <td>{{number_format($total_ppn,0,',','.')}}</td>
       <td>{{number_format($total,0,',','.')}}</td>
+      <td></td>
       <td></td>
       <td></td>
 
