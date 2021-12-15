@@ -12,12 +12,15 @@
                 <?php 
                     if(isset($_GET['tipe']) && isset($_GET['dari'])){
                 ?>
-                @if ($_GET['tipe'] == 'general' || $_GET['tipe'] == 'khusus')
-                    <a target="_blank" href="<?= route('laporan-penjualan.print')."?tipe=$_GET[tipe]&dari=$_GET[dari]&sampai=$_GET[sampai]&tipe_pembayaran=$_GET[tipe_pembayaran]" ?>" class="btn btn-info btn-sm"><span class="fa fa-print"></span> Cetak Laporan</a>
-                    <a target="_blank" href="<?= route('laporan-penjualan.print')."?tipe=$_GET[tipe]&dari=$_GET[dari]&sampai=$_GET[sampai]&tipe_pembayaran=$_GET[tipe_pembayaran]&xls=true" ?>" class="btn btn-info btn-sm"><span class="fa fa-file-excel"></span> Export XLS</a>
-                @else
-                    <a target="_blank" href="<?= route('laporan-penjualan.print')."?tipe=$_GET[tipe]&dari=$_GET[dari]&sampai=$_GET[sampai]"?>" class="btn btn-info btn-sm"><span class="fa fa-print"></span> Cetak Laporan</a>
-                    <a target="_blank" href="<?= route('laporan-penjualan.print')."?tipe=$_GET[tipe]&dari=$_GET[dari]&sampai=$_GET[sampai]&xls=true"?>" class="btn btn-info btn-sm"><span class="fa fa-file-excel"></span> Export XLS</a>
+                @if (auth()->user()->level != 'Kasir')
+                    
+                    @if ($_GET['tipe'] == 'general' || $_GET['tipe'] == 'khusus')
+                        <a target="_blank" href="<?= route('laporan-penjualan.print')."?tipe=$_GET[tipe]&dari=$_GET[dari]&sampai=$_GET[sampai]&tipe_pembayaran=$_GET[tipe_pembayaran]" ?>" class="btn btn-info btn-sm"><span class="fa fa-print"></span> Cetak Laporan</a>
+                        <a target="_blank" href="<?= route('laporan-penjualan.print')."?tipe=$_GET[tipe]&dari=$_GET[dari]&sampai=$_GET[sampai]&tipe_pembayaran=$_GET[tipe_pembayaran]&xls=true" ?>" class="btn btn-info btn-sm"><span class="fa fa-file-excel"></span> Export XLS</a>
+                    @else
+                        <a target="_blank" href="<?= route('laporan-penjualan.print')."?tipe=$_GET[tipe]&dari=$_GET[dari]&sampai=$_GET[sampai]"?>" class="btn btn-info btn-sm"><span class="fa fa-print"></span> Cetak Laporan</a>
+                        <a target="_blank" href="<?= route('laporan-penjualan.print')."?tipe=$_GET[tipe]&dari=$_GET[dari]&sampai=$_GET[sampai]&xls=true"?>" class="btn btn-info btn-sm"><span class="fa fa-file-excel"></span> Export XLS</a>
+                    @endif
                 @endif
                 <?php } ?>
                 </div>

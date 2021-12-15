@@ -225,7 +225,7 @@
             </li>
             @endif
 
-            @if (\Auth::user()->level == 'Owner' || \Auth::user()->level == 'Accounting'  || \Auth::user()->level == 'Resepsionis')
+            @if (\Auth::user()->level == 'Owner' || \Auth::user()->level == 'Accounting'  || \Auth::user()->level == 'Resepsionis' || \Auth::user()->level == 'Kasir')
             <li class="nav-item">
               <a class="nav-link collapsed {{Request::segment(1) == 'laporan' ? 'active' : ''}}" href="" data-toggle="collapse" data-target="#laporan" aria-expanded='false'>
                 <i class="ni ni-archive-2 text-purple"></i>
