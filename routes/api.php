@@ -24,4 +24,4 @@ Route::get('piutang-resto/{kodePenjualan}', 'API\MainController@getPiutang');
 
 Route::get('list-piutang-resto', 'API\MainController@getListPiutang');
 
-Route::post('/bayar-piutang', 'App\Http\Controllers\MainController@bayarPiutang');
+Route::post('bayar-piutang', 'API\MainController@bayarPiutang');
