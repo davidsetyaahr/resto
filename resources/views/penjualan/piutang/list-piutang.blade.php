@@ -66,7 +66,7 @@
                     <td>{{number_format($value->total_harga,0,',','.')}}</td>
                     <td>{{number_format($value->total_diskon + $value->total_diskon_tambahan,0,',','.')}}</td>
                     <td>
-                        <span class="badge badge-pill badge-primary">{{$value->status_bayar}}</span>
+                        <span class="badge badge-pill badge-warning">{{$value->status_bayar}}</span>
                     </td>
                     <td class="text-right">
                       <div class="dropdown">

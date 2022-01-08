@@ -91,6 +91,9 @@
                                             @if ($value->status_bayar == 'Belum Bayar')
                                                 <span
                                                     class="badge badge-pill badge-danger">{{ $value->status_bayar }}</span>
+                                            @elseif ($value->status_bayar == 'Piutang')
+                                                <span
+                                                    class="badge badge-pill badge-warning">{{ $value->status_bayar }}</span>
                                             @else
                                                 <span
                                                     class="badge badge-pill badge-success">{{ $value->status_bayar }}</span>
