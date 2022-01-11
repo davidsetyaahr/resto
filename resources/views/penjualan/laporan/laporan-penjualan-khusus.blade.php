@@ -4,7 +4,7 @@
       <tr>
       <th>#</th>
       <th>Kode Penjualan</th>
-      <th>Waktu</th>
+      <th>Waktu Pembayaran</th>
       <th>Customer</th>
       <th>Jenis Order</th>
       <th>Jumlah Item</th>
@@ -44,7 +44,7 @@
           <tr>
           <td>{{$loop->iteration}}</td>
           <td>{{$value->kode_penjualan}}</td>
-          <td>{{date('d-m-Y H:i', strtotime($value->waktu))}}</td>
+          <td>{{date('d-m-Y H:i', strtotime($value->waktu_bayar))}}</td>
           <td>{{$value->nama_customer}}</td>
           <td>{{$value->jenis_order}}</td>
           <td>{{$value->jumlah_item}}</td>

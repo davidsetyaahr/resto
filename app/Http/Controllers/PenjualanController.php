@@ -35,10 +35,10 @@ class PenjualanController extends Controller
     public function allPenjualan(Request $request)
     {
         $this->param['pageInfo'] = 'List Penjualan';
-        $getAllPenjualan = \DB::table('penjualan as p')->select('p.kode_penjualan','p.nama_customer','p.jenis_order','p.waktu','p.total_harga','p.total_diskon','m.nama_meja','p.total_diskon_tambahan','p.status_bayar','p.deleted_at')->join('meja as m','p.id_meja','m.id_meja')->orderBy('p.waktu', 'desc');
+        $getAllPenjualan = \DB::table('penjualan as p')->select('p.kode_penjualan','p.nama_customer','p.jenis_order','p.waktu_bayar','p.total_harga','p.total_diskon','m.nama_meja','p.total_diskon_tambahan','p.status_bayar','p.deleted_at')->join('meja as m','p.id_meja','m.id_meja')->orderBy('p.waktu', 'desc');
 
         if ($request->get('dari') && $request->get('sampai')) {
-            $getAllPenjualan->whereBetween('p.waktu', [$request->get('dari').' 00:00:00', $request->get('sampai').' 23:59:59']);
+            $getAllPenjualan->whereBetween('p.waktu_bayar', [$request->get('dari').' 00:00:00', $request->get('sampai').' 23:59:59']);
         }
 
         $this->param['penjualan'] = $getAllPenjualan->paginate(10);
