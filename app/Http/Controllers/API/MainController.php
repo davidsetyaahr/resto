@@ -61,7 +61,7 @@ class MainController extends Controller
         $msg = null;
         $penjualan = null;
 
-        try{;
+        try{
             $where['penjualan.status_bayar'] = 'Piutang';
             if(isset($_GET['kode_penjualan'])){
                 $where['penjualan.kode_penjualan'] = $kodePenjualan;
