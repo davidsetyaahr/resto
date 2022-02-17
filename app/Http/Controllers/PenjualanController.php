@@ -40,8 +40,11 @@ class PenjualanController extends Controller
         if ($request->get('dari') && $request->get('sampai')) {
             $getAllPenjualan->whereBetween('p.waktu_bayar', [$request->get('dari').' 00:00:00', $request->get('sampai').' 23:59:59']);
         }
+        else{
+            $getAllPenjualan->whereBetween('p.waktu_bayar', [date('Y-m-d').' 00:00:00',  date('Y-m-d').' 23:59:59']);
+        }
 
-        $this->param['penjualan'] = $getAllPenjualan->paginate(10);
+        $this->param['penjualan'] = $getAllPenjualan->get();
 
         return view('penjualan.penjualan.all-penjualan', $this->param);
     }

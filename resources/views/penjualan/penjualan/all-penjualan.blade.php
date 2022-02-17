@@ -134,7 +134,7 @@
                             </tfoot>
                         </table>
                         {{-- <br> --}}
-                        {{ $penjualan->appends(Request::all())->links() }}
+                        {{-- {{ $penjualan->appends(Request::all())->links() }} --}}
                     </div>
                 </div>
 
