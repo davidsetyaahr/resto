@@ -504,7 +504,7 @@ $(document).ready(function () {
             $.ajax({
                 type: "get",
                 url: url,
-                data: { kode: kode},
+                data: { kode: kode },
                 beforeSend: function () {
                     $(".loading").addClass("show");
                 },
@@ -517,75 +517,10 @@ $(document).ready(function () {
                     var diskon = formatRupiah(data);
                     var subtotal = parseInt(hargaIDR);
                     var no = $(".keranjang .tbodyLoop").attr("data-no");
-                    var newNo = parseInt(no);
-                    
-                    if(kode=='paket'){
-                        $("#is_paket").val('true')
-                        $.ajax({
-                            type : 'get',
-                            dataType : 'json',
-                            async : false,
-                            url : '../../paket/getPaket',
-                            success : function(res){
-                                $.each(res,function(i,v){
-                                    newNo++
-                                    $(".keranjang .tbodyLoop").append(`<tr data-tr='${newNo}' class='tr'>
-                                    <td colspan='6' class='p-0'>
-                                        <table width='100%'>
-                                            <tr>
-                                                <td width='10%' class='no'>${newNo}</td>
-                                                <td width='25%'>
-                                                <input type='hidden' name='kode_menu[]' class='inputKodeMenu' value='${v.kode_menu}'> 
-                                                <input type='hidden' name='nama_menu[]' class='inputNamaMenu' value='${v.nama}'> 
-                                                ${v.nama}</td>
-                                                <td width='25%' class='px-0'>
-                                                    <input type="hidden" name="harga[]" value="${v.harga_jual}" class="inputHarga">
-                                                    <div class="change-qty">
-                                                        <button class='btnqty' data-tipe='min'>-</button>
-                                                        <input type='text' name='qty[]' value='1' class='form-control text-center inputQty' readonly>
-                                                        <button class='btnqty' data-tipe='plus'>+</button>
-                                                    </div>
-                                                </td>
-                                                <td width='15%' class='tdDiskon'><input type='hidden' class='inputDiskon' name='diskon[]' data-diskon='${data}' value='${data}'> <span>${diskon}</span></td>
-                                                <td width='15%' class='tdSubtotal'><input type='hidden' name='subtotal[]' value='${v.harga_jual}' class='inputSubtotal'> <span> ${formatRupiah(
-                                    v.harga_jual
-                                )}</span></td>
-                                                <td width='10%'><a href='' title="Hapus" class='deleteCart'><span class='fa fa-trash fa-lg'></span></a></td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan='6' class='p-0'>
-                                                    <input type='text' class='form-control form-line' name='keterangan[]' placeholder="Keterangan">
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                </tr>`);
-                        $(
-                            ".keranjang .tbodyLoop .tr[data-tr='" +
-                            newNo +
-                            "'] .deleteCart"
-                        ).click(function (e) {
-                            e.preventDefault();
-                            deleteCart($(this));
-                        });
-                        $(
-                            ".keranjang .tbodyLoop .tr[data-tr='" +
-                            newNo +
-                            "'] .change-qty .btnqty"
-                        ).click(function (e) {
-                            e.preventDefault();
-                            changeQty($(this));
-                        });
-
-                                })
-                            }
-                        })
-
-                    }
-                    else{
-                        $("#is_paket").val('false')
-                        newNo++
-                        $(".keranjang .tbodyLoop").append(`<tr data-tr='${newNo}' class='tr'>
+                    var newNo = parseInt(no) + 1;
+                    $(".keranjang .tbodyLoop").attr("data-no", newNo);
+                    $(".keranjang .tbodyLoop").append(`
+                    <tr data-tr='${newNo}' class='tr'>
                         <td colspan='6' class='p-0'>
                             <table width='100%'>
                                 <tr>
@@ -615,27 +550,25 @@ $(document).ready(function () {
                                 </tr>
                             </table>
                         </td>
-                    </tr>`);
-                        $(
-                            ".keranjang .tbodyLoop .tr[data-tr='" +
-                            newNo +
-                            "'] .deleteCart"
-                        ).click(function (e) {
-                            e.preventDefault();
-                            deleteCart($(this));
-                        });
-                        $(
-                            ".keranjang .tbodyLoop .tr[data-tr='" +
-                            newNo +
-                            "'] .change-qty .btnqty"
-                        ).click(function (e) {
-                            e.preventDefault();
-                            changeQty($(this));
-                        });
-                    }
-                    $(".keranjang .tbodyLoop").attr("data-no", newNo);
-
+                    </tr>
+                    `);
                     getTfoot();
+                    $(
+                        ".keranjang .tbodyLoop .tr[data-tr='" +
+                        newNo +
+                        "'] .deleteCart"
+                    ).click(function (e) {
+                        e.preventDefault();
+                        deleteCart($(this));
+                    });
+                    $(
+                        ".keranjang .tbodyLoop .tr[data-tr='" +
+                        newNo +
+                        "'] .change-qty .btnqty"
+                    ).click(function (e) {
+                        e.preventDefault();
+                        changeQty($(this));
+                    });
                 }
             });
         }

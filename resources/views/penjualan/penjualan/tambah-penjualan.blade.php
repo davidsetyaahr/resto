@@ -32,22 +32,6 @@
                 </div>
               </form>
               <div class="row row-menu" id="tag_container" data-urlDiskon="{{route('get-diskon')}}">
-                <div class="col-md-3 col-6">
-                  <div class="menu" data-pick='false' data-menu='paket'>
-                      <div class="img">
-                          <img src="{{asset('assets/img/paket.jpg')}}" class="img-fluid" alt="">
-                          <div>
-                              <span class='info'>Klik Untuk Memesan</span>
-                              <span class='picked'><i class='fa fa-check'></i> Dipesan</span>
-                          </div>
-                      </div>
-                      <div class="info">
-                      <h4>Paket Ramadhan</h4>
-                      <h5 class='text-primary' data-harga=''>Tanpa PPN</h5>
-                      </div>
-                  </div>
-                </div>
-              
                 @include('penjualan.penjualan.loop-menu')
               </div>
             </div>
@@ -73,7 +57,6 @@
       @endif
 
         <input type="hidden" name="kode_penjualan" id='kode' value='{{$kode_penjualan}}'>
-        <input type="hidden" name="is_paket" id="is_paket" value='false'>
         <h2>{{$kode_penjualan}}</h2>
         <hr class="mt-1">
         <div class="row">

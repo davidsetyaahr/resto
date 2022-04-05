@@ -16,11 +16,11 @@ Auth::routes();
 Route::group(['middleware' => ['auth']], function () {
 
     Route::get('user/ganti-password/', 'UserController@gantiPassword')->name('user.ganti-password');
-    
+
     Route::put('user/update-password/{id}', 'UserController@updatePassword')->name('user.update-password');
 
     Route::get('home','Pages@dashboard')->name('dashboard');
-    
+
     Route::prefix('pages/')->group(function() {
         Route::get('list-data','Pages@list');
         Route::get('form','Pages@form');
@@ -30,12 +30,12 @@ Route::group(['middleware' => ['auth']], function () {
         Route::resource('barang', 'BarangController');
         Route::get('barang-minimum', 'BarangController@barangMinimum')->name('barang-minimum');
         Route::get('posisi-stock', 'BarangController@posisiStock')->name('posisi-stock');
-        
+
     });
     Route::prefix('laporan/')->group(function() {
         Route::get('laba-rugi', 'LabaRugiController@index')->name('laba-rugi');
     });
-    
+
     Route::prefix('pembelian-barang/')->group(function() {
         Route::resource('supplier', 'SupplierController');
         Route::get('pembelian/addDetailPembelian', 'PembelianController@addDetailPembelian');
@@ -91,15 +91,13 @@ Route::group(['middleware' => ['auth']], function () {
         Route::resource('kategori-menu', 'KategoriMenuController');
         Route::resource('menu', 'MenuController');
     });
-    
+
     // kas keluar
     Route::get('kas/laporan-kas', 'KasController@laporan')->name('kas.laporan');
     Route::get('kas/getKode', 'KasController@getKode')->name('kas.get-kode');
     Route::resource('kas', 'KasController');
-    
+
     Route::get('/home', 'HomeController@index')->name('home');
-    
+
     Route::resource('user', 'UserController');
-    Route::get('paket/getPaket', 'PaketController@getPaket');
-    Route::resource('paket', 'PaketController');
 });

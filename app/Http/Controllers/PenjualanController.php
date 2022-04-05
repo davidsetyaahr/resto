@@ -102,32 +102,26 @@ class PenjualanController extends Controller
     
     public function getDiskon($paramKode='')
     {
-        $potongan = 0;
-        if($_GET['kode']!='paket'){
+        $current_date = date('Y-m-d H:i:s');
+        $kode = isset($_GET['kode']) ? $_GET['kode'] : $paramKode;
+        $menu = Menu::select('harga_jual', 'id_kategori_menu')->where('kode_menu', $kode)->get();
+        $harga_jual = $menu[0]->harga_jual;
+        $id_kategori_menu = $menu[0]->id_kategori_menu;
 
-            $current_date = date('Y-m-d H:i:s');
-            $kode = isset($_GET['kode']) ? $_GET['kode'] : $paramKode;
-            $menu = Menu::select('harga_jual', 'id_kategori_menu')->where('kode_menu', $kode)->get();
-            $harga_jual = $menu[0]->harga_jual;
-            $id_kategori_menu = $menu[0]->id_kategori_menu;
-            
-            $diskon = DetailDiskon::select('diskon.jenis_diskon', 'diskon.diskon', \DB::raw('COUNT(jenis_diskon) AS jml'))
-            ->join('diskon', 'diskon.id_diskon', '=', 'detail_diskon.id_diskon')
-            ->where('start_date', '<=', "$current_date")
-            ->where('end_date', '>=',"$current_date")
-            ->where('id_kategori_menu', $id_kategori_menu)
-            ->get();
-            if ($diskon[0]->jml > 0) {
-                if ($diskon[0]->jenis_diskon == 'Persen') {
-                    $potongan = $harga_jual * $diskon[0]->diskon / 100;
-                    return $potongan;
-                }
-                elseif ($diskon[0]->jenis_diskon == 'Rupiah') {
-                    $potongan = $diskon[0]->diskon;
-                    return $potongan;
-                }
+        $diskon = DetailDiskon::select('diskon.jenis_diskon', 'diskon.diskon', \DB::raw('COUNT(jenis_diskon) AS jml'))
+        ->join('diskon', 'diskon.id_diskon', '=', 'detail_diskon.id_diskon')
+        ->where('start_date', '<=', "$current_date")
+        ->where('end_date', '>=',"$current_date")
+        ->where('id_kategori_menu', $id_kategori_menu)
+        ->get();
+        $potongan = 0;
+        if ($diskon[0]->jml > 0) {
+            if ($diskon[0]->jenis_diskon == 'Persen') {
+                $potongan = $harga_jual * $diskon[0]->diskon / 100;
+                return $potongan;
             }
-            else{
+            elseif ($diskon[0]->jenis_diskon == 'Rupiah') {
+                $potongan = $diskon[0]->diskon;
                 return $potongan;
             }
         }
@@ -135,7 +129,7 @@ class PenjualanController extends Controller
             return $potongan;
         }
     }
-    
+
     public function getKode()
     {
         $current_date = date('Y-m-d');
@@ -206,14 +200,27 @@ class PenjualanController extends Controller
         $ttlQty = 0;
         $totalHarga = 0; // harga sebelum diskon dan ppn
         $totalDiskon = 0;
+        $totalPpn = 0;
         foreach ($_POST['qty'] as $key => $value) {
             $ttlQty = $ttlQty + $value;
-            $totalHarga += $value * $_POST['harga'][$key];
+            $subtotal = $value * $_POST['harga'][$key];
+            $totalHarga += $subtotal;
             $totalDiskon += $_POST['diskon'][$key];
+            
+            $subtotalWithDiskon = $subtotal - $_POST['diskon'][$key];
+
+            $cekIsPaket = \DB::table('menu as m')
+            ->select('is_paket')
+            ->join('kategori_menu as k','m.id_kategori_menu','k.id_kategori_menu')
+            ->where('kode_menu', $_POST['kode_menu'][$key])->first();
+
+            if($cekIsPaket->is_paket=='0'){
+                $totalPpn += $subtotalWithDiskon * 10 / 100;
+            }
         }
 
         $total = $totalHarga - $totalDiskon; // harga setelah diskon
-        $totalPpn = $_POST['is_paket']=='true' ? 0 :  $total * 10 / 100;
+        // $totalPpn = $total * 10 / 100;
         $room_charge = 0;
 
         $newPenjualan = new Penjualan;
@@ -242,11 +249,16 @@ class PenjualanController extends Controller
         $newPenjualan->save();
 
         foreach ($_POST['kode_menu'] as $key => $value) {
+            $cekIsPaket = \DB::table('menu as m')
+            ->select('is_paket')
+            ->join('kategori_menu as k','m.id_kategori_menu','k.id_kategori_menu')
+            ->where('kode_menu', $value)->first();
+
             $newDetail = new DetailPenjualan;
             $newDetail->kode_penjualan = $request->get('kode_penjualan');
             $newDetail->kode_menu = $value;
             $newDetail->sub_total = $_POST['subtotal'][$key];
-            $newDetail->sub_total_ppn = $_POST['is_paket']=='true' ? 0 : $_POST['subtotal'][$key] * 10 / 100;
+            $newDetail->sub_total_ppn = $cekIsPaket->is_paket=='0' ? $_POST['subtotal'][$key] * 10 / 100 : 0;
             $newDetail->keterangan = $_POST['keterangan'][$key];
             $newDetail->qty = $_POST['qty'][$key];
             $newDetail->diskon = $_POST['diskon'][$key];
@@ -315,19 +327,31 @@ class PenjualanController extends Controller
         $param['billTambahan'] = [];
         $param['update'] = 'up';
         $param['cetakDapur'] = isset($_POST['print']) ? $_POST['print'] : 'false';
+        $totalPpn = 0;
         foreach ($_POST['kode_menu'] as $key => $value) {
-
-            $totalHarga += $_POST['qty'][$key] * $_POST['harga'][$key];
+            $subtotal = $_POST['qty'][$key] * $_POST['harga'][$key];
+            $totalHarga += $subtotal;
             $totalDiskon += $_POST['diskon'][$key];
             $totalQty += $_POST['qty'][$key];
+            $subtotalWithDiskon = $subtotal - $_POST['diskon'][$key];
+
+            $cekIsPaket = \DB::table('menu as m')
+            ->select('is_paket')
+            ->join('kategori_menu as k','m.id_kategori_menu','k.id_kategori_menu')
+            ->where('kode_menu', $value)->first();
+
+            if($cekIsPaket->is_paket=='0'){
+                $totalPpn += $subtotalWithDiskon * 10 / 100;
+            }
 
             if(empty($_POST['id_detail'][$key])){
                 //insert new
+    
                 $newDetail = new DetailPenjualan;
                 $newDetail->kode_penjualan = $request->get('kode_penjualan');
                 $newDetail->kode_menu = $_POST['kode_menu'][$key];
                 $newDetail->sub_total = $_POST['subtotal'][$key];
-                $newDetail->sub_total_ppn = $_POST['subtotal'][$key] * 10 / 100;
+                $newDetail->sub_total_ppn = $cekIsPaket->is_paket=='0' ? $_POST['subtotal'][$key] * 10 / 100 : 0;
                 $newDetail->keterangan = $_POST['keterangan'][$key];
                 $newDetail->qty = $_POST['qty'][$key];
                 $newDetail->diskon = $_POST['diskon'][$key];
@@ -347,7 +371,7 @@ class PenjualanController extends Controller
                     'nama' => $_POST['nama_menu'][$key],
                     'keterangan' => $_POST['keterangan'][$key],
                     'sub_total' => $_POST['subtotal'][$key],
-                    'sub_total_ppn' => $_POST['subtotal'][$key] * 10 / 100,
+                    'sub_total_ppn' => $cekIsPaket->is_paket=='0' ? $_POST['subtotal'][$key] * 10 / 100 : 0,
                     'diskon' => $_POST['diskon'][$key],
                 );
 
@@ -375,7 +399,7 @@ class PenjualanController extends Controller
                         'nama' => $_POST['nama_menu'][$key],
                         'keterangan' => $_POST['keterangan'][$key],
                         'sub_total' => $_POST['subtotal'][$key] / ($_POST['qty'][$key]),
-                        'sub_total_ppn' => $_POST['subtotal'][$key] / ($_POST['qty'][$key]) * 10 / 100,
+                        'sub_total_ppn' => $cekIsPaket->is_paket=='0' ? $_POST['subtotal'][$key] / ($_POST['qty'][$key]) * 10 / 100 : 0,
                         'diskon' => $_POST['diskon'][$key] != 0 ? $_POST['diskon'][$key] / $_POST['diskon'][$key] / ($_POST['qty'][$key]) : 0,
                     );
 
@@ -390,7 +414,7 @@ class PenjualanController extends Controller
                     DetailPenjualan::where('id_detail_penjualan', $_POST['id_detail'][$key])
                     ->update([
                         'sub_total' => $_POST['subtotal'][$key],
-                        'sub_total_ppn' => $_POST['subtotal'][$key] * 10 / 100,
+                        'sub_total_ppn' => $cekIsPaket->is_paket=='0' ? $_POST['subtotal'][$key] * 10 / 100 : 0,
                         'keterangan' => $_POST['keterangan'][$key],
                         'qty' => $_POST['qty'][$key], 
                         'diskon' => $_POST['diskon'][$key],
@@ -407,7 +431,7 @@ class PenjualanController extends Controller
         }
 
         $total = $totalHarga - $totalDiskon;
-        $totalPpn = $total * 10 / 100;
+        // $totalPpn = $total * 10 / 100;
         $room_charge = 0;
         if ($_POST['jenis_order'] == 'Room Order') {
             $nomor_kamar = $_POST['nomor_kamar'];

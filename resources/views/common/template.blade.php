@@ -68,14 +68,6 @@
               </a>
             </li>
 
-            @if (\Auth::user()->level == 'Owner' || \Auth::user()->level == 'Kasir')
-            <li class="nav-item">
-              <a class="nav-link {{Request::segment(1) == 'paket' ? 'active' : ''}}" href="{{url('paket/create')}}">
-                <i class="ni ni-archive-2 text-purple"></i>
-                <span class="nav-link-text">Paket Tanpa PPN</span>
-              </a>
-            </li>
-            @endif
             @if (\Auth::user()->level == 'Owner')
             <li class="nav-item">
               <a class="nav-link {{Request::segment(1) == 'user' ? 'active' : ''}}" href="{{route('user.index')}}">
