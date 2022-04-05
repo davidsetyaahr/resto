@@ -102,26 +102,32 @@ class PenjualanController extends Controller
     
     public function getDiskon($paramKode='')
     {
-        $current_date = date('Y-m-d H:i:s');
-        $kode = isset($_GET['kode']) ? $_GET['kode'] : $paramKode;
-        $menu = Menu::select('harga_jual', 'id_kategori_menu')->where('kode_menu', $kode)->get();
-        $harga_jual = $menu[0]->harga_jual;
-        $id_kategori_menu = $menu[0]->id_kategori_menu;
-
-        $diskon = DetailDiskon::select('diskon.jenis_diskon', 'diskon.diskon', \DB::raw('COUNT(jenis_diskon) AS jml'))
-        ->join('diskon', 'diskon.id_diskon', '=', 'detail_diskon.id_diskon')
-        ->where('start_date', '<=', "$current_date")
-        ->where('end_date', '>=',"$current_date")
-        ->where('id_kategori_menu', $id_kategori_menu)
-        ->get();
         $potongan = 0;
-        if ($diskon[0]->jml > 0) {
-            if ($diskon[0]->jenis_diskon == 'Persen') {
-                $potongan = $harga_jual * $diskon[0]->diskon / 100;
-                return $potongan;
+        if($_GET['kode']!='paket'){
+
+            $current_date = date('Y-m-d H:i:s');
+            $kode = isset($_GET['kode']) ? $_GET['kode'] : $paramKode;
+            $menu = Menu::select('harga_jual', 'id_kategori_menu')->where('kode_menu', $kode)->get();
+            $harga_jual = $menu[0]->harga_jual;
+            $id_kategori_menu = $menu[0]->id_kategori_menu;
+            
+            $diskon = DetailDiskon::select('diskon.jenis_diskon', 'diskon.diskon', \DB::raw('COUNT(jenis_diskon) AS jml'))
+            ->join('diskon', 'diskon.id_diskon', '=', 'detail_diskon.id_diskon')
+            ->where('start_date', '<=', "$current_date")
+            ->where('end_date', '>=',"$current_date")
+            ->where('id_kategori_menu', $id_kategori_menu)
+            ->get();
+            if ($diskon[0]->jml > 0) {
+                if ($diskon[0]->jenis_diskon == 'Persen') {
+                    $potongan = $harga_jual * $diskon[0]->diskon / 100;
+                    return $potongan;
+                }
+                elseif ($diskon[0]->jenis_diskon == 'Rupiah') {
+                    $potongan = $diskon[0]->diskon;
+                    return $potongan;
+                }
             }
-            elseif ($diskon[0]->jenis_diskon == 'Rupiah') {
-                $potongan = $diskon[0]->diskon;
+            else{
                 return $potongan;
             }
         }
@@ -129,7 +135,7 @@ class PenjualanController extends Controller
             return $potongan;
         }
     }
-
+    
     public function getKode()
     {
         $current_date = date('Y-m-d');
@@ -207,7 +213,7 @@ class PenjualanController extends Controller
         }
 
         $total = $totalHarga - $totalDiskon; // harga setelah diskon
-        $totalPpn = $total * 10 / 100;
+        $totalPpn = $_POST['is_paket']=='true' ? 0 :  $total * 10 / 100;
         $room_charge = 0;
 
         $newPenjualan = new Penjualan;
@@ -240,7 +246,7 @@ class PenjualanController extends Controller
             $newDetail->kode_penjualan = $request->get('kode_penjualan');
             $newDetail->kode_menu = $value;
             $newDetail->sub_total = $_POST['subtotal'][$key];
-            $newDetail->sub_total_ppn = $_POST['subtotal'][$key] * 10 / 100;
+            $newDetail->sub_total_ppn = $_POST['is_paket']=='true' ? 0 : $_POST['subtotal'][$key] * 10 / 100;
             $newDetail->keterangan = $_POST['keterangan'][$key];
             $newDetail->qty = $_POST['qty'][$key];
             $newDetail->diskon = $_POST['diskon'][$key];
