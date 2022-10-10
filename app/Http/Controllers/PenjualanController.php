@@ -12,6 +12,7 @@ use \App\Meja;
 use \App\DetailDiskon;
 use Illuminate\Support\Facades\DB;
 use Session;
+
 class PenjualanController extends Controller
 {
     private $param;
@@ -25,23 +26,22 @@ class PenjualanController extends Controller
         $this->param['pageInfo'] = 'Daftar Penjualan';
         $this->param['btnRight']['text'] = 'Tambah Penjualan';
         $this->param['btnRight']['link'] = route('penjualan.create');
-        $this->param['penjualan'] = \DB::table('penjualan as p')->select('p.kode_penjualan','p.nama_customer','p.jenis_order','p.waktu','p.total_harga','p.total_diskon','m.nama_meja','p.total_diskon_tambahan','p.status_bayar','u.nama as kasir')->join('meja as m','p.id_meja','m.id_meja')->leftJoin('users as u','p.id_user','u.id')->where('status_bayar','Belum Bayar')->paginate(10);
+        $this->param['penjualan'] = \DB::table('penjualan as p')->select('p.kode_penjualan', 'p.nama_customer', 'p.jenis_order', 'p.waktu', 'p.total_harga', 'p.total_diskon', 'm.nama_meja', 'p.total_diskon_tambahan', 'p.status_bayar', 'u.nama as kasir')->join('meja as m', 'p.id_meja', 'm.id_meja')->leftJoin('users as u', 'p.id_user', 'u.id')->where('status_bayar', 'Belum Bayar')->paginate(10);
 
-        $this->param['meja'] = Meja::orderBy('nama_meja','asc')->get();
+        $this->param['meja'] = Meja::orderBy('nama_meja', 'asc')->get();
 
         return view('penjualan.penjualan.list-penjualan', $this->param);
     }
-    
+
     public function allPenjualan(Request $request)
     {
         $this->param['pageInfo'] = 'List Penjualan';
-        $getAllPenjualan = \DB::table('penjualan as p')->select('p.kode_penjualan','p.nama_customer','p.jenis_order','p.waktu_bayar','p.total_harga','p.total_diskon','m.nama_meja','p.total_diskon_tambahan','p.status_bayar','p.deleted_at')->join('meja as m','p.id_meja','m.id_meja')->orderBy('p.waktu', 'desc');
+        $getAllPenjualan = \DB::table('penjualan as p')->select('p.kode_penjualan', 'p.nama_customer', 'p.jenis_order', 'p.waktu_bayar', 'p.total_harga', 'p.total_diskon', 'm.nama_meja', 'p.total_diskon_tambahan', 'p.status_bayar', 'p.deleted_at')->join('meja as m', 'p.id_meja', 'm.id_meja')->orderBy('p.waktu', 'desc');
 
         if ($request->get('dari') && $request->get('sampai')) {
-            $getAllPenjualan->whereBetween('p.waktu_bayar', [$request->get('dari').' 00:00:00', $request->get('sampai').' 23:59:59']);
-        }
-        else{
-            $getAllPenjualan->whereBetween('p.waktu_bayar', [date('Y-m-d').' 00:00:00',  date('Y-m-d').' 23:59:59']);
+            $getAllPenjualan->whereBetween('p.waktu_bayar', [$request->get('dari') . ' 00:00:00', $request->get('sampai') . ' 23:59:59']);
+        } else {
+            $getAllPenjualan->whereBetween('p.waktu_bayar', [date('Y-m-d') . ' 00:00:00',  date('Y-m-d') . ' 23:59:59']);
         }
 
         $this->param['penjualan'] = $getAllPenjualan->get();
@@ -51,28 +51,26 @@ class PenjualanController extends Controller
 
     public function softDelete($kode)
     {
-        Penjualan::where('kode_penjualan',$kode)
-        ->update([
-            'deleted_at' => date('Y-m-d H:i:s'),
-        ]);
+        Penjualan::where('kode_penjualan', $kode)
+            ->update([
+                'deleted_at' => date('Y-m-d H:i:s'),
+            ]);
 
         return back();
     }
 
     public function restoreData($kode)
     {
-        try{
-            Penjualan::where('kode_penjualan',$kode)
-            ->update([
-                'deleted_at' => NULL,
-            ]);
-            
+        try {
+            Penjualan::where('kode_penjualan', $kode)
+                ->update([
+                    'deleted_at' => NULL,
+                ]);
+
             return back()->withStatus('Data berhasil dikembalikan.');
-        }
-        catch(\Exception $e) {
+        } catch (\Exception $e) {
             return back()->withError($e->getMessage());
-        }
-        catch(\Illuminate\Database\QueryException $e) {
+        } catch (\Illuminate\Database\QueryException $e) {
             return back()->withError($e->getMessage());
         }
     }
@@ -82,25 +80,25 @@ class PenjualanController extends Controller
         $kodeMenu = $_GET['kode_menu'];
         $kodePenjualan = $_GET['kode_penjualan'];
 
-        $data = \DB::table('detail_penjualan as dp')->join('menu as m','dp.kode_menu','m.kode_menu')->select('dp.kode_menu','m.harga_jual','m.nama',\DB::raw('sum(qty) as qty, sum(sub_total) as subtotal'), \DB::raw('dp.diskon/dp.qty as diskon_satuan'))->where('dp.kode_menu',$kodeMenu)->where('kode_penjualan',$kodePenjualan)->get()[0];
+        $data = \DB::table('detail_penjualan as dp')->join('menu as m', 'dp.kode_menu', 'm.kode_menu')->select('dp.kode_menu', 'm.harga_jual', 'm.nama', \DB::raw('sum(qty) as qty, sum(sub_total) as subtotal'), \DB::raw('dp.diskon/dp.qty as diskon_satuan'))->where('dp.kode_menu', $kodeMenu)->where('kode_penjualan', $kodePenjualan)->get()[0];
         $data = (array)$data;
         $diskon = (int)$data['diskon_satuan']; //$this->getDiskon($kodeMenu);
         $data['diskon_satuan'] = $diskon;
-        $data['diskon'] = $data['qty']*$diskon;
+        $data['diskon'] = $data['qty'] * $diskon;
         return json_encode($data);
     }
     public function getDetailMenu()
     {
         $kode = $_GET['kode'];
         $detail = \DB::table('menu')
-        ->select('harga_jual')
-        ->where('kode_menu', $kode)
-        ->get();
+            ->select('harga_jual')
+            ->where('kode_menu', $kode)
+            ->get();
 
         return json_encode((array)$detail[0]);
     }
-    
-    public function getDiskon($paramKode='')
+
+    public function getDiskon($paramKode = '')
     {
         $current_date = date('Y-m-d H:i:s');
         $kode = isset($_GET['kode']) ? $_GET['kode'] : $paramKode;
@@ -109,23 +107,21 @@ class PenjualanController extends Controller
         $id_kategori_menu = $menu[0]->id_kategori_menu;
 
         $diskon = DetailDiskon::select('diskon.jenis_diskon', 'diskon.diskon', \DB::raw('COUNT(jenis_diskon) AS jml'))
-        ->join('diskon', 'diskon.id_diskon', '=', 'detail_diskon.id_diskon')
-        ->where('start_date', '<=', "$current_date")
-        ->where('end_date', '>=',"$current_date")
-        ->where('id_kategori_menu', $id_kategori_menu)
-        ->get();
+            ->join('diskon', 'diskon.id_diskon', '=', 'detail_diskon.id_diskon')
+            ->where('start_date', '<=', "$current_date")
+            ->where('end_date', '>=', "$current_date")
+            ->where('id_kategori_menu', $id_kategori_menu)
+            ->get();
         $potongan = 0;
         if ($diskon[0]->jml > 0) {
             if ($diskon[0]->jenis_diskon == 'Persen') {
                 $potongan = $harga_jual * $diskon[0]->diskon / 100;
                 return $potongan;
-            }
-            elseif ($diskon[0]->jenis_diskon == 'Rupiah') {
+            } elseif ($diskon[0]->jenis_diskon == 'Rupiah') {
                 $potongan = $diskon[0]->diskon;
                 return $potongan;
             }
-        }
-        else{
+        } else {
             return $potongan;
         }
     }
@@ -137,52 +133,51 @@ class PenjualanController extends Controller
         $y = $tgl[0];
         $m = $tgl[1];
         $lastKode = Penjualan::select('kode_penjualan')
-        ->whereMonth('waktu', $m)
-        ->whereYear('waktu', $y)
-        ->orderBy('kode_penjualan','desc')
-        ->skip(0)->take(1)
-        ->get();
+            ->whereMonth('waktu', $m)
+            ->whereYear('waktu', $y)
+            ->orderBy('kode_penjualan', 'desc')
+            ->skip(0)->take(1)
+            ->get();
 
-        if(count($lastKode)==0){
+        if (count($lastKode) == 0) {
             // $dateCreate = date_create($_GET['waktu']);
             $date = date('my');
-            $kode = "INV".$date."-0001";
-        }
-        else{
+            $kode = "INV" . $date . "-0001";
+        } else {
             $ex = explode('-', $lastKode[0]->kode_penjualan);
             $no = (int)$ex[1] + 1;
             $newNo = sprintf("%04s", $no);
-            $kode = $ex[0].'-'.$newNo;
+            $kode = $ex[0] . '-' . $newNo;
         }
 
         return $kode;
     }
 
     public function addDetailPenjualan()
-    {   
-        $next = $_GET['biggestNo']+1;
-        $menu = Menu::where('status', '=', 'Ready')->select('kode_menu','nama')->get();
-        return view('penjualan.penjualan.tambah-detail-penjualan',['hapus' => true, 'no' => $next, 'menu' => $menu]);
+    {
+        $next = $_GET['biggestNo'] + 1;
+        $menu = Menu::where('status', '=', 'Ready')->select('kode_menu', 'nama')->get();
+        return view('penjualan.penjualan.tambah-detail-penjualan', ['hapus' => true, 'no' => $next, 'menu' => $menu]);
     }
 
     public function create(Request $request)
     {
-        $this->param['menu'] = Menu::where('status', '=', 'Ready')->select('kode_menu','nama','foto','harga_jual')->paginate(28);
+        $this->param['menu'] = Menu::where('status', '=', 'Ready')->select('kode_menu', 'nama', 'foto', 'harga_jual')->paginate(28);
 
-        if($request->ajax()){
-            return view('penjualan.penjualan.loop-menu',['menu' => $this->param['menu']]);
+        if ($request->ajax()) {
+            return view('penjualan.penjualan.loop-menu', ['menu' => $this->param['menu']]);
         }
 
         $this->param['pageInfo'] = 'Daftar Menu';
         $this->param['btnRight']['text'] = 'Lihat Penjualan';
         $this->param['btnRight']['link'] = route('penjualan.index');
         $this->param['kode_penjualan'] = $this->getKode();
-        $this->param['kategori'] = KategoriMenu::select('id_kategori_menu','kategori_menu')->get();
-        $this->param['meja'] = \DB::table('meja')->where('nama_meja', 'Hotel Room')->orWhereNotIn('id_meja', function($query){
-            $query->select('id_meja')->from('penjualan')->where('status_bayar','Belum Bayar');
-        })->orderBy('nama_meja','asc')->get();
+        $this->param['kategori'] = KategoriMenu::select('id_kategori_menu', 'kategori_menu')->get();
+        $this->param['meja'] = \DB::table('meja')->where('nama_meja', 'Hotel Room')->orWhereNotIn('id_meja', function ($query) {
+            $query->select('id_meja')->from('penjualan')->where('status_bayar', 'Belum Bayar');
+        })->orderBy('nama_meja', 'asc')->get();
 
-        
+
         return view('penjualan.penjualan.tambah-penjualan', $this->param);
     }
 
@@ -206,15 +201,15 @@ class PenjualanController extends Controller
             $subtotal = $value * $_POST['harga'][$key];
             $totalHarga += $subtotal;
             $totalDiskon += $_POST['diskon'][$key];
-            
+
             $subtotalWithDiskon = $subtotal - $_POST['diskon'][$key];
 
             $cekIsPaket = \DB::table('menu as m')
-            ->select('is_paket')
-            ->join('kategori_menu as k','m.id_kategori_menu','k.id_kategori_menu')
-            ->where('kode_menu', $_POST['kode_menu'][$key])->first();
+                ->select('is_paket')
+                ->join('kategori_menu as k', 'm.id_kategori_menu', 'k.id_kategori_menu')
+                ->where('kode_menu', $_POST['kode_menu'][$key])->first();
 
-            if($cekIsPaket->is_paket=='0'){
+            if ($cekIsPaket->is_paket == '0') {
                 $totalPpn += $subtotalWithDiskon * 10 / 100;
             }
         }
@@ -242,7 +237,7 @@ class PenjualanController extends Controller
         $newPenjualan->id_user = \Auth::user()->id;
         if ($request->get('jenis_order') == 'Room Order') {
             $newPenjualan->nomor_kamar = $request->get('nomor_kamar');
-            $room_charge = $total * 10 /100;
+            $room_charge = $total * 10 / 100;
         }
         $newPenjualan->room_charge = $room_charge;
 
@@ -250,15 +245,15 @@ class PenjualanController extends Controller
 
         foreach ($_POST['kode_menu'] as $key => $value) {
             $cekIsPaket = \DB::table('menu as m')
-            ->select('is_paket')
-            ->join('kategori_menu as k','m.id_kategori_menu','k.id_kategori_menu')
-            ->where('kode_menu', $value)->first();
+                ->select('is_paket')
+                ->join('kategori_menu as k', 'm.id_kategori_menu', 'k.id_kategori_menu')
+                ->where('kode_menu', $value)->first();
 
             $newDetail = new DetailPenjualan;
             $newDetail->kode_penjualan = $request->get('kode_penjualan');
             $newDetail->kode_menu = $value;
             $newDetail->sub_total = $_POST['subtotal'][$key];
-            $newDetail->sub_total_ppn = $cekIsPaket->is_paket=='0' ? $_POST['subtotal'][$key] * 10 / 100 : 0;
+            $newDetail->sub_total_ppn = $cekIsPaket->is_paket == '0' ? $_POST['subtotal'][$key] * 10 / 100 : 0;
             $newDetail->keterangan = $_POST['keterangan'][$key];
             $newDetail->qty = $_POST['qty'][$key];
             $newDetail->diskon = $_POST['diskon'][$key];
@@ -273,26 +268,26 @@ class PenjualanController extends Controller
         //
     }
 
-    public function edit(Request $request,$kodePenjualan)
+    public function edit(Request $request, $kodePenjualan)
     {
-        $this->param['menu'] = Menu::where('status', '=', 'Ready')->select('kode_menu','nama','foto','harga_jual')->paginate(28);
+        $this->param['menu'] = Menu::where('status', '=', 'Ready')->select('kode_menu', 'nama', 'foto', 'harga_jual')->paginate(28);
 
-        if($request->ajax()){
-            return view('penjualan.penjualan.loop-menu',['menu' => $this->param['menu']]);
+        if ($request->ajax()) {
+            return view('penjualan.penjualan.loop-menu', ['menu' => $this->param['menu']]);
         }
         $this->param['pageInfo'] = 'Daftar Menu';
         $this->param['btnRight']['text'] = 'Lihat Penjualan';
         $this->param['btnRight']['link'] = route('penjualan.index');
-        $this->param['kategori'] = KategoriMenu::select('id_kategori_menu','kategori_menu')->get();
+        $this->param['kategori'] = KategoriMenu::select('id_kategori_menu', 'kategori_menu')->get();
         $this->param['penjualan'] = Penjualan::findOrFail($kodePenjualan);
-        $this->param['mejaSelected'] = Meja::where('id_meja',$this->param['penjualan']->id_meja)->get()[0];
-        $this->param['meja'] = \DB::table('meja')->whereNotIn('id_meja', function($query){
+        $this->param['mejaSelected'] = Meja::where('id_meja', $this->param['penjualan']->id_meja)->get()[0];
+        $this->param['meja'] = \DB::table('meja')->whereNotIn('id_meja', function ($query) {
             $query->select('id_meja')->from('penjualan')
-            ->where('status_bayar','Belum Bayar');
-        })->orderBy('nama_meja','asc')->get();
+                ->where('status_bayar', 'Belum Bayar');
+        })->orderBy('nama_meja', 'asc')->get();
 
-        $this->param['detail'] = \DB::table('detail_penjualan as dp')->select('dp.*','dp.sub_total as subtotal','m.harga_jual as harga','m.nama as nama_menu')->join('menu as m','dp.kode_menu','m.kode_menu')->where('kode_penjualan',$kodePenjualan)->get()->toArray();
-        $getKodeMenu = DetailPenjualan::select('kode_menu')->where('kode_penjualan',$kodePenjualan)->get()->toArray();
+        $this->param['detail'] = \DB::table('detail_penjualan as dp')->select('dp.*', 'dp.sub_total as subtotal', 'm.harga_jual as harga', 'm.nama as nama_menu')->join('menu as m', 'dp.kode_menu', 'm.kode_menu')->where('kode_penjualan', $kodePenjualan)->get()->toArray();
+        $getKodeMenu = DetailPenjualan::select('kode_menu')->where('kode_penjualan', $kodePenjualan)->get()->toArray();
         $arrKode = [];
         foreach ($getKodeMenu as $key => $value) {
             array_push($arrKode, $value['kode_menu']);
@@ -318,7 +313,7 @@ class PenjualanController extends Controller
             'kode_menu.*' => 'required',
             'qty.*' => 'required|integer|min:1',
         ]);
-        
+
         $totalHarga = 0;
         $totalDiskon = 0;
         $totalQty = 0;
@@ -336,57 +331,56 @@ class PenjualanController extends Controller
             $subtotalWithDiskon = $subtotal - $_POST['diskon'][$key];
 
             $cekIsPaket = \DB::table('menu as m')
-            ->select('is_paket')
-            ->join('kategori_menu as k','m.id_kategori_menu','k.id_kategori_menu')
-            ->where('kode_menu', $value)->first();
+                ->select('is_paket')
+                ->join('kategori_menu as k', 'm.id_kategori_menu', 'k.id_kategori_menu')
+                ->where('kode_menu', $value)->first();
 
-            if($cekIsPaket->is_paket=='0'){
+            if ($cekIsPaket->is_paket == '0') {
                 $totalPpn += $subtotalWithDiskon * 10 / 100;
             }
 
-            if(empty($_POST['id_detail'][$key])){
+            if (empty($_POST['id_detail'][$key])) {
                 //insert new
-    
+
                 $newDetail = new DetailPenjualan;
                 $newDetail->kode_penjualan = $request->get('kode_penjualan');
                 $newDetail->kode_menu = $_POST['kode_menu'][$key];
                 $newDetail->sub_total = $_POST['subtotal'][$key];
-                $newDetail->sub_total_ppn = $cekIsPaket->is_paket=='0' ? $_POST['subtotal'][$key] * 10 / 100 : 0;
+                $newDetail->sub_total_ppn = $cekIsPaket->is_paket == '0' ? $_POST['subtotal'][$key] * 10 / 100 : 0;
                 $newDetail->keterangan = $_POST['keterangan'][$key];
                 $newDetail->qty = $_POST['qty'][$key];
                 $newDetail->diskon = $_POST['diskon'][$key];
-    
+
                 $newDetail->save();
 
-                $cekJenis = Menu::select('jenis_menu')->where('kode_menu',$_POST['kode_menu'][$key])->get()[0];
+                $cekJenis = Menu::select('jenis_menu')->where('kode_menu', $_POST['kode_menu'][$key])->get()[0];
                 $arr = array(
                     'qty' => $_POST['qty'][$key],
                     'nama' => $_POST['nama_menu'][$key],
                     'keterangan' => $_POST['keterangan'][$key]
                 );
-                
+
                 $arrBillTambahan = array(
                     'kode_menu' => $_POST['kode_menu'][$key],
                     'qty' => $_POST['qty'][$key],
                     'nama' => $_POST['nama_menu'][$key],
                     'keterangan' => $_POST['keterangan'][$key],
                     'sub_total' => $_POST['subtotal'][$key],
-                    'sub_total_ppn' => $cekIsPaket->is_paket=='0' ? $_POST['subtotal'][$key] * 10 / 100 : 0,
+                    'sub_total_ppn' => $cekIsPaket->is_paket == '0' ? $_POST['subtotal'][$key] * 10 / 100 : 0,
                     'diskon' => $_POST['diskon'][$key],
                 );
 
-                if($cekJenis->jenis_menu=='Dapur'){
+                if ($cekJenis->jenis_menu == 'Dapur') {
                     $param['dapur'][count($param['dapur'])] = $arr;
-                }else{
+                } else {
                     $param['bar'][count($param['bar'])] = $arr;
                 }
 
                 $param['billTambahan'][count($param['billTambahan'])] = $arrBillTambahan;
-            }
-            else{
-                $getDetail = \DB::table('detail_penjualan as d')->select('d.qty','d.keterangan','m.jenis_menu')->join('menu as m','d.kode_menu','m.kode_menu')->where('d.id_detail_penjualan',$_POST['id_detail'][$key])->get()[0];
-                if($getDetail->qty!=$_POST['qty'][$key] || $getDetail->keterangan!=$_POST['keterangan'][$key]){
-                    //update   
+            } else {
+                $getDetail = \DB::table('detail_penjualan as d')->select('d.qty', 'd.keterangan', 'm.jenis_menu')->join('menu as m', 'd.kode_menu', 'm.kode_menu')->where('d.id_detail_penjualan', $_POST['id_detail'][$key])->get()[0];
+                if ($getDetail->qty != $_POST['qty'][$key] || $getDetail->keterangan != $_POST['keterangan'][$key]) {
+                    //update
                     $arr = array(
                         'qty' => ($_POST['qty'][$key] - $getDetail->qty),
                         'nama' => $_POST['nama_menu'][$key],
@@ -399,31 +393,31 @@ class PenjualanController extends Controller
                         'nama' => $_POST['nama_menu'][$key],
                         'keterangan' => $_POST['keterangan'][$key],
                         'sub_total' => $_POST['subtotal'][$key] / ($_POST['qty'][$key]),
-                        'sub_total_ppn' => $cekIsPaket->is_paket=='0' ? $_POST['subtotal'][$key] / ($_POST['qty'][$key]) * 10 / 100 : 0,
+                        'sub_total_ppn' => $cekIsPaket->is_paket == '0' ? $_POST['subtotal'][$key] / ($_POST['qty'][$key]) * 10 / 100 : 0,
                         'diskon' => $_POST['diskon'][$key] != 0 ? $_POST['diskon'][$key] / $_POST['diskon'][$key] / ($_POST['qty'][$key]) : 0,
                     );
 
-                    if($getDetail->jenis_menu=='Dapur'){
+                    if ($getDetail->jenis_menu == 'Dapur') {
                         $param['dapur'][count($param['dapur'])] = $arr;
-                    }else{
+                    } else {
                         $param['bar'][count($param['bar'])] = $arr;
                     }
 
                     $param['billTambahan'][count($param['billTambahan'])] = $arrBillTambahan;
-    
+
                     DetailPenjualan::where('id_detail_penjualan', $_POST['id_detail'][$key])
-                    ->update([
-                        'sub_total' => $_POST['subtotal'][$key],
-                        'sub_total_ppn' => $cekIsPaket->is_paket=='0' ? $_POST['subtotal'][$key] * 10 / 100 : 0,
-                        'keterangan' => $_POST['keterangan'][$key],
-                        'qty' => $_POST['qty'][$key], 
-                        'diskon' => $_POST['diskon'][$key],
-                    ]);
+                        ->update([
+                            'sub_total' => $_POST['subtotal'][$key],
+                            'sub_total_ppn' => $cekIsPaket->is_paket == '0' ? $_POST['subtotal'][$key] * 10 / 100 : 0,
+                            'keterangan' => $_POST['keterangan'][$key],
+                            'qty' => $_POST['qty'][$key],
+                            'diskon' => $_POST['diskon'][$key],
+                        ]);
                 }
             }
         }
 
-        if(isset($_POST['id_delete'])){
+        if (isset($_POST['id_delete'])) {
             foreach ($_POST['id_delete'] as $key => $value) {
                 //delete
                 DetailPenjualan::where('id_detail_penjualan', $value)->delete();
@@ -436,36 +430,34 @@ class PenjualanController extends Controller
         if ($_POST['jenis_order'] == 'Room Order') {
             $nomor_kamar = $_POST['nomor_kamar'];
             $room_charge = $total * 10 / 100;
-        }
-        else{
+        } else {
             $nomor_kamar = NULL;
         }
-        Penjualan::where('kode_penjualan',$kodePenjualan)
-        ->update([
-            'nama_customer' => $_POST['nama_customer'],
-            'no_hp' => $_POST['no_hp'],
-            'id_meja' => $_POST['id_meja'],
-            'jenis_order' => $_POST['jenis_order'],
-            'jumlah_item' => count($_POST['kode_menu']),
-            'total_harga' => $totalHarga,
-            'total_ppn' => $totalPpn,
-            // 'waktu' => date('Y-m-d H:i:s'),
-            'jumlah_qty' => $totalQty,
-            'total_diskon' => $totalDiskon,
-            'room_charge' => $room_charge,
-            'nomor_kamar' => $nomor_kamar,
-            'id_user' => \Auth::user()->id,
-        ]);
+        Penjualan::where('kode_penjualan', $kodePenjualan)
+            ->update([
+                'nama_customer' => $_POST['nama_customer'],
+                'no_hp' => $_POST['no_hp'],
+                'id_meja' => $_POST['id_meja'],
+                'jenis_order' => $_POST['jenis_order'],
+                'jumlah_item' => count($_POST['kode_menu']),
+                'total_harga' => $totalHarga,
+                'total_ppn' => $totalPpn,
+                // 'waktu' => date('Y-m-d H:i:s'),
+                'jumlah_qty' => $totalQty,
+                'total_diskon' => $totalDiskon,
+                'room_charge' => $room_charge,
+                'nomor_kamar' => $nomor_kamar,
+                'id_user' => \Auth::user()->id,
+            ]);
 
-        if(count($param['dapur'])!=0 || count($param['bar'])!=0){
+        if (count($param['dapur']) != 0 || count($param['bar']) != 0) {
             // if (isset($_POST['print'])) {
-            return redirect()->route('cetak-dapur', ['kode' => $kodePenjualan.'?update=up'])->with('data',$param);
+            return redirect()->route('cetak-dapur', ['kode' => $kodePenjualan . '?update=up'])->with('data', $param);
             // }
             // else{
             //     return redirect()->route('edit-penjualan', ['kode' => $kodePenjualan]);
             // }
-        }
-        else{
+        } else {
             return redirect()->route('edit-penjualan', ['kode' => $kodePenjualan]);
         }
     }
@@ -478,12 +470,10 @@ class PenjualanController extends Controller
      */
     public function destroy($kode)
     {
-        DetailPenjualan::where('kode_penjualan',$kode)->delete();
-        Penjualan::where('kode_penjualan',$kode)->delete();
+        DetailPenjualan::where('kode_penjualan', $kode)->delete();
+        Penjualan::where('kode_penjualan', $kode)->delete();
 
         return redirect()->route('penjualan.index')->withStatus('Data berhasil dihapus.');
-
-
     }
 
     public function listPembayaran()
@@ -496,28 +486,28 @@ class PenjualanController extends Controller
 
         return view('penjualan.pembayaran.list-pembayaran', ['penjualan' => $penjualan], $this->param);
     }
-    
+
     public function pembayaran($kode)
     {
-        $this->param['pageInfo'] = 'Pembayaran Dengan Kode '.$kode;
+        $this->param['pageInfo'] = 'Pembayaran Dengan Kode ' . $kode;
         $this->param['btnRight']['text'] = 'Lihat Penjualan';
         $this->param['btnRight']['link'] = route('penjualan.index');
 
-        $penjualan = \DB::table('penjualan as p')->select('p.*','m.nama_meja')->join('meja as m','p.id_meja','m.id_meja')->where('kode_penjualan',$kode)->get()[0];
-        $detail = DetailPenjualan::select('detail_penjualan.*','menu.harga_jual')->join('menu','detail_penjualan.kode_menu','menu.kode_menu')->where('kode_penjualan', $kode)->get();
+        $penjualan = \DB::table('penjualan as p')->select('p.*', 'm.nama_meja')->join('meja as m', 'p.id_meja', 'm.id_meja')->where('kode_penjualan', $kode)->get()[0];
+        $detail = DetailPenjualan::select('detail_penjualan.*', 'menu.harga_jual')->join('menu', 'detail_penjualan.kode_menu', 'menu.kode_menu')->where('kode_penjualan', $kode)->get();
 
         return view('penjualan.pembayaran.form-pembayaran', ['penjualan' => $penjualan, 'detail' => $detail], $this->param);
     }
 
     public function savePembayaran(Request $request, $kode)
     {
-        if($_POST['tipeBill']=='normal'){
+        if ($_POST['tipeBill'] == 'normal') {
             $penjualan = Penjualan::findOrFail($kode);
             $validatedData = $request->validate([
                 'bayar' => 'required|numeric|gte:grand_total',
                 'jenis_bayar' => 'required'
             ]);
-            
+
             $penjualan->jenis_bayar = $request->get('jenis_bayar');
             $penjualan->no_kartu = $request->get('no_kartu');
             $penjualan->status_bayar = 'Sudah Bayar';
@@ -529,18 +519,16 @@ class PenjualanController extends Controller
             $penjualan->charge = $request->get('charge');
             $penjualan->waktu_bayar = date('Y-m-d H:i:s');
             $penjualan->id_user = \Auth::user()->id;
-            if($request->get('isTravel')){
+            if ($request->get('isTravel')) {
                 $penjualan->isTravel = $request->get('isTravel');
-            }
-            else{
+            } else {
                 $penjualan->isTravel = 'False';
             }
-    
+
             $penjualan->save();
-    
-            return redirect()->route('cetak-bill',$kode.'?payment=pay');    
-        }
-        else{
+
+            return redirect()->route('cetak-bill', $kode . '?payment=pay');
+        } else {
             $keys = array_keys($_POST['guestQty']);
             $arrKode = [];
             foreach ($keys as $key => $index) {
@@ -552,17 +540,16 @@ class PenjualanController extends Controller
                 $total = $totalAfterDiskon + $ppn;
 
                 $diskonPersen = $_POST['diskon'][$index] * $total / 100;
-                
-                if($index==1){
+
+                if ($index == 1) {
                     $kode = $_POST['kode_penjualan'];
-                }
-                else{
+                } else {
                     $kode = $this->getKode();
                 }
                 array_push($arrKode, $kode);
                 $update = array(
                     'kode_penjualan' => $kode,
-                    'nama_customer' => 'Guest '.$index,
+                    'nama_customer' => 'Guest ' . $index,
                     'jumlah_item' => count($_POST['guestQty'][$index]),
                     'jenis_bayar' => $_POST['jenis_bayar'][$index],
                     'no_kartu' => $_POST['no_kartu'][$index],
@@ -577,11 +564,10 @@ class PenjualanController extends Controller
                     'id_meja' => $_POST['id_meja'],
                     'charge' => $_POST['charge'][$index]
                 );
-                if($index==1){
+                if ($index == 1) {
                     Penjualan::where('kode_penjualan', $kode)->update($update);
                     DetailPenjualan::where('kode_penjualan', $kode)->delete();
-                }
-                else{
+                } else {
                     Penjualan::insert($update);
                 }
 
@@ -601,50 +587,49 @@ class PenjualanController extends Controller
                     DetailPenjualan::insert($detail);
                 }
             }
-            $sendKode = implode(",",$arrKode);
-            return redirect()->route('cetak-bill',$sendKode.'?payment=pay');
+            $sendKode = implode(",", $arrKode);
+            return redirect()->route('cetak-bill', $sendKode . '?payment=pay');
         }
     }
     public function filter()
     {
         $menu = Menu::where('status', '=', 'Ready');
-        if($_GET['idKategori']!='' || $_GET['key']!=""){
-            if($_GET['key']!='' && $_GET['idKategori']==''){
-                $menu->where('nama','like','%'.$_GET['key'].'%');
-            }
-            else{
-                $menu->where('nama','like','%'.$_GET['key'].'%')
-                ->where('id_kategori_menu', $_GET['idKategori']);
+        if ($_GET['idKategori'] != '' || $_GET['key'] != "") {
+            if ($_GET['key'] != '' && $_GET['idKategori'] == '') {
+                $menu->where('nama', 'like', '%' . $_GET['key'] . '%');
+            } else {
+                $menu->where('nama', 'like', '%' . $_GET['key'] . '%')
+                    ->where('id_kategori_menu', $_GET['idKategori']);
             }
         }
-        $menu->select('kode_menu','nama','foto','harga_jual');
-        $filter = $menu->paginate(28)->appends(array('idKategori' => $_GET['idKategori'],'key' => $_GET['key']));
+        $menu->select('kode_menu', 'nama', 'foto', 'harga_jual');
+        $filter = $menu->paginate(28)->appends(array('idKategori' => $_GET['idKategori'], 'key' => $_GET['key']));
 
         return view('penjualan.penjualan.loop-menu', ['menu' => $filter]);
     }
 
     public function laporanGeneral()
     {
-        $laporan = Penjualan::leftJoin('users as u','penjualan.id_user','u.id')->where('status_bayar','Sudah Bayar')->whereBetween('waktu_bayar',[$_GET['dari'] . ' 00:00:00',$_GET['sampai'] . ' 23:59:59'])->orderBy('waktu_bayar','asc');
+        $laporan = Penjualan::leftJoin('users as u', 'penjualan.id_user', 'u.id')->where('status_bayar', 'Sudah Bayar')->whereBetween('waktu_bayar', [$_GET['dari'] . ' 00:00:00', $_GET['sampai'] . ' 23:59:59'])->orderBy('waktu_bayar', 'asc');
         if ($_GET['tipe_pembayaran']) {
             $laporan->where('jenis_bayar', 'LIKE', "%$_GET[tipe_pembayaran]");
         }
         $laporan->whereNull('deleted_at');
         return $laporan->get();
     }
-    
+
     public function laporanKhusus()
     {
-        $laporan = Penjualan::leftJoin('users as u','penjualan.id_user','u.id')->where('status_bayar','Sudah Bayar')->whereBetween('waktu_bayar',[$_GET['dari'] . ' 00:00:00',$_GET['sampai'] . ' 23:59:59'])->orderBy('waktu_bayar','asc');
+        $laporan = Penjualan::leftJoin('users as u', 'penjualan.id_user', 'u.id')->where('status_bayar', 'Sudah Bayar')->whereBetween('waktu_bayar', [$_GET['dari'] . ' 00:00:00', $_GET['sampai'] . ' 23:59:59'])->orderBy('waktu_bayar', 'asc');
         if ($_GET['tipe_pembayaran']) {
             $laporan->where('jenis_bayar', 'LIKE', "%$_GET[tipe_pembayaran]");
         }
         return $laporan->get();
     }
-    
+
     public function laporanMenuFavorit()
     {
-        $laporan = \DB::table('menu as m')->select(\DB::raw('m.kode_menu,m.nama, SUM(dp.qty) as qty, sum(sub_total) as total'))->leftJoin('detail_penjualan as dp','m.kode_menu','dp.kode_menu')->join('penjualan as p', 'dp.kode_penjualan','p.kode_penjualan')->where('p.status_bayar','Sudah Bayar')->whereBetween('p.waktu_bayar',[$_GET['dari'] . ' 00:00:00',$_GET['sampai'] . ' 23:59:59'])->groupBy('m.kode_menu')->orderBy('qty','desc')->orderBy('total','desc');
+        $laporan = \DB::table('menu as m')->select(\DB::raw('m.kode_menu,m.nama, SUM(dp.qty) as qty, sum(sub_total) as total'))->leftJoin('detail_penjualan as dp', 'm.kode_menu', 'dp.kode_menu')->join('penjualan as p', 'dp.kode_penjualan', 'p.kode_penjualan')->where('p.status_bayar', 'Sudah Bayar')->whereBetween('p.waktu_bayar', [$_GET['dari'] . ' 00:00:00', $_GET['sampai'] . ' 23:59:59'])->groupBy('m.kode_menu')->orderBy('qty', 'desc')->orderBy('total', 'desc');
         if (auth()->user()->level == 'Kasir') {
             $laporan->whereNull('p.deleted_at');
         }
@@ -652,88 +637,93 @@ class PenjualanController extends Controller
     }
     public function laporanTidakTerjual()
     {
-        $laporan = \DB::table('menu as m')->select('m.kode_menu','m.nama','m.hpp','m.harga_jual','m.status')->whereNotIn('m.kode_menu', function($query){
-            $query->select('dp.kode_menu')->from('detail_penjualan as dp')->join('penjualan as p','dp.kode_penjualan','p.kode_penjualan')->where('p.status_bayar','Sudah Bayar')->whereBetween('p.waktu_bayar',[$_GET['dari'] . ' 00:00:00',$_GET['sampai']. ' 23:59:59']);
-        })->orderBy('m.kode_menu','asc')->get();
+        $laporan = \DB::table('menu as m')->select('m.kode_menu', 'm.nama', 'm.hpp', 'm.harga_jual', 'm.status')->whereNotIn('m.kode_menu', function ($query) {
+            $query->select('dp.kode_menu')->from('detail_penjualan as dp')->join('penjualan as p', 'dp.kode_penjualan', 'p.kode_penjualan')->where('p.status_bayar', 'Sudah Bayar')->whereBetween('p.waktu_bayar', [$_GET['dari'] . ' 00:00:00', $_GET['sampai'] . ' 23:59:59']);
+        })->orderBy('m.kode_menu', 'asc')->get();
         return $laporan;
     }
-    
+
     public function laporanPenjualan()
     {
         $this->param['pageInfo'] = 'Laporan Pembayaran';
         $this->param['btnRight']['text'] = 'Tambah Penjualan';
         $this->param['btnRight']['link'] = route('penjualan.create');
-        if(isset($_GET['dari']) && isset($_GET['sampai'])){
-            if($_GET['tipe']=='general'){
+        if (isset($_GET['dari']) && isset($_GET['sampai'])) {
+            if ($_GET['tipe'] == 'general') {
                 $this->param['penjualan'] = $this->laporanGeneral();
-            }
-            else if($_GET['tipe']=='khusus'){
+            } else if ($_GET['tipe'] == 'khusus') {
                 $this->param['penjualan'] = $this->laporanKhusus();
-            }
-            else if($_GET['tipe']=='menu-favorit'){
+            } else if ($_GET['tipe'] == 'menu-favorit') {
                 $this->param['penjualan'] = $this->laporanMenuFavorit();
-            }
-            else if($_GET['tipe']=='tidak-terjual'){
+            } else if ($_GET['tipe'] == 'tidak-terjual') {
                 $this->param['penjualan'] = $this->laporanTidakTerjual();
             }
         }
         return view('penjualan.laporan.laporan-penjualan', $this->param);
     }
-    
-    public function printLaporanPenjualan(){
-        if($_GET['tipe']=='general'){
+
+    public function printLaporanPenjualan()
+    {
+        if ($_GET['tipe'] == 'general') {
             $data['penjualan'] = $this->laporanGeneral();
-        }
-        else if($_GET['tipe']=='khusus'){
+        } else if ($_GET['tipe'] == 'khusus') {
             $data['penjualan'] =  $this->laporanKhusus();
-        }
-        else if($_GET['tipe']=='menu-favorit'){
+        } else if ($_GET['tipe'] == 'menu-favorit') {
             $data['penjualan'] =  $this->laporanMenuFavorit();
-        }
-        else if($_GET['tipe']=='tidak-terjual'){
+        } else if ($_GET['tipe'] == 'tidak-terjual') {
             $data['penjualan'] = $this->laporanTidakTerjual();
         }
-        return view('penjualan.laporan.print-laporan-penjualan-'.$_GET['tipe'], $data);
+        return view('penjualan.laporan.print-laporan-penjualan-' . $_GET['tipe'], $data);
     }
 
     public function menuTerlaris(Request $request)
     {
         $dari = $request->get('dari');
         $sampai = $request->get('sampai');
+        $selectedKategori = $request->get('id_kategori_menu');
+        $kategoriMenu = KategoriMenu::get();
         $laporan = '';
-        if($dari && $sampai){
+        if ($dari && $sampai) {
             $laporan = \DB::table('penjualan')
-                            ->whereBetween('waktu', [$dari, $sampai])
-                            ->join('detail_penjualan AS dt', \DB::raw('dt.kode_penjualan'), '=', 'penjualan.kode_penjualan')
-                            ->join('menu AS m', \DB::raw('dt.kode_menu'), '=', \DB::raw('m.kode_menu'))
-                            ->select(\DB::raw('SUM(dt.qty) as jml'), 'dt.kode_menu', 'm.nama')
-                            ->groupBy(\DB::raw('dt.kode_menu'))
-                            ->orderBy(\DB::raw('jml'), 'DESC')
-                            ->get();
+                ->whereBetween('waktu', [$dari, $sampai])
+                ->join('detail_penjualan AS dt', \DB::raw('dt.kode_penjualan'), '=', 'penjualan.kode_penjualan')
+                ->join('menu AS m', \DB::raw('dt.kode_menu'), '=', \DB::raw('m.kode_menu'))
+                ->join('kategori_menu AS k', \DB::raw('k.id_kategori_menu'), '=', \DB::raw('m.id_kategori_menu'))
+                ->select(\DB::raw('SUM(dt.qty) as jml'), 'dt.kode_menu', 'm.nama')
+                ->groupBy(\DB::raw('dt.kode_menu'))
+                ->orderBy(\DB::raw('jml'), 'DESC');
+
+            if ($selectedKategori) {
+                $laporan->where('m.id_kategori_menu', $selectedKategori);
+            }
         }
 
         $this->param['pageInfo'] = 'Menu Terlaris';
         $this->param['btnRight']['text'] = '';
         $this->param['btnRight']['link'] = '';
         $this->param['laporan'] = $laporan;
+        $this->param['kategoriMenu'] = $kategoriMenu;
 
-        return view('laporan.laporan-menu.menu-terlaris', ['laporan' => $laporan], $this->param);
+        return view('laporan.laporan-menu.menu-terlaris', ['laporan' => $laporan == '' ? $laporan :  $laporan->get()], $this->param);
     }
-    
+
     public function printMenuTerlaris(Request $request)
     {
         $dari = $request->get('dari');
         $sampai = $request->get('sampai');
+        $selectedKategori = $request->get('id_kategori_menu');
         $laporan = '';
-        if($dari && $sampai){
+        if ($dari && $sampai) {
             $laporan = \DB::table('penjualan')
-                            ->whereBetween('waktu', [$dari, $sampai])
-                            ->join('detail_penjualan AS dt', \DB::raw('dt.kode_penjualan'), '=', 'penjualan.kode_penjualan')
-                            ->join('menu AS m', \DB::raw('dt.kode_menu'), '=', \DB::raw('m.kode_menu'))
-                            ->select(\DB::raw('SUM(dt.qty) as jml'), 'dt.kode_menu', 'm.nama')
-                            ->groupBy(\DB::raw('dt.kode_menu'))
-                            ->orderBy(\DB::raw('jml'), 'DESC')
-                            ->get();
+                ->whereBetween('waktu', [$dari, $sampai])
+                ->join('detail_penjualan AS dt', \DB::raw('dt.kode_penjualan'), '=', 'penjualan.kode_penjualan')
+                ->join('menu AS m', \DB::raw('dt.kode_menu'), '=', \DB::raw('m.kode_menu'))
+                ->select(\DB::raw('SUM(dt.qty) as jml'), 'dt.kode_menu', 'm.nama')
+                ->groupBy(\DB::raw('dt.kode_menu'))
+                ->orderBy(\DB::raw('jml'), 'DESC');
+            if ($selectedKategori) {
+                $laporan->where('m.id_kategori_menu', $selectedKategori);
+            }
         }
 
         // $this->param['pageInfo'] = 'Menu Terlaris';
@@ -741,7 +731,7 @@ class PenjualanController extends Controller
         // $this->param['btnRight']['link'] = '';
         $this->param['laporan'] = $laporan;
 
-        return view('laporan.laporan-menu.print-menu-terlaris', ['laporan' => $laporan], $this->param);
+        return view('laporan.laporan-menu.print-menu-terlaris', ['laporan' => $laporan->get()], $this->param);
     }
 
     public function menuPalingMenghasilkan(Request $request)
@@ -749,15 +739,15 @@ class PenjualanController extends Controller
         $dari = $request->get('dari');
         $sampai = $request->get('sampai');
         $laporan = '';
-        if($dari && $sampai){
+        if ($dari && $sampai) {
             $laporan = \DB::table('penjualan')
-                            ->whereBetween('waktu', [$dari, $sampai])
-                            ->join('detail_penjualan AS dt', \DB::raw('dt.kode_penjualan'), '=', 'penjualan.kode_penjualan')
-                            ->join('menu AS m', \DB::raw('dt.kode_menu'), '=', \DB::raw('m.kode_menu'))
-                            ->select(\DB::raw('SUM(dt.sub_total) - SUM(dt.diskon) as jml'), 'dt.kode_menu', 'm.nama')
-                            ->groupBy(\DB::raw('dt.kode_menu'))
-                            ->orderBy(\DB::raw('jml'), 'DESC')
-                            ->get();
+                ->whereBetween('waktu', [$dari, $sampai])
+                ->join('detail_penjualan AS dt', \DB::raw('dt.kode_penjualan'), '=', 'penjualan.kode_penjualan')
+                ->join('menu AS m', \DB::raw('dt.kode_menu'), '=', \DB::raw('m.kode_menu'))
+                ->select(\DB::raw('SUM(dt.sub_total) - SUM(dt.diskon) as jml'), 'dt.kode_menu', 'm.nama')
+                ->groupBy(\DB::raw('dt.kode_menu'))
+                ->orderBy(\DB::raw('jml'), 'DESC')
+                ->get();
         }
 
         $this->param['pageInfo'] = 'Menu Paling Menghasilkan';
@@ -767,21 +757,21 @@ class PenjualanController extends Controller
 
         return view('laporan.laporan-menu.menu-paling-menghasilkan', ['laporan' => $laporan], $this->param);
     }
-    
+
     public function printMenuPalingMenghasilkan(Request $request)
     {
         $dari = $request->get('dari');
         $sampai = $request->get('sampai');
         $laporan = '';
-        if($dari && $sampai){
+        if ($dari && $sampai) {
             $laporan = \DB::table('penjualan')
-                            ->whereBetween('waktu', [$dari, $sampai])
-                            ->join('detail_penjualan AS dt', \DB::raw('dt.kode_penjualan'), '=', 'penjualan.kode_penjualan')
-                            ->join('menu AS m', \DB::raw('dt.kode_menu'), '=', \DB::raw('m.kode_menu'))
-                            ->select(\DB::raw('SUM(dt.sub_total) - SUM(dt.diskon) as jml'), 'dt.kode_menu', 'm.nama')
-                            ->groupBy(\DB::raw('dt.kode_menu'))
-                            ->orderBy(\DB::raw('jml'), 'DESC')
-                            ->get();
+                ->whereBetween('waktu', [$dari, $sampai])
+                ->join('detail_penjualan AS dt', \DB::raw('dt.kode_penjualan'), '=', 'penjualan.kode_penjualan')
+                ->join('menu AS m', \DB::raw('dt.kode_menu'), '=', \DB::raw('m.kode_menu'))
+                ->select(\DB::raw('SUM(dt.sub_total) - SUM(dt.diskon) as jml'), 'dt.kode_menu', 'm.nama')
+                ->groupBy(\DB::raw('dt.kode_menu'))
+                ->orderBy(\DB::raw('jml'), 'DESC')
+                ->get();
         }
 
         // $this->param['pageInfo'] = 'Menu Paling Menghasilkan';
@@ -792,24 +782,23 @@ class PenjualanController extends Controller
         return view('laporan.laporan-menu.print-menu-paling-menghasilkan', ['laporan' => $laporan], $this->param);
     }
 
-    public function cetakBill($kode,$payment='')
+    public function cetakBill($kode, $payment = '')
     {
         $resto = \DB::table('perusahaan')->select('nama', 'alamat', 'kota', 'telepon', 'email')->where('id_perusahaan', 1)->get();
-        return view('penjualan.cetak.cetak-bill', ['resto' => $resto[0],'payment' => $payment,'kode' => $kode]);
+        return view('penjualan.cetak.cetak-bill', ['resto' => $resto[0], 'payment' => $payment, 'kode' => $kode]);
     }
 
     public function cetakDapur($kode)
     {
-        $param['penjualan'] = \DB::table('penjualan as p')->select('p.room_charge','p.nama_customer','p.kode_penjualan', 'p.waktu','m.nama_meja','p.total_diskon','p.total_diskon_tambahan','p.bayar','p.kembalian', 'p.jenis_order', 'p.nomor_kamar', 'p.jenis_bayar', 'p.charge')->join('meja as m','p.id_meja','m.id_meja')->where('p.kode_penjualan',$kode)->get()[0];
-        if(!empty(Session::get('data')['update'])){
+        $param['penjualan'] = \DB::table('penjualan as p')->select('p.room_charge', 'p.nama_customer', 'p.kode_penjualan', 'p.waktu', 'm.nama_meja', 'p.total_diskon', 'p.total_diskon_tambahan', 'p.bayar', 'p.kembalian', 'p.jenis_order', 'p.nomor_kamar', 'p.jenis_bayar', 'p.charge')->join('meja as m', 'p.id_meja', 'm.id_meja')->where('p.kode_penjualan', $kode)->get()[0];
+        if (!empty(Session::get('data')['update'])) {
             $param['bar'] = Session::get('data')['bar'];
             $param['dapur'] = Session::get('data')['dapur'];
             $param['billTambahan'] = Session::get('data')['billTambahan'];
             $param['cetakDapur'] = Session::get('data')['cetakDapur'];
-        }
-        else{
-            $param['bar'] = \DB::table('detail_penjualan as dp')->select('dp.qty','m.nama','dp.keterangan')->join('menu as m','dp.kode_menu','m.kode_menu')->where('dp.kode_penjualan', $kode)->where('m.jenis_menu','Bar')->get();
-            $param['dapur'] = \DB::table('detail_penjualan as dp')->select('dp.qty','m.nama','dp.keterangan')->join('menu as m','dp.kode_menu','m.kode_menu')->where('dp.kode_penjualan', $kode)->where('m.jenis_menu','Dapur')->get();        
+        } else {
+            $param['bar'] = \DB::table('detail_penjualan as dp')->select('dp.qty', 'm.nama', 'dp.keterangan')->join('menu as m', 'dp.kode_menu', 'm.kode_menu')->where('dp.kode_penjualan', $kode)->where('m.jenis_menu', 'Bar')->get();
+            $param['dapur'] = \DB::table('detail_penjualan as dp')->select('dp.qty', 'm.nama', 'dp.keterangan')->join('menu as m', 'dp.kode_menu', 'm.kode_menu')->where('dp.kode_penjualan', $kode)->where('m.jenis_menu', 'Dapur')->get();
             $param['cetakDapur'] = 'true';
         }
         $param['resto'] = \DB::table('perusahaan')->select('nama', 'alamat', 'kota', 'telepon', 'email')->where('id_perusahaan', 1)->get();
@@ -819,18 +808,16 @@ class PenjualanController extends Controller
 
     public function changeToPiutang($kode)
     {
-        try{
+        try {
             Penjualan::where('kode_penjualan', $kode)
-            ->update([
-                'status_bayar' => 'Piutang'
-            ]);
+                ->update([
+                    'status_bayar' => 'Piutang'
+                ]);
 
             return redirect()->route('penjualan.index')->withStatus('Berhasil menjadikan piutang.');
-        }
-        catch(Exception $e){
+        } catch (Exception $e) {
             error_log($e->getMessage());
-        }
-        catch(\Illuminate\Database\QueryException $e){
+        } catch (\Illuminate\Database\QueryException $e) {
             error_log($e->getMessage());
         }
     }
