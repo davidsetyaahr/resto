@@ -156,6 +156,8 @@
                         <label for=""><strong>Metode Pembayaran</strong></label>
                         <select name="jenis_bayar" class="form-control @error('bayar') is-invalid @enderror" id="jenis_bayar">
                           <option value="Tunai" {{old('jenis_bayar') == 'Tunai' ? 'selected' : ''}}>Tunai</option>
+                          <option value="Shopee Food" {{old('jenis_bayar') == 'Shopee Food' ? 'selected' : ''}}>Shopee Food</option>
+                          <option value="Gofood" {{old('jenis_bayar') == 'Gofood' ? 'selected' : ''}}>Gofood</option>
                           <option value="Debit BCA" {{old('jenis_bayar') == 'Debit BCA' ? 'selected' : ''}}>Debit BCA</option>
                           <option value="Debit BRI" {{old('jenis_bayar') == 'Debit BRI' ? 'selected' : ''}}>Debit BRI</option>
                           <option value="Debit Bank Lain" {{old('jenis_bayar') == 'Debit Bank Lain' ? 'selected' : ''}}>Debit Bank Lain</option>
