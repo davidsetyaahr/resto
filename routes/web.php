@@ -87,6 +87,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('diskon/get-detail-menu', 'DiskonController@getDetailMenu');
         Route::get('diskon/addDetailDiskon', 'DiskonController@addDetailDiskon');
         Route::get('diskon/getDetailDiskon', 'DiskonController@getDetailDiskon');
+        Route::patch('menu/{id}/activate', 'MenuController@activateMenu')->name('menu.activate');
         Route::resource('diskon', 'DiskonController');
         Route::resource('kategori-menu', 'KategoriMenuController');
         Route::resource('menu', 'MenuController');

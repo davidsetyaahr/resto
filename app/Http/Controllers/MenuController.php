@@ -195,8 +195,20 @@ class MenuController extends Controller
     public function destroy($id)
     {
         $menu = Menu::findOrFail($id);
-        $menu->delete();
+        $menu->update([
+            'status' => 'Habis'
+        ]);
 
-        return redirect()->route('menu.index')->withStatus('Data berhasil dihapus.');
+        return redirect()->route('menu.index')->withStatus('Data berhasil dinonaktifkan.');
+    }
+
+    public function activateMenu($id)
+    {
+        $menu = Menu::findOrFail($id);
+        $menu->update([
+            'status' => 'Ready'
+        ]);
+
+        return redirect()->route('menu.index')->withStatus('Data berhasil diaktifkan.');
     }
 }

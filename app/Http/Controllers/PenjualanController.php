@@ -162,7 +162,7 @@ class PenjualanController extends Controller
 
     public function create(Request $request)
     {
-        $this->param['menu'] = Menu::where('status', '=', 'Ready')->select('kode_menu', 'nama', 'foto', 'harga_jual')->paginate(28);
+        $this->param['menu'] = Menu::where('status', '=', 'Ready')->select('kode_menu', 'nama', 'foto', 'harga_jual')->paginate(16);
 
         if ($request->ajax()) {
             return view('penjualan.penjualan.loop-menu', ['menu' => $this->param['menu']]);
