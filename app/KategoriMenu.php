@@ -14,4 +14,9 @@ class KategoriMenu extends Model
     {
         return $this->hasMany('App\Menu');
     }
+
+    public function grup_kategori()
+    {
+        return $this->belongsTo('App\GrupKategori', 'id_grup_kategori', 'id');
+    }
 }

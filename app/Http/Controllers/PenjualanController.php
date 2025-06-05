@@ -627,12 +627,42 @@ class PenjualanController extends Controller
         return $laporan->get();
     }
 
+    public function laporanKategori()
+    {
+        $laporan = DB::table('menu as m')
+            ->select(DB::raw(
+                'gk.nama_grup_kategori,
+         SUM(dp.qty) as total_qty,
+         SUM(dp.sub_total) as grand_total' // Asumsi kolom sub_total ada di tabel detail_penjualan (dp)
+            ))
+            // 1. Join dari menu (m) ke kategori_menu (km)
+            // Asumsi Primary Key di tabel 'kategori_menu' adalah 'id_kategori_menu'
+            ->join('kategori_menu as km', 'm.id_kategori_menu', '=', 'km.id_kategori_menu')
+            // 2. Join dari kategori_menu (km) ke grup_kategori (gk)
+            // Asumsi Foreign Key di 'kategori_menu' adalah 'id_grup_kategori' dan PK di 'grup_kategori' adalah 'id_grup_kategori'
+            ->join('grup_kategori as gk', 'km.id_grup_kategori', '=', 'gk.id')
+            ->leftJoin('detail_penjualan as dp', 'm.kode_menu', '=', 'dp.kode_menu')
+            ->join('penjualan as p', 'dp.kode_penjualan', '=', 'p.kode_penjualan')
+            ->where('p.status_bayar', 'Sudah Bayar')
+            ->whereBetween('p.waktu_bayar', [$_GET['dari'] . ' 00:00:00', $_GET['sampai'] . ' 23:59:59'])
+            // GROUP BY berdasarkan ID grup kategori dan nama grup kategori
+            ->groupBy('gk.id', 'gk.nama_grup_kategori')
+            ->orderBy('total_qty', 'desc')
+            ->orderBy('grand_total', 'desc')
+            ->get();
+
+//        dd($laporan->toArray());
+        return $laporan;
+    }
+
     public function laporanMenuFavorit()
     {
         $laporan = \DB::table('menu as m')->select(\DB::raw('m.kode_menu,m.nama, SUM(dp.qty) as qty, sum(sub_total) as total'))->leftJoin('detail_penjualan as dp', 'm.kode_menu', 'dp.kode_menu')->join('penjualan as p', 'dp.kode_penjualan', 'p.kode_penjualan')->where('p.status_bayar', 'Sudah Bayar')->whereBetween('p.waktu_bayar', [$_GET['dari'] . ' 00:00:00', $_GET['sampai'] . ' 23:59:59'])->groupBy('m.kode_menu')->orderBy('qty', 'desc')->orderBy('total', 'desc');
         if (auth()->user()->level == 'Kasir') {
             $laporan->whereNull('p.deleted_at');
         }
+
+//        dd($laporan->get()->toArray());
         return $laporan->get();
     }
     public function laporanTidakTerjual()
@@ -645,7 +675,7 @@ class PenjualanController extends Controller
 
     public function laporanPenjualan()
     {
-        $this->param['pageInfo'] = 'Laporan Pembayaran';
+        $this->param['pageInfo'] = 'Laporan Penjualan';
         $this->param['btnRight']['text'] = 'Tambah Penjualan';
         $this->param['btnRight']['link'] = route('penjualan.create');
         if (isset($_GET['dari']) && isset($_GET['sampai'])) {
@@ -653,12 +683,17 @@ class PenjualanController extends Controller
                 $this->param['penjualan'] = $this->laporanGeneral();
             } else if ($_GET['tipe'] == 'khusus') {
                 $this->param['penjualan'] = $this->laporanKhusus();
+            } else if ($_GET['tipe'] == 'kategori') {
+                $this->param['penjualan'] = $this->laporanKategori();
             } else if ($_GET['tipe'] == 'menu-favorit') {
                 $this->param['penjualan'] = $this->laporanMenuFavorit();
             } else if ($_GET['tipe'] == 'tidak-terjual') {
                 $this->param['penjualan'] = $this->laporanTidakTerjual();
             }
         }
+
+//        dd($this->laporanMenuFavorit());
+
         return view('penjualan.laporan.laporan-penjualan', $this->param);
     }
 

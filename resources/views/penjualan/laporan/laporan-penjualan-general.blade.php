@@ -19,7 +19,7 @@
         </tr>
     </thead>
     <tbody class="list">
-    <?php 
+    <?php
         $item = 0;
         $qty = 0;
         $total = 0;

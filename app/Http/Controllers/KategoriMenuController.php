@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\GrupKategori;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use \App\KategoriMenu;
@@ -22,15 +23,17 @@ class KategoriMenuController extends Controller
     {
         $keyword = $request->get('keyword');
         if($keyword){
-            $kategori = KategoriMenu::where('kategori_menu', 'LIKE', "%$keyword%")->paginate(10);
+            $kategori = KategoriMenu::where('kategori_menu', 'LIKE', "%$keyword%")->with('grup_kategori')->paginate(10);
         }
         else{
-            $kategori = KategoriMenu::paginate(10);
+            $kategori = KategoriMenu::with('grup_kategori')->paginate(10);
         }
 
         $this->param['pageInfo'] = 'List Data';
         $this->param['btnRight']['text'] = 'Tambah Data';
         $this->param['btnRight']['link'] = route('kategori-menu.create');
+
+//        dd($kategori->toArray());
 
         return view('master-menu.kategori-menu.index', ['kategori_menu' => $kategori], $this->param);
     }
@@ -46,7 +49,7 @@ class KategoriMenuController extends Controller
         $this->param['btnRight']['text'] = 'Lihat Data';
         $this->param['btnRight']['link'] = route('kategori-menu.index');
 
-        return view('master-menu.kategori-menu.create', $this->param);
+        return view('master-menu.kategori-menu.create', ['grup_kategori' => GrupKategori::get()], $this->param);
     }
 
     /**
@@ -58,11 +61,13 @@ class KategoriMenuController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
+            'id_grup_kategori' => 'required|exists:grup_kategori,id',
             'kategori_menu' => 'required|unique:kategori_menu|max:15',
         ]);
 
         $newKategoriMenu = new KategoriMenu;
 
+        $newKategoriMenu->id_grup_kategori = $request->id_grup_kategori;
         $newKategoriMenu->kategori_menu = $request->get('kategori_menu');
 
         $newKategoriMenu->save();
@@ -88,13 +93,13 @@ class KategoriMenuController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
-    {   
+    {
         $kategori = KategoriMenu::findOrFail($id);
         $this->param['pageInfo'] = 'Edit Kategori Menu';
         $this->param['btnRight']['text'] = 'Lihat Data';
         $this->param['btnRight']['link'] = route('kategori-menu.index');
 
-        return view('master-menu.kategori-menu.edit', ['kategori_menu' => $kategori], $this->param);
+        return view('master-menu.kategori-menu.edit', ['kategori_menu' => $kategori, 'grup_kategori' => GrupKategori::get()], $this->param);
     }
 
     /**
@@ -110,9 +115,11 @@ class KategoriMenuController extends Controller
         $isUnique = $KategoriMenu->kategori_menu == $request->get('kategori_menu') ? "" : "|unique:kategori_menu";
 
         $validatedData = $request->validate([
+            'id_grup_kategori' => 'required|exists:grup_kategori,id',
             'kategori_menu' => 'required|max:15'.$isUnique,
         ]);
 
+        $KategoriMenu->id_grup_kategori = $request->get('id_grup_kategori');
         $KategoriMenu->kategori_menu = $request->get('kategori_menu');
 
         $KategoriMenu->save();

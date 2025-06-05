@@ -9,11 +9,11 @@
                   <h3 class="mb-0">{{$pageInfo}}</h3>
                 </div>
                 <div class="col-6 text-right">
-                <?php 
+                <?php
                     if(isset($_GET['tipe']) && isset($_GET['dari'])){
                 ?>
                 @if (auth()->user()->level != 'Kasir')
-                    
+
                     @if ($_GET['tipe'] == 'general' || $_GET['tipe'] == 'khusus')
                         <a target="_blank" href="<?= route('laporan-penjualan.print')."?tipe=$_GET[tipe]&dari=$_GET[dari]&sampai=$_GET[sampai]&tipe_pembayaran=$_GET[tipe_pembayaran]" ?>" class="btn btn-info btn-sm"><span class="fa fa-print"></span> Cetak Laporan</a>
                         <a target="_blank" href="<?= route('laporan-penjualan.print')."?tipe=$_GET[tipe]&dari=$_GET[dari]&sampai=$_GET[sampai]&tipe_pembayaran=$_GET[tipe_pembayaran]&xls=true" ?>" class="btn btn-info btn-sm"><span class="fa fa-file-excel"></span> Export XLS</a>
@@ -32,6 +32,7 @@
                 @if (auth()->user()->level == 'Owner' || auth()->user()->level == 'Accounting')
                 <li <?= $_GET['tipe']=='khusus' ? 'class="active"' : '' ?>><a href="?tipe=khusus">Laporan</a></li>
                 @endif
+                <li <?= $_GET['tipe']=='kategori' ? 'class="active"' : '' ?>><a href="?tipe=kategori">Kategori</a></li>
                 <li <?= $_GET['tipe']=='menu-favorit' ? 'class="active"' : '' ?>><a href="?tipe=menu-favorit">Menu Terfavorit</a></li>
                 <li <?= $_GET['tipe']=='tidak-terjual' ? 'class="active"' : '' ?>><a href="?tipe=tidak-terjual">Menu Tidak Terjual</a></li>
             </ul>
@@ -46,7 +47,7 @@
                             <span class="input-group-text"><span class="fa fa-calendar"></span></span>
                         </div>
                         <input type="text" class="datepicker form-control" name="dari" value="{{isset($_GET['dari']) ? $_GET['dari'] : ''}}" required>
-                    </div>                
+                    </div>
                 </div>
                 <div class="col-3">
                     <label for="" class="form-control-label">Sampai Tanggal</label>
@@ -55,7 +56,7 @@
                             <span class="input-group-text"><span class="fa fa-calendar"></span></span>
                         </div>
                         <input type="text" class="datepicker form-control" name="sampai" value="{{isset($_GET['sampai']) ? $_GET['sampai'] : ''}}" required>
-                    </div>                
+                    </div>
                 </div>
                 @if ($_GET['tipe'] == 'general' || $_GET['tipe'] == 'khusus')
                 <div class="col-3">
@@ -80,6 +81,8 @@
                     @include('penjualan.laporan.laporan-penjualan-general')
                 @elseif($_GET['tipe']=='khusus')
                     @include('penjualan.laporan.laporan-penjualan-khusus')
+                @elseif($_GET['tipe']=='kategori')
+                    @include('penjualan.laporan.laporan-penjualan-kategori')
                 @elseif($_GET['tipe']=='menu-favorit')
                     @include('penjualan.laporan.laporan-penjualan-menu-favorit')
                 @elseif($_GET['tipe']=='tidak-terjual')

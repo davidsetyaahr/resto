@@ -40,6 +40,7 @@
                   <tr>
                     <th scope="col" class="sort" data-sort="name">#</th>
                     <th scope="col" class="sort" data-sort="budget">Kategori Menu</th>
+                    <th scope="col" class="sort" data-sort="budget">Grup</th>
                     <th scope="col"></th>
                   </tr>
                 </thead>
@@ -52,6 +53,7 @@
                       <tr>
                         <td>{{$no}}</td>
                         <td>{{$value->kategori_menu}}</td>
+                        <td>{{$value->grup_kategori->nama_grup_kategori}}</td>
                         <td class="text-right">
                           <div class="dropdown">
                             <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -66,7 +68,7 @@
                                   Hapus
                                 </button>
                               </form>--}}
-                              
+
                             </div>
                           </div>
                         </td>

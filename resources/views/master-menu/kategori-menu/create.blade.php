@@ -26,13 +26,27 @@
             <form action="{{ route('kategori-menu.store') }}" method="POST">
                 @csrf
                 <div class="card-body">
+                    <label for="" class="form-control-label">Grup</label>
+                    <select name="id_grup_kategori" class="form-control select2 @error('id_grup_kategori') is-invalid @enderror" id="">
+                        <option value="">---Pilih Grup---</option>
+                        @foreach ($grup_kategori as $item)
+                            <option value="{{$item->id}}" {{old('id_grup_kategori') == $item->id ? 'selected' : ''}}> {{$item->nama_grup_kategori}} </option>
+                        @endforeach
+                    </select>
+                    @error('id_grup_kategori')
+                    <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                    <br>
+                    <br>
                     <label for="" class="form-control-label">Kategori Menu</label>
-                <input type="text" name="kategori_menu" class="form-control" value="{{old('kategori_menu')}}" @error('kategori_menu') is-invalid @enderror placeholder="ex : Minuman">
-                @error('kategori_menu')
+                    <input type="text" name="kategori_menu" class="form-control" value="{{old('kategori_menu')}}" @error('kategori_menu') is-invalid @enderror placeholder="ex : Minuman">
+                    @error('kategori_menu')
                     <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
                     </span>
-                @enderror
+                    @enderror
                     <br>
                     <button class="btn btn-primary"><span class="fa fa-save"></span> Simpan</button>
                     <button class="btn btn-secondary"><span class="fa fa-times"></span> Reset</button>

@@ -58,7 +58,6 @@
                     @enderror
                     <br>
                     <br>
-
                     <label for="" class="form-control-label">HPP</label>
                     <input type="number" name="hpp" value="{{old('hpp')}}" class="form-control @error('hpp') is-invalid @enderror" placeholder="ex : 12000">
                     @error('hpp')
