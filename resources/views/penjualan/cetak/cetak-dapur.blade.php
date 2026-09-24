@@ -74,7 +74,9 @@ if ($cetakDapur == 'true') {
         $Data .= Chr(29).Chr(86).Chr(49); #Auto Cutter
         fwrite($handle, $Data);
         fclose($handle);
-        if (!app()->environment('local')) { copy($file,"//192.168.18.36/Dapur"); } # Lakukan cetak (skip di lokal)
+        #copy($file,"//192.168.18.36/Dapur");
+        copy($file,"//192.168.18.36/Kasir");
+        #if (!app()->environment('local')) { copy($file,"//192.168.18.36/Dapur"); } # Lakukan cetak (skip di lokal)
         unlink($file);
         // echo "<pre>";
         // print_r($Data);
@@ -150,7 +152,8 @@ if ($cetakDapur == 'true') {
         $Data .= Chr(29).Chr(86).Chr(49); #Auto Cutter
         fwrite($handle, $Data);
         fclose($handle);
-        if (!app()->environment('local')) { copy($file,"//192.168.18.36/Bar"); } # Lakukan cetak (skip di lokal)
+        copy($file,"//192.168.18.36/Kasir");
+        #if (!app()->environment('local')) { copy($file,"//192.168.18.36/Bar"); } # Lakukan cetak (skip di lokal)
         unlink($file);
         // echo "<pre>";
         // print_r($Data);

@@ -68,6 +68,21 @@ return [
             ],
         ],
 
+        // Read-only copy of this database, filled daily by `php artisan db:sync-replica`.
+        'replica' => [
+            'driver' => 'mysql',
+            'host' => env('REPLICA_DB_HOST', env('DB_HOST', '127.0.0.1')),
+            'port' => env('REPLICA_DB_PORT', env('DB_PORT', '3306')),
+            'database' => env('REPLICA_DB_DATABASE'),
+            'username' => env('REPLICA_DB_USERNAME', env('DB_USERNAME', 'forge')),
+            'password' => env('REPLICA_DB_PASSWORD', env('DB_PASSWORD', '')),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => false,
+        ],
+
+
         'pgsql' => [
             'driver' => 'pgsql',
             'url' => env('DATABASE_URL'),
