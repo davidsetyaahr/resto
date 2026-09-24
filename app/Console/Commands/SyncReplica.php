@@ -99,7 +99,8 @@ class SyncReplica extends Command
         $pdo->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, false);
         $total = 0;
         try {
-            $stmt = $pdo->query("SELECT * FROM `$table`");
+            $where = $table === 'penjualan' ? ' WHERE `deleted_at` IS NULL' : '';
+            $stmt = $pdo->query("SELECT * FROM `$table`$where");
             $stmt->setFetchMode(PDO::FETCH_ASSOC);
             $batch = [];
             $size = null;
